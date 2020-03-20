@@ -1,0 +1,16 @@
+body, html
+{
+    height: 100%;
+    width: 100%;
+}
+
+h1
+{
+    color: #ff0000;
+}
+
+#dtp
+{
+    font-size: 20px;
+    margin-top: 50px;
+}

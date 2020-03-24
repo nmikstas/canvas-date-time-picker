@@ -16,6 +16,45 @@ class CanvDTP
     static get CAL_DATE() {return 0x00}
     static get CAL_TIME() {return 0x01}
 
+    //Day of week.
+    static get SUNDAY()    {return 0}
+    static get MONDAY()    {return 1}
+    static get TUESDAY()   {return 2}
+    static get WEDNESDAY() {return 3}
+    static get THURSDAY()  {return 4}
+    static get FRIDAY()    {return 5}
+    static get SATURDAY()  {return 6}
+
+    //Day of month.
+    static get MARCH()     {return 0x01}
+    static get APRIL()     {return 0x02}
+    static get MAY()       {return 0x03}
+    static get JUNE()      {return 0x04}
+    static get JULY()      {return 0x05}
+    static get AUGUST()    {return 0x06}
+    static get SEPTEMBER() {return 0x07}
+    static get OCTOBER()   {return 0x08}
+    static get NOVEMBER()  {return 0x09}
+    static get DECEMBER()  {return 0x10}
+    static get JANUARY()   {return 0x11}
+    static get FEBRUARY()  {return 0x12}
+
+    //Different types of selectable items.
+    static get SEL_DAY()      {return 0x00}
+    static get SEL_PREVIOUS() {return 0x01}
+    static get SEL_NEXT()     {return 0x02}
+    static get SEL_TIME()     {return 0x03}
+    static get SEL_DATE()     {return 0x04}
+    static get SEL_VIEW()     {return 0x05}
+    static get SEL_YEAR()     {return 0x06}
+    static get SEL_DECADE()   {return 0x07}
+    static get SEL_CENTURY()  {return 0x08}
+    static get SEL_INC1()     {return 0x09}
+    static get SEL_INC10()    {return 0x0A}
+    static get SEL_DEC1()     {return 0x0B}
+    static get SEL_DEC10()    {return 0x0C}
+    static get SEL_AMPM()     {return 0x0D}
+
     constructor(parentDiv)
     {
         //HTML nodes required for date/time picker.
@@ -40,8 +79,35 @@ class CanvDTP
         this.iconCanWidth;
 
         //Animation variables.
-        this.animTime  = 20;
+        this.animTime  = 25;
         this.animSteps = 10;
+
+        //Keep track of the x and y mouse position over the body canvas.
+        this.bodyX = -1000;
+        this.bodyY = -1000;
+
+        /************************************* Mouse Pointer *************************************/
+
+        //Mouse pointer.
+        this.bPointerWidth = .005;
+        this.bPointerRad   = .01;
+        this.bPointerColor = "#000000";
+
+        /************************************* Days of Week **************************************/
+
+        //Days of week header info.
+        this.days            = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+        this.headerHorzAdj   = [.12, .08, .15, .05, .15, .20, .12];
+        this.headerVertAdj   = .20;
+        this.headerScale     = .80;
+        this.HeaderColor     = "#0087b6";
+        this.headerFontStyle = "Arial";
+
+        /********************************* Overflow Days of Week *********************************/
+
+        this.nonDayColorn  = "#070707"; //Special color for days outside of currenlty selected month.
+
+        /************************************ Icon Parameters ************************************/
 
         //Parameters of the icon canvas.
         this.iBorderRadius = .20;
@@ -65,24 +131,33 @@ class CanvDTP
         this.iFillColor    = this.iFillColorn;
         this.iCalColor     = this.iCalColorn;
 
+        /************************************ Body Parameters ************************************/
+
         //Parameters of the body canvas.
         this.bBorderRadius = .05;
         this.bBorderWeight = .01;
-        this.bXPadding     = .20;
-        this.bYPadding     = .20;
+        this.bXPadding     = .10;
+        this.bYPadding     = .10;
         this.bLineWidth    = .02;
 
-        //Normal body colors.
-        this.bBorderColorn = "#a4e3f7";
-        this.bFillColorn   = "#e5f5fa";
+        //Body style.
+        this.bBorderColor = "#a4e3f7";
+        this.bFillColor   = "#e5f5fa";
 
-        //Hover body colors.
-        this.bBorderColorh = "#202020";
-        this.bFillColorh   = "#808080";
+        //*********************************** Selectable Items ************************************
 
-        //Current body colors.
-        this.bBorderColor  = this.bBorderColorn;
-        this.bFillColor    = this.bFillColorn;
+        //Parameters of the selectable items.
+        this.selectRadius = .25;
+        this.selectWeight = .07;
+
+        this.selectBorderColor = "#0087b6";
+        this.selectFillColor   = "#a4e3f7";
+
+        //Non selected items.
+
+        //Selected items.
+
+        //Hovered items.
 
 
 
@@ -92,7 +167,19 @@ class CanvDTP
 
 
 
-
+        //Variables for keeping track of date and time.
+        this.isPicked   = false;
+        this.isAM       = true;
+        this.isLeapYear = false;
+        this.month      = 1;
+        this.day        = 1;
+        this.year       = 2000;
+        this.hour       = 12;
+        this.minute     = 0;
+        this.dayOfWeek  = 6;
+        this.calView    = CanvDTP.CAL_MONTH;
+        this.dateTime   = CanvDTP.CAL_DATE;
+        
         //Only create date/time picker if the parent exists.
         if(this.parentDiv)this.intit();
     }
@@ -129,6 +216,8 @@ class CanvDTP
         //Add mouse event listeners.
         this.iconCanvas.addEventListener("mouseenter", () => this.iconEnter());
         this.iconCanvas.addEventListener("mouseleave", () => this.iconExit());
+        this.bodyCanvas.addEventListener('mouseleave', () => this.bodyExit());
+        this.bodyCanvas.addEventListener('mousemove',  () => this.bodyCoords());
 
         //Add click event listeners.
         this.iconCanvas.addEventListener("click", () => this.iconClick());
@@ -136,6 +225,65 @@ class CanvDTP
         this.iconCanvas.style.cursor = "pointer";
 
         this.resize();
+    }
+
+    //Calculate the day of week.
+    dayCalc(month, day, year)
+    {
+        if(month < 3 ) year--;
+
+        let decade  = parseInt(year % 100);
+        let century = parseInt(year / 100);
+
+        (month > 2) ? month -= 2 : month += 10;
+
+        let dayOfWeek = parseInt((day + (2.6 * month - 0.2) + decade + Math.floor(decade / 4) + Math.floor(century / 4) - 2 * century ) % 7);
+        
+        if(dayOfWeek < 0) dayOfWeek += 7;
+    
+        this.dayOfWeek = dayOfWeek;
+        return this.dayOfWeek;    
+    }
+
+    //Calculate if a year is a leap year.
+    leapCalc(year)
+    {
+        let isLeap = false;
+        let div4   = parseInt(year % 4);
+        let div100 = parseInt(year % 100);
+
+        if(!div4 && div100) isLeap = true;
+
+        console.log(isLeap);
+
+        this.isLeapYear = isLeap;
+        return this.isLeapYear;
+    }
+
+    //Calculate the x, y coordinates of the mouse over the body canvas.
+    bodyCoords()
+    {
+        let obj = this.bodyCanvas;
+        let obj_left = 0;
+        let obj_top  = 0;
+        
+        //Get the offset of the body canvas and all its parents accumulated.
+        while (obj.offsetParent)
+        {
+            obj_left += obj.offsetLeft;
+            obj_top += obj.offsetTop;
+            obj = obj.offsetParent;
+        }
+
+        //Figure out the total offset taking the mouse position and scroll into account.
+        this.bodyX = window.event.x + window.pageXOffset - obj_left;
+        this.bodyY = window.event.y + window.pageYOffset - obj_top;
+        
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Remove Later! @@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        document.getElementById("x-coord").innerHTML = this.bodyX;
+        document.getElementById("y-coord").innerHTML = this.bodyY;
+
+        this.drawBody();
     }
 
     //Change icon colors when mouse is hovering over it.
@@ -154,6 +302,14 @@ class CanvDTP
         this.iFillColor   = this.iFillColorn;
         this.iCalColor    = this.iCalColorn;
         this.drawIcon();
+    }
+
+    //Remove mouse cursor when leaving body canvas.
+    bodyExit()
+    {
+        this.bodyX = -1000;
+        this.bodyY = -1000;
+        this.drawBody();
     }
 
     resize()
@@ -345,6 +501,8 @@ class CanvDTP
         //Exit if the canvas does not meet minimum size dimensions.
         if(this.bodyCanWidth <= 5) return;
 
+        this.ctxDTP.clearRect(0, 0, this.bodyCanWidth, this.bodyCanWidth);
+
         //Calculate the padding pixels and line width.
         let borderPx    = this.bodyCanWidth * this.bBorderWeight;
         let borderRad   = this.bodyCanWidth * this.bBorderRadius;
@@ -364,5 +522,169 @@ class CanvDTP
         this.ctxDTP.fillStyle = this.bFillColor;
         this.ctxDTP.fill();
         this.ctxDTP.stroke();
+
+        //Calculate the pointer radius and line width;
+        let pointerRadius = this.bodyCanWidth * this.bPointerRad;
+        let pointerWidth  = this.bodyCanWidth * this.bPointerWidth;
+
+        //Draw a mouse indicator. May remove later after project is complete.
+        this.ctxDTP.beginPath();
+        this.ctxDTP.strokeStyle = this.bPointerColor;
+        this.ctxDTP.lineWidth = pointerWidth;
+        this.ctxDTP.moveTo(this.bodyX, this.bodyY);
+        this.ctxDTP.lineTo(this.bodyX - pointerRadius, this.bodyY);
+        this.ctxDTP.lineTo(this.bodyX + pointerRadius, this.bodyY);
+        this.ctxDTP.moveTo(this.bodyX, this.bodyY);
+        this.ctxDTP.lineTo(this.bodyX, this.bodyY - pointerRadius);
+        this.ctxDTP.lineTo(this.bodyX, this.bodyY + pointerRadius);
+        this.ctxDTP.stroke();
+
+        //Determine what to draw in the body canvas.
+        if(this.dateTime === CanvDTP.CAL_TIME)
+        {
+            this.drawTime();
+        }
+        else
+        {
+            switch(this.calView)
+            {
+                case CanvDTP.CAL_MONTH:
+                    this.drawMonth();
+                    break;
+
+                case CanvDTP.CAL_YEAR:
+                    this.drawYear();
+                    break;
+
+                case CanvDTP.CAL_DECADE:
+                    this.drawDecade();
+                    break;
+
+                case CanvDTP.CAL_CENTURY:
+                    this.drawCentury();
+                    break;
+
+                default:
+                    this.drawMonth();
+                    break;
+            }
+        }
+    }
+
+    drawTime()
+    {
+
+    }
+
+    drawMonth()
+    {
+        let contentWidth  = this.bodyCanWidth - this.bodyCanWidth * this.bXPadding;
+        let contentHeight = this.bodyCanWidth - this.bodyCanWidth * this.bYPadding;
+        let contentLeft   = this.bodyCanWidth * this.bXPadding / 2;
+        let contentRight  = this.bodyCanWidth - this.bodyCanWidth * this.bXPadding / 2;
+        let contentTop    = this.bodyCanWidth * this.bYPadding / 2;
+        let contentBottom = this.bodyCanWidth - this.bodyCanWidth * this.bYPadding / 2;
+        let rowHeight     = contentHeight / 9;
+        let dayWidth      = contentWidth  / 7;
+        
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        //Draw out the boundaries between elements. It will be erased later.
+        this.ctxDTP.beginPath();
+        this.ctxDTP.strokeStyle = "#000000";
+        this.ctxDTP.lineWidth = 1;
+        this.ctxDTP.rect(contentLeft, contentTop, contentWidth, contentHeight);
+        for(let i = 1; i < 9; i++)
+        {
+            this.ctxDTP.moveTo(contentLeft, contentTop + i * rowHeight);
+            this.ctxDTP.lineTo(contentRight, contentTop + i * rowHeight);
+        }
+        for(let i = 1; i < 7; i++)
+        {
+            this.ctxDTP.moveTo(contentLeft + i * dayWidth, contentTop + rowHeight);
+            this.ctxDTP.lineTo(contentLeft + i * dayWidth, contentTop + 8 * rowHeight);
+        }
+        this.ctxDTP.stroke();
+        ///////////////////////////////////////////////////////////////////////////////////////////
+
+        //Draw the days of the week header.
+        this.ctxDTP.beginPath();
+        this.ctxDTP.fillStyle = this.HeaderColor;
+        this.ctxDTP.font = (rowHeight * this.headerScale) + "px " + this.headerFontStyle;
+        for(let i = 0; i < 7; i++)
+        {
+            this.ctxDTP.fillText
+            (
+                this.days[i],
+                contentLeft + i * dayWidth + dayWidth * this.headerHorzAdj[i],
+                contentTop + 2 * rowHeight - rowHeight * this.headerVertAdj
+            );
+        }
+        this.ctxDTP.stroke();
+
+
+        //Create an array of hit boundaries for the various buttons.
+        //Each element has 4 points representing the upper left and lower right corners.
+        let hitBounds = [];
+
+        //Hit boundaries for the days.
+        for(let i = 2; i < 8; i++)
+        {
+            for(let j = 0; j < 7; j++)
+            {
+                let x1 = contentLeft + j * dayWidth;
+                let x2 = contentLeft + (j + 1) * dayWidth - 1;
+                let y1 = contentTop + i * rowHeight;
+                let y2 = contentTop + (i + 1) * rowHeight - 1;
+                hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_DAY});
+            }
+        }
+
+
+
+
+
+
+
+        //Highlight the section being touched by the mouse cursor.
+        for(let i = 0; i < hitBounds.length; i++)
+        {
+            if(this.bodyX >= hitBounds[i].x1 && this.bodyX <= hitBounds[i].x2 && this.bodyY >= hitBounds[i].y1 && this.bodyY <= hitBounds[i].y2)
+            {
+                //Calculate border thickness and radius based on height.
+                let selectBorder = (hitBounds[i].y2 - hitBounds[i].y1) * this.selectWeight;
+                let selectRadius = (hitBounds[i].y2 - hitBounds[i].y1) * this.selectRadius;
+
+                
+
+                this.ctxDTP.beginPath();
+                this.ctxDTP.strokeStyle = this.selectBorderColor;
+                this.ctxDTP.fillStyle   = this.selectFillColor;
+                this.ctxDTP.lineWidth   = selectBorder;
+                this.ctxDTP.arc(hitBounds[i].x1 + selectRadius,  hitBounds[i].y1 + selectRadius, selectRadius, -Math.PI, -Math.PI / 2);
+                this.ctxDTP.arc(hitBounds[i].x2 - selectRadius,  hitBounds[i].y1 + selectRadius, selectRadius, -Math.PI / 2, 0);
+                this.ctxDTP.arc(hitBounds[i].x2 - selectRadius,  hitBounds[i].y2 - selectRadius, selectRadius, 0, Math.PI / 2);
+                this.ctxDTP.arc(hitBounds[i].x1 + selectRadius,  hitBounds[i].y2 - selectRadius, selectRadius, Math.PI / 2, Math.PI);
+                this.ctxDTP.lineTo(hitBounds[i].x1,  hitBounds[i].y1 + selectRadius);
+                this.ctxDTP.fill();
+                this.ctxDTP.stroke();
+            }
+        }
+
+
+    }
+
+    drawYear()
+    {
+
+    }
+
+    drawDecade()
+    {
+
+    }
+
+    drawCentury()
+    {
+
     }
 }

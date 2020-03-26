@@ -26,18 +26,18 @@ class CanvDTP
     static get SATURDAY()  {return 6}
 
     //Day of month.
-    static get MARCH()     {return 0x01}
-    static get APRIL()     {return 0x02}
-    static get MAY()       {return 0x03}
-    static get JUNE()      {return 0x04}
-    static get JULY()      {return 0x05}
-    static get AUGUST()    {return 0x06}
-    static get SEPTEMBER() {return 0x07}
-    static get OCTOBER()   {return 0x08}
-    static get NOVEMBER()  {return 0x09}
-    static get DECEMBER()  {return 0x10}
-    static get JANUARY()   {return 0x11}
-    static get FEBRUARY()  {return 0x12}
+    static get JANUARY()   {return 1}
+    static get FEBRUARY()  {return 2}
+    static get MARCH()     {return 3}
+    static get APRIL()     {return 4}
+    static get MAY()       {return 5}
+    static get JUNE()      {return 6}
+    static get JULY()      {return 7}
+    static get AUGUST()    {return 8}
+    static get SEPTEMBER() {return 9}
+    static get OCTOBER()   {return 10}
+    static get NOVEMBER()  {return 11}
+    static get DECEMBER()  {return 12}
 
     //Different types of selectable items.
     static get SEL_DAY()      {return 0x00}
@@ -54,6 +54,11 @@ class CanvDTP
     static get SEL_DEC1()     {return 0x0B}
     static get SEL_DEC10()    {return 0x0C}
     static get SEL_AMPM()     {return 0x0D}
+
+    //Displayed days of month types.
+    static get DAY_THIS() {return 0x00}
+    static get DAY_PRE()  {return 0x01}
+    static get DAY_POST() {return 0x02}
 
     constructor(parentDiv)
     {
@@ -103,9 +108,25 @@ class CanvDTP
         this.HeaderColor     = "#0087b6";
         this.headerFontStyle = "Arial";
 
-        /********************************* Overflow Days of Week *********************************/
+        /************************************* Days of Month *************************************/
 
-        this.nonDayColorn  = "#070707"; //Special color for days outside of currenlty selected month.
+        this.nonDayColorn = "#888888";
+        this.dayColorn    = "#000000";
+
+        this.nonDayColorh = "#ff8888";
+        this.dayColorh    = "#8800ff";
+
+        this.dayScale     = .80;
+        this.dayFontStyle = "Arial";
+        this.dayVertAdj   = .20;
+        this.dayHorzAdj   = 
+        [
+            0,
+            .30, .30, .30, .30, .30, .30, .30, .30, .30, .10,
+            .15, .10, .10, .10, .10, .10, .12, .12, .10, .15,
+            .15, .15, .15, .15, .15, .15, .15, .15, .15, .15,
+            .18
+        ];
 
         /************************************ Icon Parameters ************************************/
 
@@ -168,17 +189,31 @@ class CanvDTP
 
 
         //Variables for keeping track of date and time.
-        this.isPicked   = false;
-        this.isAM       = true;
-        this.isLeapYear = false;
-        this.month      = 1;
-        this.day        = 1;
-        this.year       = 2000;
-        this.hour       = 12;
-        this.minute     = 0;
-        this.dayOfWeek  = 6;
-        this.calView    = CanvDTP.CAL_MONTH;
-        this.dateTime   = CanvDTP.CAL_DATE;
+        this.isPicked      = false;
+        this.isAM          = true;
+        this.isLeapYear    = false;
+        this.month         = 1;
+        this.day           = 1;
+        this.year          = 2000;
+        this.hour          = 12;
+        this.minute        = 0;
+        this.dayOfWeek     = 6;
+        this.dayMonthStart = 6;
+        this.calView       = CanvDTP.CAL_MONTH;
+        this.dateTime      = CanvDTP.CAL_DATE;
+
+        this.tempMonth   = 1;
+        this.tempYear    = 2000;
+        this.tempDecade  = 2000;
+        this.tempCentury = 2000;
+
+        this.dayArray       = new Array(42);
+        this.monthDaysArray = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+
+
+
+
         
         //Only create date/time picker if the parent exists.
         if(this.parentDiv)this.intit();
@@ -204,6 +239,10 @@ class CanvDTP
         this.paddingDiv.appendChild(this.iconCanvas);
         this.paddingDiv.appendChild(this.bodyCanvas);
         this.parentDiv.appendChild(this.paddingDiv);
+
+        //Add placeholder text to the textbox and make it read only.
+        this.dtpText.placeholder = "Click Icon for Date/Time";
+        this.dtpText.readOnly    = true;
         
         //Setup positioning to ignore any parent padding.
         this.paddingDiv.style.position = "relative";
@@ -227,22 +266,115 @@ class CanvDTP
         this.resize();
     }
 
-    //Calculate the day of week.
-    dayCalc(month, day, year)
+    //This function is called only once on the first pick after a page load.
+    firstPick()
     {
-        if(month < 3 ) year--;
-
-        let decade  = parseInt(year % 100);
-        let century = parseInt(year / 100);
-
-        (month > 2) ? month -= 2 : month += 10;
-
-        let dayOfWeek = parseInt((day + (2.6 * month - 0.2) + decade + Math.floor(decade / 4) + Math.floor(century / 4) - 2 * century ) % 7);
+        this.isPicked = true;
         
-        if(dayOfWeek < 0) dayOfWeek += 7;
-    
-        this.dayOfWeek = dayOfWeek;
-        return this.dayOfWeek;    
+        //Get the current date and break it down.
+        let date           = new Date();
+        this.month         = date.getMonth() + 1;
+        this.day           = date.getDate();
+        this.year          = date.getFullYear();
+        this.dayOfWeek     = date.getDay();
+        this.isLeapYear    = this.leapCalc(this.year);
+        this.minute        = date.getMinutes();
+        this.hour          = date.getHours();
+
+        //Convert military time to AM/PM.
+        if(this.hour === 0)
+        {
+            this.hour = 12;
+        }
+        else if(this.hour === 12)
+        {
+            this.isAM = false;
+        }
+        else if(this.hour > 12)
+        {
+            this.isAM = false;
+            this.hour -= 12;
+        }
+
+        this.tempMonth   = this.month;
+        this.tempYear    = this.year;
+        this.tempDecade  = parseInt(this.year / 10)  * 10;
+        this.tempCentury = parseInt(this.year / 100) * 100;
+
+        this.textBoxDateTime();
+        this.updateDayArray();
+    }
+
+    //Update the array that holds the individual day to render.
+    updateDayArray()
+    {
+        //Calculate the day the month starts on.
+        let startDate = new Date(this.tempYear, this.tempMonth - 1, 1, 12, 0, 0, 0);
+        let dayMonthStart = startDate.getDay();
+
+        //Update the array with the current month days.
+        let i = 0;
+        for(i; i < this.monthDaysArray[this.tempMonth]; i++)
+        {
+            this.dayArray[i + dayMonthStart] = { day: i + 1, type: CanvDTP.DAY_THIS };
+        }
+
+        //Special case for February on leap years.
+        if(this.tempMonth === CanvDTP.FEBRUARY && this.leapCalc(this.tempYear))
+        {
+            console.log("here")
+            this.dayArray[i++ + dayMonthStart] = { day: 29, type: CanvDTP.DAY_THIS };
+        }
+
+        //Update the array with post month days.
+        let postDays = 1;
+        while(i + dayMonthStart < 42)
+        {
+            this.dayArray[i++ + dayMonthStart] = { day: postDays++, type: CanvDTP.DAY_POST };
+        }
+
+        //Only add pre days if month does not start on a Sunday.
+        if(dayMonthStart > 0)
+        {
+            i = dayMonthStart - 1;
+
+            //Special case for March on leap years.
+            if(this.tempMonth === CanvDTP.MARCH && this.leapCalc(this.tempYear))
+            {
+                this.dayArray[i--] = { day: 29, type: CanvDTP.DAY_PRE };
+            }
+            
+            //Update the array with pre month days.
+            let preDays;
+            if(this.tempMonth === 1)
+            {
+                preDays = this.monthDaysArray[12];
+            }
+            else
+            {
+                preDays = this.monthDaysArray[this.tempMonth - 1];
+            }
+            
+            while(i >= 0)
+            {
+                this.dayArray[i--] = { day: preDays--, type: CanvDTP.DAY_PRE };
+            }
+        }
+    }
+
+    //Update the date and time in the textbox.
+    textBoxDateTime()
+    {
+        let date = this.month + "/" + this.day + "/" + this.year;
+        
+        let min  = this.minute > 9 ? "" : "0";
+        min += this.minute;
+
+        let ampm = this.isAM ? "AM" : "PM";
+
+        let time = this.hour + ":" + min + " " + ampm;
+
+        this.dtpText.value = date + " " + time;
     }
 
     //Calculate if a year is a leap year.
@@ -253,8 +385,6 @@ class CanvDTP
         let div100 = parseInt(year % 100);
 
         if(!div4 && div100) isLeap = true;
-
-        console.log(isLeap);
 
         this.isLeapYear = isLeap;
         return this.isLeapYear;
@@ -278,10 +408,6 @@ class CanvDTP
         //Figure out the total offset taking the mouse position and scroll into account.
         this.bodyX = window.event.x + window.pageXOffset - obj_left;
         this.bodyY = window.event.y + window.pageYOffset - obj_top;
-        
-        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Remove Later! @@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        document.getElementById("x-coord").innerHTML = this.bodyX;
-        document.getElementById("y-coord").innerHTML = this.bodyY;
 
         this.drawBody();
     }
@@ -359,6 +485,9 @@ class CanvDTP
         this.bodyCanAnim = (this.bodyCanAnim === CanvDTP.BODY_CLOSED ||
             this.bodyCanAnim === CanvDTP.BODY_COLLAPSING) ?
             CanvDTP.BODY_EXPANDING : CanvDTP.BODY_COLLAPSING;
+
+        //Check if date/time has been picked already.
+        if(!this.isPicked) this.firstPick();
 
         this.bodyAnimTimer = setInterval(() => this.bodyAnimate(), this.animTime);
     }
@@ -589,6 +718,7 @@ class CanvDTP
         
         ///////////////////////////////////////////////////////////////////////////////////////////
         //Draw out the boundaries between elements. It will be erased later.
+        /*
         this.ctxDTP.beginPath();
         this.ctxDTP.strokeStyle = "#000000";
         this.ctxDTP.lineWidth = 1;
@@ -604,6 +734,7 @@ class CanvDTP
             this.ctxDTP.lineTo(contentLeft + i * dayWidth, contentTop + 8 * rowHeight);
         }
         this.ctxDTP.stroke();
+        */
         ///////////////////////////////////////////////////////////////////////////////////////////
 
         //Draw the days of the week header.
@@ -639,6 +770,31 @@ class CanvDTP
             }
         }
 
+        //Draw the day numbers.
+        this.ctxDTP.beginPath();
+        this.ctxDTP.font = (rowHeight * this.dayScale) + "px " + this.dayFontStyle;
+        for(let i = 0; i < hitBounds.length; i++)
+        {
+            if(this.dayArray[i].type === CanvDTP.DAY_THIS)
+            {
+                this.ctxDTP.fillStyle = this.dayColorn;
+            }
+            else
+            {
+                this.ctxDTP.fillStyle = this.nonDayColorn;
+            }
+            
+            this.ctxDTP.fillText
+            (
+                this.dayArray[i].day,
+                hitBounds[i].x1 + dayWidth * this.dayHorzAdj[this.dayArray[i].day],
+                hitBounds[i].y2 - rowHeight * this.dayVertAdj
+            );
+        }
+        this.ctxDTP.stroke();
+
+
+
 
 
 
@@ -654,8 +810,7 @@ class CanvDTP
                 let selectBorder = (hitBounds[i].y2 - hitBounds[i].y1) * this.selectWeight;
                 let selectRadius = (hitBounds[i].y2 - hitBounds[i].y1) * this.selectRadius;
 
-                
-
+                //Draw the border and fill the space.
                 this.ctxDTP.beginPath();
                 this.ctxDTP.strokeStyle = this.selectBorderColor;
                 this.ctxDTP.fillStyle   = this.selectFillColor;
@@ -667,10 +822,46 @@ class CanvDTP
                 this.ctxDTP.lineTo(hitBounds[i].x1,  hitBounds[i].y1 + selectRadius);
                 this.ctxDTP.fill();
                 this.ctxDTP.stroke();
+                
+                //Draw the highlighted text.
+                switch(hitBounds[i].type)
+                {
+                    //Draw the day numbers.
+                    case CanvDTP.SEL_DAY:
+                        this.ctxDTP.beginPath();
+                        this.ctxDTP.font = (rowHeight * this.dayScale) + "px " + this.dayFontStyle;
+                        this.ctxDTP.fillStyle = this.nonDayColorh;
+                        
+                            if(this.dayArray[i].type === CanvDTP.DAY_THIS)
+                            {
+                                this.ctxDTP.fillStyle = this.dayColorh;
+                            }
+                            else
+                            {
+                                this.ctxDTP.fillStyle = this.nonDayColorh;
+                            }
+            
+                            this.ctxDTP.fillText
+                            (
+                                this.dayArray[i].day,
+                                hitBounds[i].x1 + dayWidth * this.dayHorzAdj[this.dayArray[i].day],
+                                hitBounds[i].y2 - rowHeight * this.dayVertAdj
+                            );
+                        
+                        this.ctxDTP.stroke();
+                        break;
+
+
+
+
+
+
+                    
+                    default:
+                        break;
+                }
             }
         }
-
-
     }
 
     drawYear()

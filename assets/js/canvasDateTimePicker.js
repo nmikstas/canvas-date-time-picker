@@ -135,10 +135,8 @@ class CanvDTP
 
         //*********************************** Selectable Items ************************************
 
-        //Parameters of the selectable items.
         this.selectRadius = .25;
         this.selectWeight = .07;
-
         this.selectBorderColor = "#0087b6";
         this.selectFillColor   = "#a4e3f7";
 
@@ -203,6 +201,18 @@ class CanvDTP
         this.clockPad    = .10;
         this.clockWeight = .07;
 
+        /******************************** Currently Selected Day *********************************/
+
+        this.currentRadius = .25;
+        this.currentWeight = .07;
+        this.currentBorderColor = "#00f7ff";
+        this.currentFillColor   = "#aefcff";
+
+        /************************************* Today's Date **************************************/
+
+        this.nowWeight = .25;
+        this.nowColor  = "#000000";
+
 
 
 
@@ -218,26 +228,37 @@ class CanvDTP
         /************************************ Misc Variables *************************************/
 
         //Variables for keeping track of date and time.
-        this.isAM          = true;
+        this.isFirstPicked = false;
         this.isLeapYear    = false;
+        this.pickedDay     = 0;
+        this.dayType       = CanvDTP.DAY_THIS;
+
+        //Currently selected date and time.
         this.month         = 1;
         this.day           = 1;
         this.year          = 2000;
         this.hour          = 12;
         this.minute        = 0;
+        this.isAM          = true;
         this.dayOfWeek     = 6;
         this.dayMonthStart = 6;
 
-        //Keep track of currently picked item and view.
-        this.isPicked      = false;
-        this.calView       = CanvDTP.CAL_MONTH;
-        this.dateTime      = CanvDTP.CAL_DATE;
-        this.pickedType    = null;
-
+        //Date used for drawing current canvas values.
         this.tempMonth   = 1;
         this.tempYear    = 2000;
         this.tempDecade  = 2000;
         this.tempCentury = 2000;
+
+        //Todays date.
+        this.nowYear;
+        this.nowMonth;
+        this.nowDay;
+
+        //Keep track of currently picked item and view.
+        this.isPicked   = false;
+        this.calView    = CanvDTP.CAL_MONTH;
+        this.dateTime   = CanvDTP.CAL_DATE;
+        this.pickedType = null;
 
         //Calendar drawing and hit detection variables.
         this.dayArray       = new Array(42);
@@ -308,20 +329,20 @@ class CanvDTP
     //This function is called only once on the first pick after a page load.
     firstPick()
     {
-        this.isPicked = true;
+        this.isFirstPicked = true;
         
         //For test purposes only!
         //let date = new Date(2020, 11, 1, 12, 0, 0, 0);
 
         //Get the current date and break it down.
-        let date           = new Date();
-        this.month         = date.getMonth() + 1;
-        this.day           = date.getDate();
-        this.year          = date.getFullYear();
-        this.dayOfWeek     = date.getDay();
-        this.isLeapYear    = this.leapCalc(this.year);
-        this.minute        = date.getMinutes();
-        this.hour          = date.getHours();
+        let date        = new Date();
+        this.month      = date.getMonth() + 1;
+        this.day        = date.getDate();
+        this.year       = date.getFullYear();
+        this.dayOfWeek  = date.getDay();
+        this.isLeapYear = this.leapCalc(this.year);
+        this.minute     = date.getMinutes();
+        this.hour       = date.getHours();
 
         //Convert military time to AM/PM.
         if(this.hour === 0)
@@ -342,6 +363,9 @@ class CanvDTP
         this.tempYear    = this.year;
         this.tempDecade  = parseInt(this.year / 10)  * 10;
         this.tempCentury = parseInt(this.year / 100) * 100;
+        this.nowYear     = this.year;
+        this.nowMonth    = this.month;
+        this.nowDay      = this.day;
 
         this.textBoxDateTime();
         this.updateDayArray();
@@ -539,7 +563,7 @@ class CanvDTP
             CanvDTP.BODY_EXPANDING : CanvDTP.BODY_COLLAPSING;
 
         //Check if date/time has been picked already.
-        if(!this.isPicked) this.firstPick();
+        if(!this.isFirstPicked) this.firstPick();
         
         clearInterval(this.bodyAnimTimer);
         this.bodyAnimTimer = setInterval(() => this.bodyAnimate(), this.animTime);
@@ -552,6 +576,10 @@ class CanvDTP
         {
             case CanvDTP.BODY_CLOSED:
                 this.bodyCanWidth = 0;
+                this.calView      = CanvDTP.CAL_MONTH;
+                this.dateTime     = CanvDTP.CAL_DATE;
+                this.tempYear     = this.year;
+                this.tempMonth    = this.month;
                 clearInterval(this.bodyAnimTimer);
                 break;
 
@@ -855,6 +883,137 @@ class CanvDTP
         this.ctxDTP.font = (rowHeight * this.dayScale) + "px " + this.dayFontStyle;
         for(let i = 0; i < CanvDTP.NUM_DAYS; i++)
         {
+            let isSelected = false;
+            let isToday    = false;
+            let calcMonth, calcYear;
+
+            //Highlight the currently selected day.
+            switch(this.dayArray[i].type)
+            {
+                //Check for day before this month.
+                case CanvDTP.DAY_PRE:
+                    calcMonth = this.tempMonth - 1;
+                    calcYear  = this.tempYear;
+                    if(calcMonth <= 0)
+                    {
+                        calcMonth = 12;
+                        calcYear--;
+                    }
+
+                    if(calcYear === this.year && calcMonth === this.month && this.day === this.dayArray[i].day)
+                    {
+                        isSelected = true;
+                    }
+                    break;
+
+                //Check for day after this month.
+                case CanvDTP.DAY_POST:
+                    calcMonth = this.tempMonth + 1;
+                    calcYear  = this.tempYear;
+                    if(calcMonth >= 13)
+                    {
+                        calcMonth = 1;
+                        calcYear++;
+                    }
+
+                    if(calcYear === this.year && calcMonth === this.month && this.day === this.dayArray[i].day)
+                    {
+                        isSelected = true;
+                    }
+                    break;
+
+                //Must be day of this month.
+                default:
+                    if(this.tempYear === this.year && this.tempMonth === this.month && this.day === this.dayArray[i].day)
+                    {
+                        isSelected = true;
+                     }
+                    break;
+            }
+
+            //Fill in the currently selected day on the calendar.
+            if(isSelected)
+            {
+                //Calculate border thickness and radius based on height.
+                let currentBorder = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.currentWeight;
+                let currentRadius = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.currentRadius;
+
+                //Draw the border and fill the space.
+                this.ctxDTP.beginPath();
+                this.ctxDTP.strokeStyle = this.currentBorderColor;
+                this.ctxDTP.fillStyle   = this.currentFillColor;
+                this.ctxDTP.lineWidth   = currentBorder;
+                this.ctxDTP.arc(this.hitBounds[i].x1 + currentRadius, this.hitBounds[i].y1 + currentRadius, currentRadius, -Math.PI, -Math.PI / 2);
+                this.ctxDTP.arc(this.hitBounds[i].x2 - currentRadius, this.hitBounds[i].y1 + currentRadius, currentRadius, -Math.PI / 2, 0);
+                this.ctxDTP.arc(this.hitBounds[i].x2 - currentRadius, this.hitBounds[i].y2 - currentRadius, currentRadius, 0, Math.PI / 2);
+                this.ctxDTP.arc(this.hitBounds[i].x1 + currentRadius, this.hitBounds[i].y2 - currentRadius, currentRadius, Math.PI / 2, Math.PI);
+                this.ctxDTP.lineTo(this.hitBounds[i].x1, this.hitBounds[i].y1 + currentRadius);
+                this.ctxDTP.fill();
+                this.ctxDTP.stroke();
+            }
+        
+            //Highlight today's date.
+            switch(this.dayArray[i].type)
+            {
+                //Check for day before this month.
+                case CanvDTP.DAY_PRE:
+                    calcMonth = this.tempMonth - 1;
+                    calcYear  = this.tempYear;
+                    if(calcMonth <= 0)
+                    {
+                        calcMonth = 12;
+                        calcYear--;
+                    }
+
+                    if(calcYear === this.nowYear && calcMonth === this.nowMonth && this.nowDay === this.dayArray[i].day)
+                    {
+                        isToday = true;
+                    }
+                    break;
+
+                //Check for day after this month.
+                case CanvDTP.DAY_POST:
+                    calcMonth = this.tempMonth + 1;
+                    calcYear  = this.tempYear;
+                    if(calcMonth >= 13)
+                    {
+                        calcMonth = 1;
+                        calcYear++;
+                    }
+
+                    if(calcYear === this.nowYear && calcMonth === this.nowMonth && this.nowDay === this.dayArray[i].day)
+                    {
+                        isToday = true;
+                    }
+                    break;
+
+                //Must be day of this month.
+                default:
+                    if(this.tempYear === this.nowYear && this.tempMonth === this.nowMonth && this.nowDay === this.dayArray[i].day)
+                    {
+                        isToday = true;
+                     }
+                    break;
+            }
+
+            //Draw selector for todays date.
+            if(isToday)
+            {
+                //Draw the border and fill the space.   
+                this.ctxDTP.beginPath();
+                this.ctxDTP.strokeStyle = this.nowColor;
+                this.ctxDTP.fillStyle   = this.nowColor;
+                this.ctxDTP.lineWidth   = 1;
+                this.ctxDTP.moveTo(this.hitBounds[i].x1, this.hitBounds[i].y1);
+                this.ctxDTP.lineTo(this.hitBounds[i].x1 + this.nowWeight * dayWidth, this.hitBounds[i].y1);
+                this.ctxDTP.lineTo(this.hitBounds[i].x1, this.hitBounds[i].y1 + this.nowWeight * dayWidth);
+                this.ctxDTP.moveTo(this.hitBounds[i].x2, this.hitBounds[i].y2);
+                this.ctxDTP.lineTo(this.hitBounds[i].x2 - this.nowWeight * dayWidth, this.hitBounds[i].y2);
+                this.ctxDTP.lineTo(this.hitBounds[i].x2, this.hitBounds[i].y2 - this.nowWeight * dayWidth);
+                this.ctxDTP.fill();
+                this.ctxDTP.stroke();
+            }
+
             this.dayArray[i].type === CanvDTP.DAY_THIS ? 
                 this.ctxDTP.fillStyle = this.dayColorn :
                 this.ctxDTP.fillStyle = this.nonDayColorn;
@@ -948,9 +1107,16 @@ class CanvDTP
             )
             {
                 //Indicate something can be picked.
-                this.isPicked = true;
+                this.isPicked   = true;
                 this.pickedType = this.hitBounds[i].type;
 
+                //Get additional info for days of month.
+                if(i < CanvDTP.NUM_DAYS)
+                {
+                    this.pickedDay  = this.dayArray[i].day;
+                    this.dayType    = this.dayArray[i].type;
+                }
+                
                 //Calculate border thickness and radius based on height.
                 let selectBorder = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.selectWeight;
                 let selectRadius = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.selectRadius;
@@ -1065,22 +1231,38 @@ class CanvDTP
 
     drawYear()
     {
-
+        this.ctxDTP.beginPath();
+        this.ctxDTP.font = "20px Arial"
+        this.ctxDTP.fillStyle = "#000000";
+        this.ctxDTP.fillText("Year View", 20, 25);
+        this.ctxDTP.stroke();
     }
 
     drawDecade()
     {
-
+        this.ctxDTP.beginPath();
+        this.ctxDTP.font = "20px Arial"
+        this.ctxDTP.fillStyle = "#000000";
+        this.ctxDTP.fillText("Decade View", 20, 25);
+        this.ctxDTP.stroke();
     }
 
     drawCentury()
     {
-
+        this.ctxDTP.beginPath();
+        this.ctxDTP.font = "20px Arial"
+        this.ctxDTP.fillStyle = "#000000";
+        this.ctxDTP.fillText("Century View", 20, 25);
+        this.ctxDTP.stroke();
     }
     
     drawTime()
     {
-
+        this.ctxDTP.beginPath();
+        this.ctxDTP.font = "20px Arial"
+        this.ctxDTP.fillStyle = "#000000";
+        this.ctxDTP.fillText("Time View", 20, 25);
+        this.ctxDTP.stroke();
     }
 
 
@@ -1094,13 +1276,45 @@ class CanvDTP
 
 
 
+
+
+    //Update the selected date.
+    updateDate()
+    {
+        //Adjust the date if a day before the month is chosen.
+        if(this.dayType === CanvDTP.DAY_PRE)
+        {
+            this.tempMonth--;
+            if(this.tempMonth <= 0)
+            {
+                this.tempMonth = 12;
+                this.tempYear--;
+            }
+        }
+        //Adjust the date if a day after the month is chosen.
+        else if(this.dayType === CanvDTP.DAY_POST)
+        {
+            this.tempMonth++;
+            if(this.tempMonth >= 13)
+            {
+                this.tempMonth = 1;
+                this.tempYear++;
+            }
+        }
+
+        this.month = this.tempMonth;
+        this.year  = this.tempYear;
+        this.day   = this.pickedDay;
+        this.textBoxDateTime();
+        this.drawBody();
+    }
 
     //Increment the month and redraw the calendar.
     incrementMonth()
     {
         this.tempMonth++;
 
-        if(this.tempMonth >= 12)
+        if(this.tempMonth >= 13)
         {
             this.tempMonth = 1;
             this.tempYear++;
@@ -1132,6 +1346,7 @@ class CanvDTP
                     switch(this.pickedType)
                     {
                         case CanvDTP.SEL_DAY:
+                            this.updateDate();
                             break;
 
                         case CanvDTP.SEL_PREVIOUS:
@@ -1143,10 +1358,16 @@ class CanvDTP
                             break;
 
                         case CanvDTP.SEL_TIME:
+                            this.dateTime = CanvDTP.CAL_TIME;
+                            document.body.style.cursor = "default";
+                            this.drawBody();
                             break;
 
                         case CanvDTP.SEL_VIEW:
                         default:
+                            this.calView = CanvDTP.CAL_YEAR;
+                            document.body.style.cursor = "default";
+                            this.drawBody();
                             break;
                     }
                     break;

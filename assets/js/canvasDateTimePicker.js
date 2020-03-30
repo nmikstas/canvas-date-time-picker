@@ -161,10 +161,8 @@ class CanvDTP
 
         this.nonDayColorn = "#888888";
         this.dayColorn    = "#000000";
-
         this.nonDayColorh = "#ff8888";
         this.dayColorh    = "#8800ff";
-
         this.dayScale     = .80;
         this.dayFontStyle = "Arial";
         this.dayVertAdj   = .20;
@@ -180,7 +178,6 @@ class CanvDTP
 
         this.monthYearn = "#000000";
         this.monthYearh = "#8800ff";
-
         this.monthYearScale     = .80;
         this.monthYearFontStyle = "Arial";
         this.monthYearVertAdj   = .20;
@@ -212,30 +209,42 @@ class CanvDTP
         this.nowWeight = .25;
         this.nowColor  = "#000000";
 
-        /*************************************** Year Text ***************************************/
+        /*************************************** Month Text **************************************/
 
-        this.yearn = "#000000";
-        this.yearh = "#8800ff";
-        this.yearScale     = .60;
-        this.yearFontStyle = "Arial";
-        this.yearVertAdj   = .25;
-        this.yearHorzAdj   = [.20, .20, .20, .20, .15, .20, .22, .18, .17, .20, .17, .17];
+        this.monthn         = "#000000";
+        this.monthh         = "#8800ff";
+        this.monthScale     = .60;
+        this.monthFontStyle = "Arial";
+        this.monthVertAdj   = .25;
+        this.monthHorzAdj   = [.20, .20, .20, .20, .15, .20, .22, .18, .17, .20, .17, .17];
 
         /***************************************** Year ******************************************/
 
-        this.onlyYearn = "#000000";
-        this.onlyYearh = "#8800ff";
+        this.onlyYearn         = "#000000";
+        this.onlyYearh         = "#8800ff";
         this.onlyYearScale     = .80;
         this.onlyYearFontStyle = "Arial";
         this.onlyYearVertAdj   = .20;
         this.onlyYearHorzAdj   = 1.80;
 
+        /*************************************** Year Text ***************************************/
 
+        this.nonYear       = "#888888";
+        this.yearn         = "#000000";
+        this.yearh         = "#8800ff";
+        this.yearScale     = .60;
+        this.yearFontStyle = "Arial";
+        this.yearVertAdj   = .25;
+        this.yearHorzAdj   = .10;
 
+        /**************************************** Decade *****************************************/
 
-
-
-
+        this.onlyDecaden         = "#000000";
+        this.onlyDecadeh         = "#8800ff";
+        this.onlyDecadeScale     = .80;
+        this.onlyDecadeFontStyle = "Arial";
+        this.onlyDecadeVertAdj   = .20;
+        this.onlyDecadeHorzAdj   = 1.0;
 
 
 
@@ -1390,13 +1399,13 @@ class CanvDTP
             }
 
             this.ctxDTP.beginPath();
-            this.ctxDTP.font = (monthsHeight * this.yearScale) + "px " + this.yearFontStyle;
-            this.ctxDTP.fillStyle = this.yearn;
+            this.ctxDTP.font = (monthsHeight * this.monthScale) + "px " + this.monthFontStyle;
+            this.ctxDTP.fillStyle = this.monthn;
             this.ctxDTP.fillText
             (
                 this.shortMonthsArray[i], 
-                this.hitBounds[i].x1 + this.yearHorzAdj[i] * monthsWidth,
-                this.hitBounds[i].y2 - this.yearVertAdj * monthsHeight
+                this.hitBounds[i].x1 + this.monthHorzAdj[i] * monthsWidth,
+                this.hitBounds[i].y2 - this.monthVertAdj * monthsHeight
             );
             this.ctxDTP.stroke();
         }
@@ -1499,13 +1508,13 @@ class CanvDTP
                 {
                     case CanvDTP.SEL_MONTH:
                         this.ctxDTP.beginPath();
-                        this.ctxDTP.font = (monthsHeight * this.yearScale) + "px " + this.yearFontStyle;
-                        this.ctxDTP.fillStyle = this.yearh;
+                        this.ctxDTP.font = (monthsHeight * this.monthScale) + "px " + this.monthFontStyle;
+                        this.ctxDTP.fillStyle = this.monthh;
                         this.ctxDTP.fillText
                         (
                             this.shortMonthsArray[i], 
-                            this.hitBounds[i].x1 + this.yearHorzAdj[i] * monthsWidth,
-                            this.hitBounds[i].y2 - this.yearVertAdj * monthsHeight
+                            this.hitBounds[i].x1 + this.monthHorzAdj[i] * monthsWidth,
+                            this.hitBounds[i].y2 - this.monthVertAdj * monthsHeight
                         );
                         this.ctxDTP.stroke();
                         break;
@@ -1675,9 +1684,56 @@ class CanvDTP
         y2 = contentTop + 9 * rowHeight - 1;
         this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_TIME});
 
+        let yearBase = parseInt(this.tempYear / 10) * 10 - 1;
 
+        //Draw the years.
+        for(let i = 0; i < 12; i++)
+        {
+            //Highlight the current selected year.
+            if(yearBase + i === this.tempYear)
+            {
+                //Calculate border thickness and radius based on height.
+                let currentBorder = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.currentWeight;
+                let currentRadius = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.currentRadius;
 
-
+                //Draw the border and fill the space.
+                this.ctxDTP.beginPath();
+                this.ctxDTP.strokeStyle = this.currentBorderColor;
+                this.ctxDTP.fillStyle   = this.currentFillColor;
+                this.ctxDTP.lineWidth   = currentBorder;
+                this.ctxDTP.arc(this.hitBounds[i].x1 + currentRadius, this.hitBounds[i].y1 + currentRadius, currentRadius, -Math.PI, -Math.PI / 2);
+                this.ctxDTP.arc(this.hitBounds[i].x2 - currentRadius, this.hitBounds[i].y1 + currentRadius, currentRadius, -Math.PI / 2, 0);
+                this.ctxDTP.arc(this.hitBounds[i].x2 - currentRadius, this.hitBounds[i].y2 - currentRadius, currentRadius, 0, Math.PI / 2);
+                this.ctxDTP.arc(this.hitBounds[i].x1 + currentRadius, this.hitBounds[i].y2 - currentRadius, currentRadius, Math.PI / 2, Math.PI);
+                this.ctxDTP.lineTo(this.hitBounds[i].x1, this.hitBounds[i].y1 + currentRadius);
+                this.ctxDTP.fill();
+                this.ctxDTP.stroke();
+            }
+            
+            this.ctxDTP.beginPath();
+            this.ctxDTP.font = (monthsHeight * this.yearScale) + "px " + this.yearFontStyle;
+            this.ctxDTP.fillStyle = (!i || i === 11) ? this.nonYear : this.ctxDTP.fillStyle = this.yearn;
+            this.ctxDTP.fillText
+            (
+                yearBase + i, 
+                this.hitBounds[i].x1 + this.yearHorzAdj * monthsWidth,
+                this.hitBounds[i].y2 - this.yearVertAdj * monthsHeight
+                
+            );
+            this.ctxDTP.stroke();          
+        }
+        
+        //Draw the decade.
+        this.ctxDTP.beginPath();
+        this.ctxDTP.fillStyle = this.onlyDecaden;
+        this.ctxDTP.font = (rowHeight * this.onlyDecadeScale) + "px " + this.onlyDecadeFontStyle;
+        this.ctxDTP.fillText
+        (
+            (yearBase + 1) + "-" + (yearBase + 10),
+            contentLeft + nextPrevWidth + nextPrevWidth * this.onlyDecadeHorzAdj,
+            contentTop + rowHeight - rowHeight * this.onlyDecadeVertAdj
+        );
+        this.ctxDTP.stroke();
 
 
 

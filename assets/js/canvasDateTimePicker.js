@@ -78,7 +78,7 @@ class CanvDTP
 
     constructor(parentDiv)
     {
-        this.debug = false;
+        this.debug = true;
 
         //HTML nodes required for date/time picker.
         this.parentDiv = parentDiv;
@@ -129,9 +129,9 @@ class CanvDTP
         this.iCalColorh    = "#ffffff";
 
         //Current icon colors.
-        this.iBorderColor  = this.iBorderColorn;
-        this.iFillColor    = this.iFillColorn;
-        this.iCalColor     = this.iCalColorn;
+        this.iBorderColor = this.iBorderColorn;
+        this.iFillColor   = this.iFillColorn;
+        this.iCalColor    = this.iCalColorn;
 
         //*********************************** Selectable Items ************************************
 
@@ -176,8 +176,8 @@ class CanvDTP
 
         /************************************ Month and Year *************************************/
 
-        this.monthYearn = "#000000";
-        this.monthYearh = "#8800ff";
+        this.monthYearn         = "#000000";
+        this.monthYearh         = "#8800ff";
         this.monthYearScale     = .80;
         this.monthYearFontStyle = "Arial";
         this.monthYearVertAdj   = .20;
@@ -199,8 +199,8 @@ class CanvDTP
 
         /******************************** Currently Selected Day *********************************/
 
-        this.currentRadius = .25;
-        this.currentWeight = .07;
+        this.currentRadius      = .25;
+        this.currentWeight      = .07;
         this.currentBorderColor = "#00f7ff";
         this.currentFillColor   = "#aefcff";
 
@@ -268,9 +268,33 @@ class CanvDTP
         this.bannerCenturyVertAdj   = .20;
         this.bannerCenturyHorzAdj   = 1.0;
 
+        /************************************* Calendar Icon *************************************/
 
+        this.calXPadding  = .20;
+        this.calYPadding  = .10;
+        this.calLineWidth = .05;
+        this.calCalColorn = "#000000";
+        this.calCalColorh = "#8800ff";
 
+        /************************************ Time Parameters ************************************/
 
+        this.timeVertAdj     = .20;
+        this.timeDivVertAdj  = .25;
+        this.timeDivHorzAdj  = .15;
+        this.timeAmPmHorzAdj = -.045;
+        this.timehourHorzAdj = [.10, .10, .10, .10, .30, .10, .10, .10, .10, .10, .10, .10];
+        this.timeMinHorzAdj  =
+        [
+            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10,
+            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10,
+            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10,
+            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10,
+            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10,
+            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10
+        ];
+        this.timeFont   = "Arial";
+        this.timeColor  = "#000000";
+        this.timeWeight = .80;
 
 
 
@@ -315,6 +339,16 @@ class CanvDTP
         this.innerBottom;
         this.innerLeft;
         this.innerRight;
+
+        //Dimensions for the time view only.
+        this.timeWidth;
+        this.timeHeight;
+        this.timeLeft;
+        this.timeRight;
+        this.timeTop;
+        this.timeBottom;
+        this.timeBoxWidth;
+        this.timeBoxHeight;
         
         //Clock graphic radius.
         this.clockRadius;
@@ -573,7 +607,6 @@ class CanvDTP
         let iXPad      = this.iconCanWidth * this.iXPadding + iLWidth;
         let iYPad      = this.iconCanWidth * this.iYPadding + iLWidth;
         let iXWidth    = this.iconCanWidth - 2 * iXPad;
-        let iYHeight   = this.iconCanWidth - 2 * iYPad;
         let topWidth   = iXWidth / 5;
         let gridWidth  = iXWidth / 4;
         let gridTop    = iYPad + 2 * iLWidth;
@@ -621,6 +654,63 @@ class CanvDTP
     }
 
     /************************************* Helper Functions **************************************/
+
+    //This function draws the calendar icon on the body canvas. Similar to above.
+    calDraw(calColor)
+    {
+        //Calculate the padding pixels and line width.
+        let calTop     = this.contentBottom - this.smallBoxHeight;
+        let calBottom  = this.contentBottom;
+        let calLeft    = this.contentLeft + (this.contentWidth / 2 - this.smallBoxWidth / 2);
+        let calRight   = this.contentLeft + (this.contentWidth / 2 + this.smallBoxWidth / 2);
+        let calWidth   = calRight - calLeft;
+        let calHeight  = calBottom - calTop;
+        let iXPad      = this.smallBoxWidth * this.calXPadding;
+        let iYPad      = this.smallBoxHeight * this.calYPadding;
+        let iLWidth    = calWidth * this.calLineWidth;
+        let iXWidth    = calWidth - 2 * iXPad;
+        let topWidth   = iXWidth / 5;
+        let gridTop    = calTop + iYPad + 2 * iLWidth;
+        let gridBottom = calBottom - iYPad;
+        let gridWidth  = iXWidth / 4;
+        let gridHeight = (gridBottom - gridTop) / 4;
+      
+        //Draw the top of the calendar.
+        this.ctxDTP.beginPath();
+        this.ctxDTP.lineWidth   = iLWidth;
+        this.ctxDTP.strokeStyle = calColor;
+        this.ctxDTP.moveTo(calLeft + iXPad, calTop + iYPad);        
+        this.ctxDTP.lineTo(calLeft + iXPad + 1 * topWidth, calTop + iYPad);
+        this.ctxDTP.moveTo(calLeft + iXPad + 2 * topWidth, calTop + iYPad);
+        this.ctxDTP.lineTo(calLeft + iXPad + 3 * topWidth, calTop + iYPad);
+        this.ctxDTP.moveTo(calLeft + iXPad + 4 * topWidth, calTop + iYPad);
+        this.ctxDTP.lineTo(calLeft + iXPad + 5 * topWidth, calTop + iYPad);
+        this.ctxDTP.moveTo(calLeft + iXPad, calTop + iYPad + iLWidth);
+        this.ctxDTP.lineTo(calLeft + iXPad + 5 * topWidth, calTop + iYPad + iLWidth);
+        this.ctxDTP.moveTo(calLeft + iXPad, calTop + iYPad + 2 * iLWidth);
+        this.ctxDTP.lineTo(calLeft + iXPad + 5 * topWidth, calTop + iYPad + 2 * iLWidth);
+
+        //Draw calendar grid.
+        this.ctxDTP.moveTo(calLeft + iXPad, calTop + iYPad - iLWidth / 2);
+        this.ctxDTP.lineTo(calLeft + iXPad, gridBottom);
+        this.ctxDTP.moveTo(calLeft + iXPad + gridWidth, gridTop);
+        this.ctxDTP.lineTo(calLeft + iXPad + gridWidth, gridBottom);
+        this.ctxDTP.moveTo(calLeft + iXPad + 2 * gridWidth, gridTop);
+        this.ctxDTP.lineTo(calLeft + iXPad + 2 * gridWidth, gridBottom);
+        this.ctxDTP.moveTo(calLeft + iXPad + 3 * gridWidth, gridTop);
+        this.ctxDTP.lineTo(calLeft + iXPad + 3 * gridWidth, gridBottom);
+        this.ctxDTP.moveTo(calLeft + iXPad + 4 * gridWidth, calTop + iYPad - iLWidth / 2);
+        this.ctxDTP.lineTo(calLeft + iXPad + 4 * gridWidth, gridBottom);
+        this.ctxDTP.moveTo(calLeft + iXPad, gridTop + gridHeight);
+        this.ctxDTP.lineTo(calLeft + iXPad + iXWidth, gridTop + gridHeight);
+        this.ctxDTP.moveTo(calLeft + iXPad, gridTop + 2 * gridHeight);
+        this.ctxDTP.lineTo(calLeft + iXPad + iXWidth, gridTop + 2 * gridHeight);
+        this.ctxDTP.moveTo(calLeft + iXPad, gridTop + 3 * gridHeight);
+        this.ctxDTP.lineTo(calLeft + iXPad + iXWidth, gridTop + 3 * gridHeight);
+        this.ctxDTP.moveTo(calLeft + iXPad, gridTop + 4 * gridHeight);
+        this.ctxDTP.lineTo(calLeft + iXPad + iXWidth, gridTop + 4 * gridHeight);
+        this.ctxDTP.stroke();
+    }
 
     //This function is called only once on the first pick after a page load.
     firstPick()
@@ -845,7 +935,32 @@ class CanvDTP
                 break;
 
             case CanvDTP.GRID_TIME:
-
+                this.ctxDTP.beginPath();
+                this.ctxDTP.strokeStyle = "#000000";
+                this.ctxDTP.lineWidth = 1;
+                this.ctxDTP.rect(this.contentLeft,  this.contentTop, this.contentWidth, this.contentHeight);
+                this.ctxDTP.moveTo(this.contentLeft, this.contentBottom - this.smallBoxHeight);
+                this.ctxDTP.lineTo(this.contentRight, this.contentBottom - this.smallBoxHeight);
+                this.ctxDTP.rect(this.timeLeft,  this.timeTop, this.timeWidth, this.timeHeight);
+                this.ctxDTP.moveTo(this.timeLeft + this.timeBoxWidth, this.timeTop);
+                this.ctxDTP.lineTo(this.timeLeft + this.timeBoxWidth, this.timeBottom);
+                this.ctxDTP.moveTo(this.timeLeft + 1.5 * this.timeBoxWidth, this.timeTop);
+                this.ctxDTP.lineTo(this.timeLeft + 1.5 * this.timeBoxWidth, this.timeBottom);
+                this.ctxDTP.moveTo(this.timeLeft + 2.5 * this.timeBoxWidth, this.timeTop);
+                this.ctxDTP.lineTo(this.timeLeft + 2.5 * this.timeBoxWidth, this.timeBottom);
+                this.ctxDTP.moveTo(this.timeLeft, this.timeTop + this.timeBoxHeight);
+                this.ctxDTP.lineTo(this.timeRight, this.timeTop + this.timeBoxHeight);
+                this.ctxDTP.moveTo(this.timeLeft, this.timeTop + 2 * this.timeBoxHeight);
+                this.ctxDTP.lineTo(this.timeRight, this.timeTop + 2 * this.timeBoxHeight);
+                this.ctxDTP.moveTo(this.timeLeft, this.timeTop + .5 * this.timeBoxHeight);
+                this.ctxDTP.lineTo(this.timeLeft + this.timeBoxWidth, this.timeTop + .5 * this.timeBoxHeight);
+                this.ctxDTP.moveTo(this.timeLeft + 1.5 * this.timeBoxWidth, this.timeTop + .5 * this.timeBoxHeight);
+                this.ctxDTP.lineTo(this.timeLeft + 2.5 * this.timeBoxWidth, this.timeTop + .5 * this.timeBoxHeight);
+                this.ctxDTP.moveTo(this.timeLeft, this.timeTop + 2.5 * this.timeBoxHeight);
+                this.ctxDTP.lineTo(this.timeLeft + this.timeBoxWidth, this.timeTop + 2.5 * this.timeBoxHeight);
+                this.ctxDTP.moveTo(this.timeLeft + 1.5 * this.timeBoxWidth, this.timeTop + 2.5 * this.timeBoxHeight);
+                this.ctxDTP.lineTo(this.timeLeft + 2.5 * this.timeBoxWidth, this.timeTop + 2.5 * this.timeBoxHeight);
+                this.ctxDTP.stroke();
                 break;
                 
             default:
@@ -1060,6 +1175,16 @@ class CanvDTP
         this.bigBoxHeight   = (this.innerBottom - this.innerTop) / 4;
         this.bigBoxWidth    = this.contentWidth / 3;
         this.clockRadius    = this.smallBoxHeight * .5 - this.clockPad * this.smallBoxHeight;
+
+        //Time view calculations.
+        this.timeWidth      = this.contentWidth;
+        this.timeHeight     = this.contentHeight - 2 * this.smallBoxHeight;
+        this.timeLeft       = this.contentLeft;
+        this.timeRight      = this.contentRight;
+        this.timeTop        = this.contentTop;
+        this.timeBottom     = this.contentBottom - 2 * this.smallBoxHeight;
+        this.timeBoxWidth   = this.timeWidth / 3.5;
+        this.timeBoxHeight  = this.timeHeight / 3;
     }
 
     //Calculate the x, y coordinates of the mouse over the body canvas.
@@ -1725,7 +1850,7 @@ class CanvDTP
             }
             
             this.ctxDTP.beginPath();
-            this.ctxDTP.font = (this.bigBoxHeight * this.decadeScale) + "px " + this.onlyDecadeFontStyle;
+            this.ctxDTP.font = (this.bigBoxHeight * this.decadeScale) + "px " + this.bannerDecadeFontStyle;
             this.ctxDTP.fillStyle = (!i || i === 11) ? this.nonDecaden : this.ctxDTP.fillStyle = this.decaden;
             this.ctxDTP.fillText
             (
@@ -1781,7 +1906,7 @@ class CanvDTP
                 {
                     case CanvDTP.SEL_DECADE:
                         this.ctxDTP.beginPath();
-                        this.ctxDTP.font = (this.bigBoxHeight * this.decadeScale) + "px " + this.onlyDecadeFontStyle;
+                        this.ctxDTP.font = (this.bigBoxHeight * this.decadeScale) + "px " + this.bannerDecadeFontStyle;
                         this.ctxDTP.fillStyle = (!i || i === 11) ? this.nonDecadeh : this.ctxDTP.fillStyle = this.decadeh;
                         this.ctxDTP.fillText
                         (
@@ -1822,211 +1947,309 @@ class CanvDTP
     
     drawTime()
     {
+        /*
+        this.timeVertAdj     = .20;
+        this.timeDivHorzAdj  = .20;
+        this.timeAmPmHorzAdj = .20;
+        this.timehourHorzAdj = [.10, .10, .10, .10, .10, .10, .10, .10, .10, .10, .10, .10];
+        this.timeMinHorzAdj  =
+        [
+            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10,
+            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10,
+            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10,
+            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10,
+            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10,
+            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10
+        ];
+        this.timeFont   = "Arial";
+        this.timeColorn = "#000000";
+        this.timeColorh = "#8800ff";
+        this.timeWeight = .80;
+        */
+
+        //Draw a grid on the canvas. For debugging purposes.
+        if(this.debug) this.gridDraw(CanvDTP.GRID_TIME);
+
+        //Calculate the hit boundaries.
+        let x1, x2, y1, y2;
+        this.hitBounds = [];
+
+        //Calendar hit boundaries.
+        x1 = this.contentLeft;
+        x2 = this.contentRight;
+        y1 = this.contentBottom - this.smallBoxHeight;
+        y2 = this.contentBottom;
+        this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_DATE});
+
+
+
+
+
+
+
+
+        //Draw the calendar icon.
+        this.calDraw(this.calCalColorn);
+
+        this.ctxDTP.beginPath();
+        this.ctxDTP.font = (this.timeBoxHeight * this.timeWeight) + "px " + this.timeFont;
+        this.ctxDTP.fillStyle = this.timeColor;
+        this.ctxDTP.fillText //Draw the hours.
+        (
+            this.hour, 
+            this.contentLeft + this.timeBoxWidth * this.timehourHorzAdj[this.hour - 1],
+            this.contentTop + 2 * this.timeBoxHeight - this.timeBoxHeight * this.timeVertAdj
+        );                
+        this.ctxDTP.fillText //Draw the hour minute separator.
+        (
+            ":", 
+            this.contentLeft + this.timeBoxWidth + this.timeBoxWidth * this.timeDivHorzAdj,
+            this.contentTop + 2 * this.timeBoxHeight - this.timeBoxHeight * this.timeDivVertAdj
+        );                
+        this.ctxDTP.fillText //Draw the minutes.
+        (
+            this.minute, 
+            this.contentLeft + 1.5 * this.timeBoxWidth + this.timeBoxWidth * this.timeMinHorzAdj[this.minute - 1],
+            this.contentTop + 2 * this.timeBoxHeight - this.timeBoxHeight * this.timeVertAdj
+        );
+        this.ctxDTP.fillText //Draw AM/PM.
+        (
+            this.isAM ? "AM" : "PM", 
+            this.contentLeft + 2.5 * this.timeBoxWidth + this.timeBoxWidth * this.timeAmPmHorzAdj,
+            this.contentTop + 2 * this.timeBoxHeight - this.timeBoxHeight * this.timeVertAdj
+        );  
+        
         
 
 
 
+        this.ctxDTP.stroke();
 
 
-
-
-
-
-
+        //Highlight the section being touched by the mouse cursor.
+        this.isPicked = false;
         
+        for(let i = 0; i < this.hitBounds.length; i++)
+        {
+            if
+            (
+                this.bodyX >= this.hitBounds[i].x1 &&
+                this.bodyX <= this.hitBounds[i].x2 &&
+                this.bodyY >= this.hitBounds[i].y1 &&
+                this.bodyY <= this.hitBounds[i].y2
+            )
+            {
+                this.highlightHovItem(i); //Highlight the hovered item.
+
+                //Draw the highlighted text.
+                switch(this.hitBounds[i].type)
+                {
+                    //Highlight the calendar icon.
+                    case CanvDTP.SEL_DATE:
+                        this.calDraw(this.calCalColorh);
+                        break;
+
+
+
+
+
+
+
+                }
+            }
+        }
+
+        //Change pointer if hovering over selectable item.
+        this.isPicked ? document.body.style.cursor = "pointer" : document.body.style.cursor = "default";
     }
 
     /******************************** Body Canvas Click Functions ********************************/
-
-    //Update the selected date.
-    updateDate()
-    {
-        //Adjust the date if a day before the month is chosen.
-        if(this.dayType === CanvDTP.DAY_PRE)
-        {
-            this.tempMonth--;
-            if(this.tempMonth <= 0)
-            {
-                this.tempMonth = 12;
-                this.tempYear--;
-            }
-        }
-        //Adjust the date if a day after the month is chosen.
-        else if(this.dayType === CanvDTP.DAY_POST)
-        {
-            this.tempMonth++;
-            if(this.tempMonth >= 13)
-            {
-                this.tempMonth = 1;
-                this.tempYear++;
-            }
-        }
-
-        this.month = this.tempMonth;
-        this.year  = this.tempYear;
-        this.day   = this.pickedDay;
-        this.textBoxDateTime();
-        this.bodyDraw();
-    }
-
-    //Increment the month and redraw the calendar.
-    incrementMonth()
-    {
-        this.tempMonth++;
-
-        if(this.tempMonth >= 13)
-        {
-            this.tempMonth = 1;
-            this.tempYear++;
-        }
-        this.bodyDraw();
-    }
-
-    //Decrement the month and redraw the calendar.
-    decrementMonth()
-    {
-        this.tempMonth--;
-
-        if(this.tempMonth <= 0)
-        {
-            this.tempMonth = 12;
-            this.tempYear--;
-        }
-        this.bodyDraw();
-    }
 
     //Determine which action to perform when the body canvas is clicked.
     bodyClick()
     {
         if(this.isPicked)
         {
-            switch(this.calView)
+            if(this.dateTime === CanvDTP.CAL_TIME)
             {
-                case CanvDTP.CAL_MONTH:
-                    switch(this.pickedType)
-                    {
-                        case CanvDTP.SEL_DAY:
-                            this.updateDate();
-                            break;
-
-                        case CanvDTP.SEL_PREVIOUS:
-                            this.decrementMonth();
-                            break;
-
-                        case CanvDTP.SEL_NEXT:
-                            this.incrementMonth();
-                            break;
-
-                        case CanvDTP.SEL_TIME:
-                            this.dateTime = CanvDTP.CAL_TIME;
-                            document.body.style.cursor = "default";
-                            this.bodyDraw();
-                            break;
-
-                        case CanvDTP.SEL_VIEW:
-                            this.calView = CanvDTP.CAL_YEAR;
-                            document.body.style.cursor = "default";
-                            this.bodyDraw();
-                            break;
-                    }
-                    break;
-
-                case CanvDTP.CAL_YEAR:
-                    switch(this.pickedType)
-                    {
-                        case CanvDTP.SEL_MONTH:
-                            this.calView = CanvDTP.CAL_MONTH;
-                            this.tempMonth = this.pickedMonth;
-                            document.body.style.cursor = "default";
-                            this.bodyDraw();
-                            break;
-
-                        case CanvDTP.SEL_PREVIOUS:
-                            this.tempYear--;
-                            this.bodyDraw();
-                            break;
-
-                        case CanvDTP.SEL_NEXT:
-                            this.tempYear++;
-                            this.bodyDraw();
-                            break;
-
-                        case CanvDTP.SEL_TIME:
-                            this.dateTime = CanvDTP.CAL_TIME;
-                            document.body.style.cursor = "default";
-                            this.bodyDraw();
-                            break;
-
-                        case CanvDTP.SEL_VIEW:
-                            this.calView = CanvDTP.CAL_DECADE;
-                            document.body.style.cursor = "default";
-                            this.bodyDraw();
-                            break;
-                    }
-                    break;
-
-                case CanvDTP.CAL_DECADE:
-                    switch(this.pickedType)
-                    {
-                        case CanvDTP.SEL_YEAR:
-                            this.calView = CanvDTP.CAL_YEAR;
-                            this.tempYear = this.pickedYear;
-                            document.body.style.cursor = "default";
-                            this.bodyDraw();
-                            break;
-
-                        case CanvDTP.SEL_PREVIOUS:
-                            this.tempYear -= 10;
-                            this.bodyDraw();
-                            break;
-
-                        case CanvDTP.SEL_NEXT:
-                            this.tempYear += 10;
-                            this.bodyDraw();
-                            break;
-
-                        case CanvDTP.SEL_TIME:
-                            this.dateTime = CanvDTP.CAL_TIME;
-                            document.body.style.cursor = "default";
-                            this.bodyDraw();
-                            break;
-
-                        case CanvDTP.SEL_VIEW:
-                            this.calView = CanvDTP.CAL_CENTURY;
-                            document.body.style.cursor = "default";
-                            this.bodyDraw();
-                            break;
-                    }
-                    break;
-
-                case CanvDTP.CAL_CENTURY:
-                    switch(this.pickedType)
-                    {
-                        case CanvDTP.SEL_DECADE:
-                            this.calView = CanvDTP.CAL_DECADE;
-                            this.tempYear = this.pickedDecade;
-                            document.body.style.cursor = "default";
-                            this.bodyDraw();
-                            break;
-
-                        case CanvDTP.SEL_PREVIOUS:
-                            this.tempYear -= 100;
-                            this.bodyDraw();
-                            break;
-
-                        case CanvDTP.SEL_NEXT:
-                            this.tempYear += 100;
-                            this.bodyDraw();
-                            break;
-
-                        case CanvDTP.SEL_TIME:
-                            this.dateTime = CanvDTP.CAL_TIME;
-                            document.body.style.cursor = "default";
-                            this.bodyDraw();
-                            break;
-                    }
-                    break;
+                switch(this.pickedType)
+                {
+                    case CanvDTP.SEL_DATE:
+                        this.dateTime = CanvDTP.CAL_DATE;
+                        this.bodyDraw();
+                        break;
+                }
             }
+            else
+            {
+                switch(this.calView)
+                {
+                    case CanvDTP.CAL_MONTH:
+                        switch(this.pickedType)
+                        {
+                            case CanvDTP.SEL_DAY:
+                                //Adjust the date if a day before the month is chosen.
+                                if(this.dayType === CanvDTP.DAY_PRE)
+                                {
+                                    this.tempMonth--;
+                                    if(this.tempMonth <= 0)
+                                    {
+                                        this.tempMonth = 12;
+                                        this.tempYear--;
+                                    }
+                                }
+                                //Adjust the date if a day after the month is chosen.
+                                else if(this.dayType === CanvDTP.DAY_POST)
+                                {
+                                    this.tempMonth++;
+                                    if(this.tempMonth >= 13)
+                                    {
+                                        this.tempMonth = 1;
+                                        this.tempYear++;
+                                    }
+                                }
+
+                                this.month = this.tempMonth;
+                                this.year  = this.tempYear;
+                                this.day   = this.pickedDay;
+                                this.textBoxDateTime();
+                                this.bodyDraw();
+                                break;
+
+                            case CanvDTP.SEL_PREVIOUS:
+                                this.tempMonth--;
+
+                                if(this.tempMonth <= 0)
+                                {
+                                    this.tempMonth = 12;
+                                    this.tempYear--;
+                                }
+                                this.bodyDraw();
+                                break;
+
+                            case CanvDTP.SEL_NEXT:
+                                this.tempMonth++;
+
+                                if(this.tempMonth >= 13)
+                                {
+                                    this.tempMonth = 1;
+                                    this.tempYear++;
+                                }
+                                this.bodyDraw();
+                                break;
+
+                            case CanvDTP.SEL_TIME:
+                                this.dateTime = CanvDTP.CAL_TIME;
+                                document.body.style.cursor = "default";
+                                this.bodyDraw();
+                                break;
+
+                            case CanvDTP.SEL_VIEW:
+                                this.calView = CanvDTP.CAL_YEAR;
+                                document.body.style.cursor = "default";
+                                this.bodyDraw();
+                                break;
+                        }
+                        break;
+
+                    case CanvDTP.CAL_YEAR:
+                        switch(this.pickedType)
+                        {
+                            case CanvDTP.SEL_MONTH:
+                                this.calView = CanvDTP.CAL_MONTH;
+                                this.tempMonth = this.pickedMonth;
+                                document.body.style.cursor = "default";
+                                this.bodyDraw();
+                                break;
+
+                            case CanvDTP.SEL_PREVIOUS:
+                                this.tempYear--;
+                                this.bodyDraw();
+                                break;
+
+                            case CanvDTP.SEL_NEXT:
+                                this.tempYear++;
+                                this.bodyDraw();
+                                break;
+
+                            case CanvDTP.SEL_TIME:
+                                this.dateTime = CanvDTP.CAL_TIME;
+                                document.body.style.cursor = "default";
+                                this.bodyDraw();
+                                break;
+
+                            case CanvDTP.SEL_VIEW:
+                                this.calView = CanvDTP.CAL_DECADE;
+                                document.body.style.cursor = "default";
+                                this.bodyDraw();
+                                break;
+                        }
+                        break;
+
+                    case CanvDTP.CAL_DECADE:
+                        switch(this.pickedType)
+                        {
+                            case CanvDTP.SEL_YEAR:
+                                this.calView = CanvDTP.CAL_YEAR;
+                                this.tempYear = this.pickedYear;
+                                document.body.style.cursor = "default";
+                                this.bodyDraw();
+                                break;
+
+                            case CanvDTP.SEL_PREVIOUS:
+                                this.tempYear -= 10;
+                                this.bodyDraw();
+                                break;
+
+                            case CanvDTP.SEL_NEXT:
+                                this.tempYear += 10;
+                                this.bodyDraw();
+                                break;
+
+                            case CanvDTP.SEL_TIME:
+                                this.dateTime = CanvDTP.CAL_TIME;
+                                document.body.style.cursor = "default";
+                                this.bodyDraw();
+                                break;
+
+                            case CanvDTP.SEL_VIEW:
+                                this.calView = CanvDTP.CAL_CENTURY;
+                                document.body.style.cursor = "default";
+                                this.bodyDraw();
+                                break;
+                        }
+                        break;
+
+                    case CanvDTP.CAL_CENTURY:
+                        switch(this.pickedType)
+                        {
+                            case CanvDTP.SEL_DECADE:
+                                this.calView = CanvDTP.CAL_DECADE;
+                                this.tempYear = this.pickedDecade;
+                                document.body.style.cursor = "default";
+                                this.bodyDraw();
+                                break;
+
+                            case CanvDTP.SEL_PREVIOUS:
+                                this.tempYear -= 100;
+                                this.bodyDraw();
+                                break;
+
+                            case CanvDTP.SEL_NEXT:
+                                this.tempYear += 100;
+                                this.bodyDraw();
+                                break;
+
+                            case CanvDTP.SEL_TIME:
+                                this.dateTime = CanvDTP.CAL_TIME;
+                                document.body.style.cursor = "default";
+                                this.bodyDraw();
+                                break;
+                        }
+                        break;
+                }
+            }
+            
         }
     }
 }

@@ -78,7 +78,7 @@ class CanvDTP
 
     constructor(parentDiv)
     {
-        this.debug = true;
+        this.debug = false;
 
         //HTML nodes required for date/time picker.
         this.parentDiv = parentDiv;
@@ -220,12 +220,12 @@ class CanvDTP
 
         /***************************************** Year ******************************************/
 
-        this.onlyYearn         = "#000000";
-        this.onlyYearh         = "#8800ff";
-        this.onlyYearScale     = .80;
-        this.onlyYearFontStyle = "Arial";
-        this.onlyYearVertAdj   = .20;
-        this.onlyYearHorzAdj   = 1.80;
+        this.bannerYearn         = "#000000";
+        this.bannerYearh         = "#8800ff";
+        this.bannerYearScale     = .80;
+        this.bannerYearFontStyle = "Arial";
+        this.bannerYearVertAdj   = .20;
+        this.bannerYearHorzAdj   = 1.80;
 
         /*************************************** Year Text ***************************************/
 
@@ -240,12 +240,33 @@ class CanvDTP
 
         /**************************************** Decade *****************************************/
 
-        this.onlyDecaden         = "#000000";
-        this.onlyDecadeh         = "#8800ff";
-        this.onlyDecadeScale     = .80;
-        this.onlyDecadeFontStyle = "Arial";
-        this.onlyDecadeVertAdj   = .20;
-        this.onlyDecadeHorzAdj   = 1.0;
+        this.bannerDecaden         = "#000000";
+        this.bannerDecadeh         = "#8800ff";
+        this.bannerDecadeScale     = .80;
+        this.bannerDecadeFontStyle = "Arial";
+        this.bannerDecadeVertAdj   = .20;
+        this.bannerDecadeHorzAdj   = 1.0;
+
+        /************************************** Decade Text **************************************/
+
+        this.nonDecaden      = "#888888";
+        this.decaden         = "#000000";
+        this.nonDecadeh      = "#ff8888";
+        this.decadeh         = "#8800ff";
+        this.decadeScale     = .50;
+        this.decadeFontStyle = "Arial";
+        this.decadeVertAdj1  = .55;
+        this.decadeVertAdj2  = .08;
+        this.decadeHorzAdj   = .20;
+
+        /**************************************** Century ****************************************/
+
+        this.bannerCenturyn         = "#000000";
+        this.bannerCenturyh         = "#8800ff";
+        this.bannerCenturyScale     = .80;
+        this.bannerCenturyFontStyle = "Arial";
+        this.bannerCenturyVertAdj   = .20;
+        this.bannerCenturyHorzAdj   = 1.0;
 
 
 
@@ -257,6 +278,7 @@ class CanvDTP
 
 
 
+        
 
 
 
@@ -327,12 +349,13 @@ class CanvDTP
         this.nowDay;
 
         //Keep track of currently picked item and view.
-        this.isPicked    = false;
-        this.calView     = CanvDTP.CAL_MONTH;
-        this.dateTime    = CanvDTP.CAL_DATE;
-        this.pickedType  = null;
-        this.pickedMonth = 0;
-        this.pickedYear  = 0;
+        this.isPicked     = false;
+        this.calView      = CanvDTP.CAL_MONTH;
+        this.dateTime     = CanvDTP.CAL_DATE;
+        this.pickedType   = null;
+        this.pickedMonth  = 0;
+        this.pickedYear   = 0;
+        this.pickedDecade = 0;
 
         //Calendar drawing and hit detection variables.
         this.dayArray       = new Array(42);
@@ -1481,13 +1504,13 @@ class CanvDTP
         
         //Draw the year
         this.ctxDTP.beginPath();
-        this.ctxDTP.fillStyle = this.onlyYearn;
-        this.ctxDTP.font = (this.smallBoxHeight * this.onlyYearScale) + "px " + this.onlyYearFontStyle;
+        this.ctxDTP.fillStyle = this.bannerYearn;
+        this.ctxDTP.font = (this.smallBoxHeight * this.bannerYearScale) + "px " + this.bannerYearFontStyle;
         this.ctxDTP.fillText
         (
             this.tempYear, 
-            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.onlyYearHorzAdj,
-            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.onlyYearVertAdj
+            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.bannerYearHorzAdj,
+            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.bannerYearVertAdj
         );
         this.ctxDTP.stroke();
        
@@ -1512,11 +1535,6 @@ class CanvDTP
                 
                 //Get additional info for days of month.
                 this.pickedMonth = i + 1; 
-                if(i < CanvDTP.NUM_DAYS)
-                {
-                    this.pickedDay  = this.dayArray[i].day;
-                    this.dayType    = this.dayArray[i].type;
-                }
                 
                 //Draw the highlighted text.
                 switch(this.hitBounds[i].type)
@@ -1536,13 +1554,13 @@ class CanvDTP
 
                     case CanvDTP.SEL_VIEW:
                         this.ctxDTP.beginPath();
-                        this.ctxDTP.fillStyle = this.monthYearh;
+                        this.ctxDTP.fillStyle = this.bannerYearh;
                         this.ctxDTP.font = (this.smallBoxHeight * this.monthYearScale) + "px " + this.monthYearFontStyle;
                         this.ctxDTP.fillText
                         (
                             this.tempYear, 
-                            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.onlyYearHorzAdj,
-                            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.onlyYearVertAdj
+                            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.bannerYearHorzAdj,
+                            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.bannerYearVertAdj
                         );
                         this.ctxDTP.stroke();
                         break;
@@ -1602,13 +1620,13 @@ class CanvDTP
         
         //Draw the decade.
         this.ctxDTP.beginPath();
-        this.ctxDTP.fillStyle = this.onlyDecaden;
-        this.ctxDTP.font = (this.smallBoxHeight * this.onlyDecadeScale) + "px " + this.onlyDecadeFontStyle;
+        this.ctxDTP.fillStyle = this.bannerDecaden;
+        this.ctxDTP.font = (this.smallBoxHeight * this.bannerDecadeScale) + "px " + this.bannerDecadeFontStyle;
         this.ctxDTP.fillText
         (
             (yearBase + 1) + "-" + (yearBase + 10),
-            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.onlyDecadeHorzAdj,
-            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.onlyDecadeVertAdj
+            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.bannerDecadeHorzAdj,
+            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.bannerDecadeVertAdj
         );
         this.ctxDTP.stroke();
 
@@ -1633,11 +1651,6 @@ class CanvDTP
 
                 //Get additional info for days of month.
                 this.pickedYear = yearBase + i; 
-                if(i < CanvDTP.NUM_DAYS)
-                {
-                    this.pickedDay  = this.dayArray[i].day;
-                    this.dayType    = this.dayArray[i].type;
-                }
                 
                 //Draw the highlighted text.
                 switch(this.hitBounds[i].type)
@@ -1657,13 +1670,13 @@ class CanvDTP
 
                     case CanvDTP.SEL_VIEW:
                         this.ctxDTP.beginPath();
-                        this.ctxDTP.fillStyle = this.onlyDecadeh;
-                        this.ctxDTP.font = (this.smallBoxHeight * this.onlyDecadeScale) + "px " + this.onlyDecadeFontStyle;
+                        this.ctxDTP.fillStyle = this.bannerDecadeh;
+                        this.ctxDTP.font = (this.smallBoxHeight * this.bannerDecadeScale) + "px " + this.bannerDecadeFontStyle;
                         this.ctxDTP.fillText
                         (
                             (yearBase + 1) + "-" + (yearBase + 10),
-                            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.onlyDecadeHorzAdj,
-                            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.onlyDecadeVertAdj
+                            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.bannerDecadeHorzAdj,
+                            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.bannerDecadeVertAdj
                         );
                         this.ctxDTP.stroke();
                         break;
@@ -1699,10 +1712,55 @@ class CanvDTP
         this.hitBounds = [];
         this.doCommonHitBounds(true, false, CanvDTP.SEL_DECADE);
 
+        let centuryBase = parseInt(this.tempYear / 100) * 100 - 1;
+        let thisDecade = parseInt(this.year / 10) * 10;
+        
+        //Draw the decades.
+        for(let i = 0; i < 12; i++)
+        {
+            //Highlight the current selected year.
+            if((centuryBase + i * 10 - 9) === thisDecade)
+            {
+                this.fillCurrent(i);
+            }
+            
+            this.ctxDTP.beginPath();
+            this.ctxDTP.font = (this.bigBoxHeight * this.decadeScale) + "px " + this.onlyDecadeFontStyle;
+            this.ctxDTP.fillStyle = (!i || i === 11) ? this.nonDecaden : this.ctxDTP.fillStyle = this.decaden;
+            this.ctxDTP.fillText
+            (
+                (centuryBase + i * 10 - 9) + "-", 
+                this.hitBounds[i].x1 + this.decadeHorzAdj * this.bigBoxWidth,
+                this.hitBounds[i].y2 - this.decadeVertAdj1 * this.bigBoxHeight
+            );
+            this.ctxDTP.fillText
+            (
+                centuryBase + i * 10, 
+                this.hitBounds[i].x1 + this.decadeHorzAdj * this.bigBoxWidth,
+                this.hitBounds[i].y2 - this.decadeVertAdj2 * this.bigBoxHeight
+            );
+            this.ctxDTP.stroke();          
+        }
+
+        //Draw the century.
+        this.ctxDTP.beginPath();
+        this.ctxDTP.fillStyle = this.bannerCenturyn;
+        this.ctxDTP.font = (this.smallBoxHeight * this.bannerCenturyScale) + "px " + this.bannerCenturyFontStyle;
+        this.ctxDTP.fillText
+        (
+            (centuryBase + 1) + "-" + (centuryBase + 100),
+            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.bannerCenturyHorzAdj,
+            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.bannerCenturyVertAdj
+        );
+        this.ctxDTP.stroke();
+
         this.drawPrevious(); //Draw the previous button.
         this.drawNext();     //Draw the next button.
         this.drawClock();    //Draw the clock button.
 
+        //Highlight the section being touched by the mouse cursor.
+        this.isPicked = false;
+        
         for(let i = 0; i < this.hitBounds.length; i++)
         {
             if
@@ -1714,6 +1772,45 @@ class CanvDTP
             )
             {
                 this.highlightHovItem(i); //Highlight the hovered item.
+
+                //Get additional info for days of month.
+                this.pickedDecade = centuryBase + i * 10 - 9;
+                
+                //Draw the highlighted text.
+                switch(this.hitBounds[i].type)
+                {
+                    case CanvDTP.SEL_DECADE:
+                        this.ctxDTP.beginPath();
+                        this.ctxDTP.font = (this.bigBoxHeight * this.decadeScale) + "px " + this.onlyDecadeFontStyle;
+                        this.ctxDTP.fillStyle = (!i || i === 11) ? this.nonDecadeh : this.ctxDTP.fillStyle = this.decadeh;
+                        this.ctxDTP.fillText
+                        (
+                            (centuryBase + i * 10 - 9) + "-", 
+                            this.hitBounds[i].x1 + this.decadeHorzAdj * this.bigBoxWidth,
+                            this.hitBounds[i].y2 - this.decadeVertAdj1 * this.bigBoxHeight
+                        );
+                        this.ctxDTP.fillText
+                        (
+                            centuryBase + i * 10, 
+                            this.hitBounds[i].x1 + this.decadeHorzAdj * this.bigBoxWidth,
+                            this.hitBounds[i].y2 - this.decadeVertAdj2 * this.bigBoxHeight
+                        );
+                        this.ctxDTP.stroke(); 
+                        break;
+
+                    case CanvDTP.SEL_PREVIOUS:
+                        this.highlightPrevious();
+                        break;
+
+                    case CanvDTP.SEL_NEXT:
+                        this.highlightNext();
+                        break;
+
+                    case CanvDTP.SEL_TIME:
+                    default:
+                        this.highlightClock();
+                        break;
+                }
             }
         }
 
@@ -1725,22 +1822,19 @@ class CanvDTP
     
     drawTime()
     {
-        this.ctxDTP.beginPath();
-        this.ctxDTP.font = "20px Arial"
-        this.ctxDTP.fillStyle = "#000000";
-        this.ctxDTP.fillText("Time View", 20, 25);
-        this.ctxDTP.stroke();
+        
+
+
+
+
+
+
+
+
+
+
+        
     }
-
-
-
-
-
-
-
-
-
-
 
     /******************************** Body Canvas Click Functions ********************************/
 
@@ -1830,7 +1924,6 @@ class CanvDTP
                             break;
 
                         case CanvDTP.SEL_VIEW:
-                        default:
                             this.calView = CanvDTP.CAL_YEAR;
                             document.body.style.cursor = "default";
                             this.bodyDraw();
@@ -1865,7 +1958,6 @@ class CanvDTP
                             break;
 
                         case CanvDTP.SEL_VIEW:
-                        default:
                             this.calView = CanvDTP.CAL_DECADE;
                             document.body.style.cursor = "default";
                             this.bodyDraw();
@@ -1900,7 +1992,6 @@ class CanvDTP
                             break;
 
                         case CanvDTP.SEL_VIEW:
-                        default:
                             this.calView = CanvDTP.CAL_CENTURY;
                             document.body.style.cursor = "default";
                             this.bodyDraw();
@@ -1909,7 +2000,31 @@ class CanvDTP
                     break;
 
                 case CanvDTP.CAL_CENTURY:
-                default:
+                    switch(this.pickedType)
+                    {
+                        case CanvDTP.SEL_DECADE:
+                            this.calView = CanvDTP.CAL_DECADE;
+                            this.tempYear = this.pickedDecade;
+                            document.body.style.cursor = "default";
+                            this.bodyDraw();
+                            break;
+
+                        case CanvDTP.SEL_PREVIOUS:
+                            this.tempYear -= 100;
+                            this.bodyDraw();
+                            break;
+
+                        case CanvDTP.SEL_NEXT:
+                            this.tempYear += 100;
+                            this.bodyDraw();
+                            break;
+
+                        case CanvDTP.SEL_TIME:
+                            this.dateTime = CanvDTP.CAL_TIME;
+                            document.body.style.cursor = "default";
+                            this.bodyDraw();
+                            break;
+                    }
                     break;
             }
         }

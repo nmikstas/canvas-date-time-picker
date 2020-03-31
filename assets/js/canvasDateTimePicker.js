@@ -1,5 +1,9 @@
 class CanvDTP
 {
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //                                       Enumerations                                        //
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
     //Number of day squares on the calendar
     static get NUM_DAYS() {return 42}
 
@@ -63,9 +67,18 @@ class CanvDTP
     static get DAY_PRE()  {return 0x01}
     static get DAY_POST() {return 0x02}
 
+    //Debug grid types.
+    static get GRID_MONTH()   {return 0x00}
+    static get GRID_GENERAL() {return 0x01}
+    static get GRID_TIME()    {return 0x02}
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //                                        Constructor                                        //
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
     constructor(parentDiv)
     {
-        this.debug = false;
+        this.debug = true;
 
         //HTML nodes required for date/time picker.
         this.parentDiv = parentDiv;
@@ -119,19 +132,6 @@ class CanvDTP
         this.iBorderColor  = this.iBorderColorn;
         this.iFillColor    = this.iFillColorn;
         this.iCalColor     = this.iCalColorn;
-
-        /************************************ Body Parameters ************************************/
-
-        //Parameters of the body canvas.
-        this.bBorderRadius = .05;
-        this.bBorderWeight = .01;
-        this.bXPadding     = .10;
-        this.bYPadding     = .10;
-        this.bLineWidth    = .02;
-
-        //Body style.
-        this.bBorderColor = "#a4e3f7";
-        this.bFillColor   = "#e5f5fa";
 
         //*********************************** Selectable Items ************************************
 
@@ -229,8 +229,9 @@ class CanvDTP
 
         /*************************************** Year Text ***************************************/
 
-        this.nonYear       = "#888888";
+        this.nonYearn      = "#888888";
         this.yearn         = "#000000";
+        this.nonYearh      = "#ff8888";
         this.yearh         = "#8800ff";
         this.yearScale     = .60;
         this.yearFontStyle = "Arial";
@@ -255,6 +256,46 @@ class CanvDTP
 
 
 
+
+
+
+
+        
+        /************************************ Body Parameters ************************************/
+
+        //Parameters of the body canvas.
+        this.bBorderRadius = .05;
+        this.bBorderWeight = .01;
+        this.bXPadding     = .10;
+        this.bYPadding     = .10;
+        this.bLineWidth    = .02;
+        this.bBorderColor  = "#a4e3f7";
+        this.bFillColor    = "#e5f5fa";
+
+        /***************************** Rendering Dimension Variables *****************************/
+
+        //Dimensions of the content after body padding taken into account.
+        this.contentWidth;
+        this.contentHeight;
+        this.contentLeft;
+        this.contentRight;
+        this.contentTop;
+        this.contentBottom;
+
+        //Heights and widths of the various selection boxes.
+        this.smallBoxHeight;
+        this.smallBoxWidth;
+        this.bigBoxHeight;
+        this.bigBoxWidth;
+
+        //Inner dimensions for year, decade and century views.
+        this.innerTop;
+        this.innerBottom;
+        this.innerLeft;
+        this.innerRight;
+        
+        //Clock graphic radius.
+        this.clockRadius;
 
         /************************************ Misc Variables *************************************/
 
@@ -291,6 +332,7 @@ class CanvDTP
         this.dateTime    = CanvDTP.CAL_DATE;
         this.pickedType  = null;
         this.pickedMonth = 0;
+        this.pickedYear  = 0;
 
         //Calendar drawing and hit detection variables.
         this.dayArray       = new Array(42);
@@ -312,6 +354,12 @@ class CanvDTP
         //Only create date/time picker if the parent exists.
         if(this.parentDiv)this.intit();
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //                                      Class Functions                                      //
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**************************************** Initialize *****************************************/
 
     intit()
     {
@@ -343,33 +391,218 @@ class CanvDTP
         this.iconCanvas.style.position = "absolute";
         this.bodyCanvas.style.position = "absolute";
 
-        //Add resize listener to resize the canvas.
-        window.addEventListener("resize", () => this.resize());
-
-        //Add mouse event listeners.
-        this.iconCanvas.addEventListener("mouseenter", () => this.iconEnter());
-        this.iconCanvas.addEventListener("mouseleave", () => this.iconExit());
-        this.bodyCanvas.addEventListener('mouseleave', () => this.bodyExit());
-        this.bodyCanvas.addEventListener('mousemove',  () => this.bodyCoords());
-
-
-        //Add click event listeners.
-        this.iconCanvas.addEventListener("click", () => this.iconClick());
-        this.bodyCanvas.addEventListener("click", () => this.bodyClick());
-        window.addEventListener("click", (event) => this.windowClick(event));
-
+        //Setup default cursor for icon canvas.
         this.iconCanvas.style.cursor = "pointer";
 
+        //Add resize and click listeners to the window.
+        window.addEventListener("resize", () => this.resize());
+        window.addEventListener("click", (event) => this.windowClick(event));
+
+        //Add icon event listeners.
+        this.iconCanvas.addEventListener("mouseenter", () => this.iconEnter());
+        this.iconCanvas.addEventListener("mouseleave", () => this.iconExit());
+        this.iconCanvas.addEventListener("click", () => this.iconClick());
+
+        //Add body event listeners.
+        this.bodyCanvas.addEventListener('mousemove',  () => this.bodyCoords());
+        this.bodyCanvas.addEventListener('mouseleave', () => this.bodyExit());
+        this.bodyCanvas.addEventListener("click", () => this.bodyClick());
+        
         this.resize();
     }
+
+    /************************************* Window Listeners **************************************/
+
+    resize()
+    {
+        let rect = this.parentDiv.getBoundingClientRect();
+
+        //Set the width of the text area - leave room for the icon canvas.
+        this.dtpText.style.width = (rect.width - rect.height) + "px";
+        
+        //Save a copy of the canvas widths. Base for future calculations.
+        this.bodyCanMaxWidth = rect.width;
+        this.iconCanWidth = rect.height;
+
+        //Set the animation step size for the body canvas.
+        this.bodyAnimStep = this.bodyCanMaxWidth / this.animSteps;
+
+        //Place the main date/time picker canvas below the text area.
+        this.bodyCanvas.style.left = "0px";
+        this.bodyCanvas.style.top = rect.height + "px";
+
+        //Maximize the canvas size if it is open.
+        if(this.bodyCanAnim === CanvDTP.BODY_OPEN)
+        {
+            this.bodyCanWidth  = this.bodyCanMaxWidth;
+        }
+
+        //Make the date/time picker a square the width of the parent container.
+        this.bodyCanvas.width  = this.bodyCanWidth;
+        this.bodyCanvas.height = this.bodyCanWidth;
+        
+        //Place the calendar icon to the right of the text box.
+        this.iconCanvas.width  = this.iconCanWidth;
+        this.iconCanvas.height = this.iconCanWidth;
+
+        //Round the text box left border.
+        this.dtpText.style.borderTopLeftRadius = (this.iconCanWidth * this.iBorderRadius) + "px";
+        this.dtpText.style.borderBottomLeftRadius = (this.iconCanWidth * this.iBorderRadius) + "px";
+
+        //Draw the date/time picker.
+        this.iconDraw();
+        this.bodyDraw();
+    }
+
+    //Close body canvas if click occurs outside of date/time picker.
+    windowClick(event)
+    {
+        if(event.target !== this.bodyCanvas && event.target !== this.iconCanvas && event.target !== this.dtpText)
+        {
+            if(this.bodyCanAnim === CanvDTP.BODY_OPEN || this.bodyCanAnim === CanvDTP.BODY_EXPANDING)
+            {
+                this.bodyCanAnim = CanvDTP.BODY_COLLAPSING;
+                clearInterval(this.bodyAnimTimer);
+                this.bodyAnimTimer = setInterval(() => this.bodyAnimate(), this.animTime);
+            }
+        }        
+    }
+
+    /*********************************** Icon Canvas Functions ***********************************/
+
+    //Change icon colors when mouse is hovering over it.
+    iconEnter()
+    {
+        this.iBorderColor = this.iBorderColorh;
+        this.iFillColor   = this.iFillColorh;
+        this.iCalColor    = this.iCalColorh;
+        this.iconDraw();
+    }
+
+    //Change icon colors when mouse is not hovering over it.
+    iconExit()
+    {
+        this.iBorderColor = this.iBorderColorn;
+        this.iFillColor   = this.iFillColorn;
+        this.iCalColor    = this.iCalColorn;
+        this.iconDraw();
+    }
+
+    //Event listener callback for animation body canvas.
+    iconClick()
+    {
+        //Set the animation to expanding or collapsing.
+        this.bodyCanAnim = (this.bodyCanAnim === CanvDTP.BODY_CLOSED ||
+            this.bodyCanAnim === CanvDTP.BODY_COLLAPSING) ?
+            CanvDTP.BODY_EXPANDING : CanvDTP.BODY_COLLAPSING;
+
+        //Check if date/time has been picked already.
+        if(!this.isFirstPicked) this.firstPick();
+        
+        clearInterval(this.bodyAnimTimer);
+        this.bodyAnimTimer = setInterval(() => this.bodyAnimate(), this.animTime);
+    }
+
+    //Draw the calendar icon on the canvas.
+    iconDraw()
+    {
+        //Exit if the canvas does not meet minimum size dimensions.
+        if(this.iconCanWidth <= 5) return;
+
+        //---------------- Draw the border ----------------
+
+        let borderPx = this.iconCanWidth * this.iBorderWeight;
+
+        this.ctxIcon.beginPath();
+        this.ctxIcon.lineWidth = this.iconCanWidth * this.iBorderWeight;
+        this.ctxIcon.strokeStyle = this.iBorderColor;
+
+        this.ctxIcon.arc
+        (
+            this.iconCanWidth - (this.iconCanWidth * this.iBorderRadius) - borderPx / 2,
+            this.iconCanWidth * this.iBorderRadius + borderPx / 2,
+            this.iconCanWidth * this.iBorderRadius,
+            -Math.PI / 2,
+            0
+        );
+
+        this.ctxIcon.arc
+        (
+            this.iconCanWidth - (this.iconCanWidth * this.iBorderRadius) - borderPx / 2,
+            this.iconCanWidth - (this.iconCanWidth * this.iBorderRadius) - borderPx / 2,
+            this.iconCanWidth * this.iBorderRadius,
+            0,
+            Math.PI / 2
+        );
+
+        this.ctxIcon.lineTo(borderPx / 2, this.iconCanWidth - borderPx / 2);
+        this.ctxIcon.lineTo(borderPx / 2, borderPx / 2);
+        this.ctxIcon.lineTo(this.iconCanWidth - this.iconCanWidth * this.iBorderRadius,  borderPx / 2);
+
+        this.ctxIcon.fillStyle = this.iFillColor;
+        this.ctxIcon.fill();
+        this.ctxIcon.stroke();
+
+        //----------- Draw the calendar graphic -----------
+
+        //Calculate the padding pixels and line width.
+        let iLWidth    = Math.ceil(this.iconCanWidth * this.iLineWidth);
+        let iXPad      = this.iconCanWidth * this.iXPadding + iLWidth;
+        let iYPad      = this.iconCanWidth * this.iYPadding + iLWidth;
+        let iXWidth    = this.iconCanWidth - 2 * iXPad;
+        let iYHeight   = this.iconCanWidth - 2 * iYPad;
+        let topWidth   = iXWidth / 5;
+        let gridWidth  = iXWidth / 4;
+        let gridTop    = iYPad + 2 * iLWidth;
+        let gridBottom = this.iconCanWidth - (this.iconCanWidth * this.iYPadding + iLWidth);
+        let gridHeight = (gridBottom - gridTop) / 4;
+
+        //Draw the top of the calendar.
+        this.ctxIcon.beginPath();
+        this.ctxIcon.lineWidth = iLWidth;
+        this.ctxIcon.strokeStyle = this.iCalColor;
+
+        this.ctxIcon.moveTo(iXPad, iYPad);
+        this.ctxIcon.lineTo(iXPad + topWidth, iYPad);
+        this.ctxIcon.moveTo(iXPad + 2 * topWidth, iYPad);
+        this.ctxIcon.lineTo(iXPad + 3 * topWidth, iYPad);
+        this.ctxIcon.moveTo(iXPad + 4 * topWidth, iYPad);
+        this.ctxIcon.lineTo(iXPad + 5 * topWidth, iYPad);
+
+        this.ctxIcon.moveTo(iXPad, iYPad + iLWidth);
+        this.ctxIcon.lineTo(iXPad + 5 * topWidth, iYPad + iLWidth);
+        this.ctxIcon.moveTo(iXPad, iYPad + 2 * iLWidth);
+        this.ctxIcon.lineTo(iXPad + 5 * topWidth, iYPad + 2 * iLWidth);
+
+        //Draw calendar grid.
+        this.ctxIcon.moveTo(iXPad, iYPad - iLWidth / 2);
+        this.ctxIcon.lineTo(iXPad, gridBottom);
+        this.ctxIcon.moveTo(iXPad + gridWidth, gridTop);
+        this.ctxIcon.lineTo(iXPad + gridWidth, gridBottom);
+        this.ctxIcon.moveTo(iXPad + 2 * gridWidth, gridTop);
+        this.ctxIcon.lineTo(iXPad + 2 * gridWidth, gridBottom);
+        this.ctxIcon.moveTo(iXPad + 3 * gridWidth, gridTop);
+        this.ctxIcon.lineTo(iXPad + 3 * gridWidth, gridBottom);
+        this.ctxIcon.moveTo(iXPad + 4 * gridWidth, iYPad - iLWidth / 2);
+        this.ctxIcon.lineTo(iXPad + 4 * gridWidth, gridBottom);
+
+        this.ctxIcon.moveTo(iXPad, gridTop + gridHeight);
+        this.ctxIcon.lineTo(iXPad + iXWidth, gridTop + gridHeight);
+        this.ctxIcon.moveTo(iXPad, gridTop + 2 * gridHeight);
+        this.ctxIcon.lineTo(iXPad + iXWidth, gridTop + 2 * gridHeight);
+        this.ctxIcon.moveTo(iXPad, gridTop + 3 * gridHeight);
+        this.ctxIcon.lineTo(iXPad + iXWidth, gridTop + 3 * gridHeight);
+        this.ctxIcon.moveTo(iXPad, gridTop + 4 * gridHeight);
+        this.ctxIcon.lineTo(iXPad + iXWidth, gridTop + 4 * gridHeight);
+        this.ctxIcon.stroke();
+    }
+
+    /************************************* Helper Functions **************************************/
 
     //This function is called only once on the first pick after a page load.
     firstPick()
     {
         this.isFirstPicked = true;
-        
-        //For test purposes only!
-        //let date = new Date(2020, 11, 1, 12, 0, 0, 0);
 
         //Get the current date and break it down.
         let date        = new Date();
@@ -488,6 +721,324 @@ class CanvDTP
         return this.isLeapYear;
     }
 
+    //Calculate the hit bounds common to the date views.
+    doCommonHitBounds(doInner, doBanner, selectType)
+    {
+        let x1, x2, y1, y2;
+
+        //Hit boundaries for year, decade and century.
+        if(doInner)
+        {
+            for(let i = 0; i < 4; i++)
+            {
+                for(let j = 0; j < 3; j++)
+                {
+                    x1 = this.innerLeft + j * this.bigBoxWidth;
+                    x2 = this.innerLeft + (j + 1) * this.bigBoxWidth - 1;
+                    y1 = this.innerTop + i * this.bigBoxHeight;
+                    y2 = this.innerTop + (i + 1) * this.bigBoxHeight - 1;
+                    this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: selectType});
+                }
+            }
+        }
+        
+        //Hit boundaries for previous.
+        x1 = this.contentLeft;
+        x2 = this.contentLeft + this.smallBoxWidth - 1;
+        y1 = this.contentTop;
+        y2 = this.contentTop + this.smallBoxHeight - 1;
+        this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_PREVIOUS});
+
+        //Hit boundaries for next.
+        x1 = this.contentLeft + 6 * this.smallBoxWidth;
+        x2 = this.contentLeft + 7 * this.smallBoxWidth - 1;
+        y1 = this.contentTop;
+        y2 = this.contentTop + this.smallBoxHeight - 1;
+        this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_NEXT});
+
+        //Hit boundaries for banner between previous and next.
+        if(doBanner)
+        {
+            x1 = this.contentLeft + this.smallBoxWidth;
+            x2 = this.contentLeft + 6 * this.smallBoxWidth - 1;
+            y1 = this.contentTop;
+            y2 = this.contentTop + this.smallBoxHeight - 1;
+            this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_VIEW});
+        }
+        
+        //Hit boundaries for time.
+        x1 = this.contentLeft;
+        x2 = this.contentLeft + 7 * this.smallBoxWidth - 1;
+        y1 = this.contentTop  + 8 * this.smallBoxHeight;
+        y2 = this.contentTop + 9 * this.smallBoxHeight - 1;
+        this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_TIME});
+    }
+
+    /************************************** Debug Functions **************************************/
+
+    pointerDraw()
+    {
+        //Calculate the pointer radius and line width;
+        let pointerRadius = this.bodyCanWidth * this.bPointerRad;
+        let pointerWidth  = this.bodyCanWidth * this.bPointerWidth;
+
+        //Draw a mouse indicator. For debug purposes.
+        this.ctxDTP.beginPath();
+        this.ctxDTP.strokeStyle = this.bPointerColor;
+        this.ctxDTP.lineWidth = pointerWidth;
+        this.ctxDTP.moveTo(this.bodyX, this.bodyY);
+        this.ctxDTP.lineTo(this.bodyX - pointerRadius, this.bodyY);
+        this.ctxDTP.lineTo(this.bodyX + pointerRadius, this.bodyY);
+        this.ctxDTP.moveTo(this.bodyX, this.bodyY);
+        this.ctxDTP.lineTo(this.bodyX, this.bodyY - pointerRadius);
+        this.ctxDTP.lineTo(this.bodyX, this.bodyY + pointerRadius);
+        this.ctxDTP.stroke();
+    }
+
+    gridDraw(gridType)
+    {
+        switch(gridType)
+        {
+            case CanvDTP.GRID_MONTH:
+                this.ctxDTP.beginPath();
+                this.ctxDTP.strokeStyle = "#000000";
+                this.ctxDTP.lineWidth = 1;
+                this.ctxDTP.rect(this.contentLeft, this.contentTop, this.contentWidth, this.contentHeight);
+                for(let i = 1; i < 9; i++)
+                {
+                    this.ctxDTP.moveTo(this.contentLeft, this.contentTop + i * this.smallBoxHeight);
+                    this.ctxDTP.lineTo(this.contentRight, this.contentTop + i * this.smallBoxHeight);
+                }
+                for(let i = 1; i < 7; i++)
+                {
+                    this.ctxDTP.moveTo(this.contentLeft + i * this.smallBoxWidth, this.contentTop + this.smallBoxHeight);
+                    this.ctxDTP.lineTo(this.contentLeft + i * this.smallBoxWidth, this.contentTop + 8 * this.smallBoxHeight);
+                }
+                this.ctxDTP.moveTo(this.contentLeft + 1 * this.smallBoxWidth, this.contentTop);
+                this.ctxDTP.lineTo(this.contentLeft + 1 * this.smallBoxWidth, this.contentTop + this.smallBoxHeight);
+                this.ctxDTP.moveTo(this.contentLeft + 6 * this.smallBoxWidth, this.contentTop);
+                this.ctxDTP.lineTo(this.contentLeft + 6 * this.smallBoxWidth, this.contentTop + this.smallBoxHeight);
+                this.ctxDTP.stroke();
+                break;
+
+            case CanvDTP.GRID_TIME:
+
+                break;
+                
+            default:
+                this.ctxDTP.beginPath();
+                this.ctxDTP.strokeStyle = "#000000";
+                this.ctxDTP.lineWidth = 1;
+                this.ctxDTP.rect(this.contentLeft,  this.contentTop, this.contentWidth, this.contentHeight);
+                this.ctxDTP.moveTo(this.innerLeft,  this.innerTop);
+                this.ctxDTP.lineTo(this.innerRight, this.innerTop);
+                this.ctxDTP.moveTo(this.innerLeft,  this.innerBottom);
+                this.ctxDTP.lineTo(this.innerRight, this.innerBottom);
+                for(let i = 1; i < 4; i++)
+                {
+                    this.ctxDTP.moveTo(this.innerLeft, this.innerTop + i * this.bigBoxHeight);
+                    this.ctxDTP.lineTo(this.innerRight, this.innerTop + i * this.bigBoxHeight);
+                }
+                for(let i = 1; i < 3; i++)
+                {
+                    this.ctxDTP.moveTo(this.innerLeft + i * this.bigBoxWidth, this.innerTop);
+                    this.ctxDTP.lineTo(this.innerLeft + i * this.bigBoxWidth, this.innerBottom);
+                }
+                this.ctxDTP.moveTo(this.contentLeft  + this.smallBoxWidth, this.contentTop);
+                this.ctxDTP.lineTo(this.contentLeft  + this.smallBoxWidth, this.contentTop + this.smallBoxHeight);
+                this.ctxDTP.moveTo(this.contentRight - this.smallBoxWidth, this.contentTop);
+                this.ctxDTP.lineTo(this.contentRight - this.smallBoxWidth, this.contentTop + this.smallBoxHeight);
+                this.ctxDTP.stroke();
+                break;
+        }
+    }
+
+    /******************************** Graphical Helper Functions *********************************/
+
+    //Draw the previous button.
+    drawPrevious()
+    {
+        this.ctxDTP.beginPath();
+        this.ctxDTP.strokeStyle = this.prevNextColorn;
+        this.ctxDTP.fillStyle   = this.prevNextColorn;
+        this.ctxDTP.lineWidth   = 1;
+        this.ctxDTP.moveTo(this.contentLeft + this.prevNextXPad * this.smallBoxWidth,
+            this.contentTop + .5 * this.smallBoxHeight);
+        this.ctxDTP.lineTo(this.contentLeft + this.smallBoxWidth - this.prevNextXPad * this.smallBoxWidth,
+            this.contentTop + this.prevNextYPad * this.contentTop);
+        this.ctxDTP.lineTo(this.contentLeft + this.smallBoxWidth - this.prevNextXPad * this.smallBoxWidth,
+            this.contentTop + this.smallBoxHeight - this.prevNextYPad * this.contentTop);
+        this.ctxDTP.fill();
+        this.ctxDTP.stroke();
+    }
+
+    //Highlight the previous button.
+    highlightPrevious()
+    {
+        this.ctxDTP.beginPath();
+        this.ctxDTP.strokeStyle = this.prevNextColorh;
+        this.ctxDTP.fillStyle   = this.prevNextColorh;
+        this.ctxDTP.lineWidth   = 1;
+        this.ctxDTP.moveTo(this.contentLeft + this.prevNextXPad * this.smallBoxWidth, 
+            this.contentTop + .5 * this.smallBoxHeight);
+        this.ctxDTP.lineTo(this.contentLeft + this.smallBoxWidth - this.prevNextXPad * this.smallBoxWidth,
+            this.contentTop + this.prevNextYPad * this.contentTop);
+        this.ctxDTP.lineTo(this.contentLeft + this.smallBoxWidth - this.prevNextXPad * this.smallBoxWidth,
+            this.contentTop + this.smallBoxHeight - this.prevNextYPad * this.contentTop);
+        this.ctxDTP.fill();
+        this.ctxDTP.stroke();
+    }
+
+    //Draw the next button.
+    drawNext()
+    {
+        this.ctxDTP.beginPath();
+        this.ctxDTP.strokeStyle = this.prevNextColorn;
+        this.ctxDTP.fillStyle   = this.prevNextColorn;
+        this.ctxDTP.lineWidth   = 1;
+        this.ctxDTP.moveTo(this.contentRight - this.prevNextXPad * this.smallBoxWidth,
+            this.contentTop + .5 * this.smallBoxHeight);
+        this.ctxDTP.lineTo(this.contentRight - this.smallBoxWidth + this.prevNextXPad * this.smallBoxWidth,
+            this.contentTop + this.prevNextYPad * this.contentTop);
+        this.ctxDTP.lineTo(this.contentRight - this.smallBoxWidth + this.prevNextXPad * this.smallBoxWidth,
+            this.contentTop + this.smallBoxHeight - this.prevNextYPad * this.contentTop);
+        this.ctxDTP.fill();
+        this.ctxDTP.stroke();
+    }
+
+    //Highlight the next button.
+    highlightNext()
+    {
+        this.ctxDTP.beginPath();
+        this.ctxDTP.strokeStyle = this.prevNextColorh;
+        this.ctxDTP.fillStyle   = this.prevNextColorh;
+        this.ctxDTP.lineWidth   = 1;
+        this.ctxDTP.moveTo(this.contentRight - this.prevNextXPad * this.smallBoxWidth,
+            this.contentTop + .5 * this.smallBoxHeight);
+        this.ctxDTP.lineTo(this.contentRight - this.smallBoxWidth + this.prevNextXPad * this.smallBoxWidth,
+            this.contentTop + this.prevNextYPad * this.contentTop);
+        this.ctxDTP.lineTo(this.contentRight - this.smallBoxWidth + this.prevNextXPad * this.smallBoxWidth,
+            this.contentTop + this.smallBoxHeight - this.prevNextYPad * this.contentTop);
+        this.ctxDTP.fill();
+        this.ctxDTP.stroke();
+    }
+
+    //Draw the clock button.
+    drawClock()
+    {
+        this.ctxDTP.beginPath();
+        this.ctxDTP.strokeStyle = this.clockColorn;
+        this.ctxDTP.lineWidth   = this.smallBoxHeight * this.clockWeight;
+        this.ctxDTP.arc(this.contentLeft + .5 * this.contentWidth,
+            this.contentTop + 8 * this.smallBoxHeight + .5 * this.smallBoxHeight, this.clockRadius, 0, 2 * Math.PI);
+        this.ctxDTP.moveTo(this.contentLeft + .5 * this.contentWidth - .60 * this.clockRadius, 
+            this.contentTop + 8 * this.smallBoxHeight + .5 * this.smallBoxHeight);
+        this.ctxDTP.lineTo(this.contentLeft + .5 * this.contentWidth,
+            this.contentTop + 8 * this.smallBoxHeight + .5 * this.smallBoxHeight);
+        this.ctxDTP.lineTo(this.contentLeft + .5 * this.contentWidth,
+            this.contentTop + 8 * this.smallBoxHeight + .5 * this.smallBoxHeight - .85 * this.clockRadius);
+        this.ctxDTP.stroke();
+    }
+
+    //Highlight the clock button.
+    highlightClock()
+    {
+        this.ctxDTP.beginPath();
+        this.ctxDTP.strokeStyle = this.clockColorh;
+        this.ctxDTP.lineWidth   = this.smallBoxHeight * this.clockWeight;
+        this.ctxDTP.arc(this.contentLeft + .5 * (this.contentWidth),
+            this.contentTop + 8 * this.smallBoxHeight + .5 * this.smallBoxHeight, this.clockRadius, 0, 2 * Math.PI);
+        this.ctxDTP.moveTo(this.contentLeft + .5 * this.contentWidth - .60 * this.clockRadius,
+            this.contentTop + 8 * this.smallBoxHeight + .5 * this.smallBoxHeight);
+        this.ctxDTP.lineTo(this.contentLeft + .5 * this.contentWidth,
+            this.contentTop + 8 * this.smallBoxHeight + .5 * this.smallBoxHeight);
+        this.ctxDTP.lineTo(this.contentLeft + .5 * this.contentWidth,
+            this.contentTop + 8 * this.smallBoxHeight + .5 * this.smallBoxHeight - .85 * this.clockRadius);
+        this.ctxDTP.stroke();
+    }
+
+    //Highlight the hovered item.
+    highlightHovItem(i)
+    {
+        //Indicate something can be picked.
+        this.isPicked   = true;
+        this.pickedType = this.hitBounds[i].type;
+
+        //Get additional info for days of month.
+        if(i < CanvDTP.NUM_DAYS)
+        {
+            this.pickedDay  = this.dayArray[i].day;
+            this.dayType    = this.dayArray[i].type;
+        }
+        
+        //Calculate border thickness and radius based on height.
+        let selectBorder = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.selectWeight;
+        let selectRadius = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.selectRadius;
+
+        //Draw the border and fill the space.
+        this.ctxDTP.beginPath();
+        this.ctxDTP.strokeStyle = this.selectBorderColor;
+        this.ctxDTP.fillStyle   = this.selectFillColor;
+        this.ctxDTP.lineWidth   = selectBorder;
+        this.ctxDTP.arc(this.hitBounds[i].x1 + selectRadius, this.hitBounds[i].y1 + selectRadius, selectRadius, -Math.PI, -Math.PI / 2);
+        this.ctxDTP.arc(this.hitBounds[i].x2 - selectRadius, this.hitBounds[i].y1 + selectRadius, selectRadius, -Math.PI / 2, 0);
+        this.ctxDTP.arc(this.hitBounds[i].x2 - selectRadius, this.hitBounds[i].y2 - selectRadius, selectRadius, 0, Math.PI / 2);
+        this.ctxDTP.arc(this.hitBounds[i].x1 + selectRadius, this.hitBounds[i].y2 - selectRadius, selectRadius, Math.PI / 2, Math.PI);
+        this.ctxDTP.lineTo(this.hitBounds[i].x1, this.hitBounds[i].y1 + selectRadius);
+        this.ctxDTP.fill();
+        this.ctxDTP.stroke();
+    }
+
+    //Fill in currently selected date component.
+    fillCurrent(i)
+    {
+        //Calculate border thickness and radius based on height.
+        let currentBorder = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.currentWeight;
+        let currentRadius = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.currentRadius;
+
+        try //Prevent exceptions if canvas calculations go negative.
+        {
+            //Draw the border and fill the space.
+            this.ctxDTP.beginPath();
+            this.ctxDTP.strokeStyle = this.currentBorderColor;
+            this.ctxDTP.fillStyle   = this.currentFillColor;
+            this.ctxDTP.lineWidth   = currentBorder;
+            this.ctxDTP.arc(this.hitBounds[i].x1 + currentRadius, this.hitBounds[i].y1 + currentRadius, currentRadius, -Math.PI, -Math.PI / 2);
+            this.ctxDTP.arc(this.hitBounds[i].x2 - currentRadius, this.hitBounds[i].y1 + currentRadius, currentRadius, -Math.PI / 2, 0);
+            this.ctxDTP.arc(this.hitBounds[i].x2 - currentRadius, this.hitBounds[i].y2 - currentRadius, currentRadius, 0, Math.PI / 2);
+            this.ctxDTP.arc(this.hitBounds[i].x1 + currentRadius, this.hitBounds[i].y2 - currentRadius, currentRadius, Math.PI / 2, Math.PI);
+            this.ctxDTP.lineTo(this.hitBounds[i].x1, this.hitBounds[i].y1 + currentRadius);
+            this.ctxDTP.fill();
+            this.ctxDTP.stroke();
+        }
+        catch
+        {
+            //Do nothing. Just catch exception.
+        }
+    }
+
+    /*********************************** Body Canvas Functions ***********************************/
+
+    //Calculate the canvas dimensions.
+    bodyDimCalc()
+    {
+        this.contentWidth   = this.bodyCanWidth - this.bodyCanWidth * this.bXPadding;
+        this.contentHeight  = this.bodyCanWidth - this.bodyCanWidth * this.bYPadding;
+        this.contentLeft    = this.bodyCanWidth * this.bXPadding / 2;
+        this.contentRight   = this.bodyCanWidth - this.bodyCanWidth * this.bXPadding / 2;;
+        this.contentTop     = this.bodyCanWidth * this.bYPadding / 2;
+        this.contentBottom  = this.bodyCanWidth - this.bodyCanWidth * this.bYPadding / 2;
+        this.smallBoxHeight = this.contentHeight / 9;
+        this.smallBoxWidth  = this.contentWidth  / 7;
+        this.innerTop       = this.contentTop + this.smallBoxHeight;
+        this.innerBottom    = this.contentBottom - this.smallBoxHeight;
+        this.innerLeft      = this.contentLeft;
+        this.innerRight     = this.contentRight;
+        this.bigBoxHeight   = (this.innerBottom - this.innerTop) / 4;
+        this.bigBoxWidth    = this.contentWidth / 3;
+        this.clockRadius    = this.smallBoxHeight * .5 - this.clockPad * this.smallBoxHeight;
+    }
+
     //Calculate the x, y coordinates of the mouse over the body canvas.
     bodyCoords()
     {
@@ -507,25 +1058,7 @@ class CanvDTP
         this.bodyX = window.event.x + window.pageXOffset - obj_left;
         this.bodyY = window.event.y + window.pageYOffset - obj_top;
 
-        this.drawBody();
-    }
-
-    //Change icon colors when mouse is hovering over it.
-    iconEnter()
-    {
-        this.iBorderColor = this.iBorderColorh;
-        this.iFillColor   = this.iFillColorh;
-        this.iCalColor    = this.iCalColorh;
-        this.drawIcon();
-    }
-
-    //Change icon colors when mouse is not hovering over it.
-    iconExit()
-    {
-        this.iBorderColor = this.iBorderColorn;
-        this.iFillColor   = this.iFillColorn;
-        this.iCalColor    = this.iCalColorn;
-        this.drawIcon();
+        this.bodyDraw();
     }
 
     //Remove mouse cursor when leaving body canvas.
@@ -533,77 +1066,7 @@ class CanvDTP
     {
         this.bodyX = -1000;
         this.bodyY = -1000;
-        this.drawBody();
-    }
-
-    resize()
-    {
-        let rect = this.parentDiv.getBoundingClientRect();
-
-        //Set the width of the text area - leave room for the icon canvas.
-        this.dtpText.style.width = (rect.width - rect.height) + "px";
-        
-        //Save a copy of the canvas widths. Base for future calculations.
-        this.bodyCanMaxWidth = rect.width;
-        this.iconCanWidth = rect.height;
-
-        //Set the animation step size for the body canvas.
-        this.bodyAnimStep = this.bodyCanMaxWidth / this.animSteps;
-
-        //Place the main date/time picker canvas below the text area.
-        this.bodyCanvas.style.left = "0px";
-        this.bodyCanvas.style.top = rect.height + "px";
-
-        //Maximize the canvas size if it is open.
-        if(this.bodyCanAnim === CanvDTP.BODY_OPEN)
-        {
-            this.bodyCanWidth  = this.bodyCanMaxWidth;
-        }
-
-        //Make the date/time picker a square the width of the parent container.
-        this.bodyCanvas.width  = this.bodyCanWidth;
-        this.bodyCanvas.height = this.bodyCanWidth;
-        
-        //Place the calendar icon to the right of the text box.
-        this.iconCanvas.width  = this.iconCanWidth;
-        this.iconCanvas.height = this.iconCanWidth;
-
-        //Round the text box left border.
-        this.dtpText.style.borderTopLeftRadius = (this.iconCanWidth * this.iBorderRadius) + "px";
-        this.dtpText.style.borderBottomLeftRadius = (this.iconCanWidth * this.iBorderRadius) + "px";
-
-        //Draw the date/time picker.
-        this.drawIcon();
-        this.drawBody();
-    }
-
-    //Close body canvas if click occurs outside of date/time picker.
-    windowClick(event)
-    {
-        if(event.target !== this.bodyCanvas && event.target !== this.iconCanvas && event.target !== this.dtpText)
-        {
-            if(this.bodyCanAnim === CanvDTP.BODY_OPEN || this.bodyCanAnim === CanvDTP.BODY_EXPANDING)
-            {
-                this.bodyCanAnim = CanvDTP.BODY_COLLAPSING;
-                clearInterval(this.bodyAnimTimer);
-                this.bodyAnimTimer = setInterval(() => this.bodyAnimate(), this.animTime);
-            }
-        }        
-    }
-
-    //Event listener callback for animation body canvas.
-    iconClick()
-    {
-        //Set the animation to expanding or collapsing.
-        this.bodyCanAnim = (this.bodyCanAnim === CanvDTP.BODY_CLOSED ||
-            this.bodyCanAnim === CanvDTP.BODY_COLLAPSING) ?
-            CanvDTP.BODY_EXPANDING : CanvDTP.BODY_COLLAPSING;
-
-        //Check if date/time has been picked already.
-        if(!this.isFirstPicked) this.firstPick();
-        
-        clearInterval(this.bodyAnimTimer);
-        this.bodyAnimTimer = setInterval(() => this.bodyAnimate(), this.animTime);
+        this.bodyDraw();
     }
 
     //Expand/collapse the calendar canvas.
@@ -651,102 +1114,13 @@ class CanvDTP
         this.resize();
     }
 
-    drawIcon()
-    {
-        //Exit if the canvas does not meet minimum size dimensions.
-        if(this.iconCanWidth <= 5) return;
-
-        //---------------- Draw the border ----------------
-        let borderPx = this.iconCanWidth * this.iBorderWeight;
-
-        this.ctxIcon.beginPath();
-        this.ctxIcon.lineWidth = this.iconCanWidth * this.iBorderWeight;
-        this.ctxIcon.strokeStyle = this.iBorderColor;
-
-        this.ctxIcon.arc
-        (
-            this.iconCanWidth - (this.iconCanWidth * this.iBorderRadius) - borderPx / 2,
-            this.iconCanWidth * this.iBorderRadius + borderPx / 2,
-            this.iconCanWidth * this.iBorderRadius,
-            -Math.PI / 2,
-            0
-        );
-
-        this.ctxIcon.arc
-        (
-            this.iconCanWidth - (this.iconCanWidth * this.iBorderRadius) - borderPx / 2,
-            this.iconCanWidth - (this.iconCanWidth * this.iBorderRadius) - borderPx / 2,
-            this.iconCanWidth * this.iBorderRadius,
-            0,
-            Math.PI / 2
-        );
-
-        this.ctxIcon.lineTo(borderPx / 2, this.iconCanWidth - borderPx / 2);
-        this.ctxIcon.lineTo(borderPx / 2, borderPx / 2);
-        this.ctxIcon.lineTo(this.iconCanWidth - this.iconCanWidth * this.iBorderRadius,  borderPx / 2);
-
-        this.ctxIcon.fillStyle = this.iFillColor;
-        this.ctxIcon.fill();
-        this.ctxIcon.stroke();
-
-        //----------- Draw the calendar graphic -----------
-
-        //Calculate the padding pixels and line width.
-        let iLWidth    = Math.ceil(this.iconCanWidth * this.iLineWidth);
-        let iXPad      = this.iconCanWidth * this.iXPadding + iLWidth;
-        let iYPad      = this.iconCanWidth * this.iYPadding + iLWidth;
-        let iXWidth    = this.iconCanWidth - 2 * iXPad;
-        let iYHeight   = this.iconCanWidth - 2 * iYPad;
-        let topWidth   = iXWidth / 5;
-        let gridWidth  = iXWidth / 4;
-        let gridTop    = iYPad + 2 * iLWidth;
-        let gridBottom = this.iconCanWidth - (this.iconCanWidth * this.iYPadding + iLWidth);
-        let gridHeight = (gridBottom - gridTop) / 4;
-
-        //Draw the top of the calendar.
-        this.ctxIcon.beginPath();
-        this.ctxIcon.lineWidth = iLWidth;
-        this.ctxIcon.strokeStyle = this.iCalColor;
-
-        this.ctxIcon.moveTo(iXPad, iYPad);
-        this.ctxIcon.lineTo(iXPad + topWidth, iYPad);
-        this.ctxIcon.moveTo(iXPad + 2 * topWidth, iYPad);
-        this.ctxIcon.lineTo(iXPad + 3 * topWidth, iYPad);
-        this.ctxIcon.moveTo(iXPad + 4 * topWidth, iYPad);
-        this.ctxIcon.lineTo(iXPad + 5 * topWidth, iYPad);
-
-        this.ctxIcon.moveTo(iXPad, iYPad + iLWidth);
-        this.ctxIcon.lineTo(iXPad + 5 * topWidth, iYPad + iLWidth);
-        this.ctxIcon.moveTo(iXPad, iYPad + 2 * iLWidth);
-        this.ctxIcon.lineTo(iXPad + 5 * topWidth, iYPad + 2 * iLWidth);
-
-        //Draw calendar grid.
-        this.ctxIcon.moveTo(iXPad, iYPad - iLWidth / 2);
-        this.ctxIcon.lineTo(iXPad, gridBottom);
-        this.ctxIcon.moveTo(iXPad + gridWidth, gridTop);
-        this.ctxIcon.lineTo(iXPad + gridWidth, gridBottom);
-        this.ctxIcon.moveTo(iXPad + 2 * gridWidth, gridTop);
-        this.ctxIcon.lineTo(iXPad + 2 * gridWidth, gridBottom);
-        this.ctxIcon.moveTo(iXPad + 3 * gridWidth, gridTop);
-        this.ctxIcon.lineTo(iXPad + 3 * gridWidth, gridBottom);
-        this.ctxIcon.moveTo(iXPad + 4 * gridWidth, iYPad - iLWidth / 2);
-        this.ctxIcon.lineTo(iXPad + 4 * gridWidth, gridBottom);
-
-        this.ctxIcon.moveTo(iXPad, gridTop + gridHeight);
-        this.ctxIcon.lineTo(iXPad + iXWidth, gridTop + gridHeight);
-        this.ctxIcon.moveTo(iXPad, gridTop + 2 * gridHeight);
-        this.ctxIcon.lineTo(iXPad + iXWidth, gridTop + 2 * gridHeight);
-        this.ctxIcon.moveTo(iXPad, gridTop + 3 * gridHeight);
-        this.ctxIcon.lineTo(iXPad + iXWidth, gridTop + 3 * gridHeight);
-        this.ctxIcon.moveTo(iXPad, gridTop + 4 * gridHeight);
-        this.ctxIcon.lineTo(iXPad + iXWidth, gridTop + 4 * gridHeight);
-        this.ctxIcon.stroke();
-    }
-
-    drawBody()
+    bodyDraw()
     {
         //Exit if the canvas does not meet minimum size dimensions.
         if(this.bodyCanWidth <= 5) return;
+
+        //Calculate the body canvas item dimensions.
+        this.bodyDimCalc();
 
         this.updateDayArray();
         this.ctxDTP.clearRect(0, 0, this.bodyCanWidth, this.bodyCanWidth);
@@ -771,28 +1145,8 @@ class CanvDTP
         this.ctxDTP.fill();
         this.ctxDTP.stroke();
 
-        ///////////////////////////////////////////////////////////////////////////////////////////
-
-        if(this.debug)
-        {
-            //Calculate the pointer radius and line width;
-            let pointerRadius = this.bodyCanWidth * this.bPointerRad;
-            let pointerWidth  = this.bodyCanWidth * this.bPointerWidth;
-
-            //Draw a mouse indicator. For debug purposes.
-            this.ctxDTP.beginPath();
-            this.ctxDTP.strokeStyle = this.bPointerColor;
-            this.ctxDTP.lineWidth = pointerWidth;
-            this.ctxDTP.moveTo(this.bodyX, this.bodyY);
-            this.ctxDTP.lineTo(this.bodyX - pointerRadius, this.bodyY);
-            this.ctxDTP.lineTo(this.bodyX + pointerRadius, this.bodyY);
-            this.ctxDTP.moveTo(this.bodyX, this.bodyY);
-            this.ctxDTP.lineTo(this.bodyX, this.bodyY - pointerRadius);
-            this.ctxDTP.lineTo(this.bodyX, this.bodyY + pointerRadius);
-            this.ctxDTP.stroke();
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////////////////
+        //If in debug mode, draw a pointer on the body canvas.
+        if(this.debug) this.pointerDraw();
         
         //Determine what to draw in the body canvas.
         if(this.dateTime === CanvDTP.CAL_TIME)
@@ -829,47 +1183,9 @@ class CanvDTP
     /**************************************** Draw Month *****************************************/
 
     drawMonth()
-    {
-        let contentWidth  = this.bodyCanWidth - this.bodyCanWidth * this.bXPadding;
-        let contentHeight = this.bodyCanWidth - this.bodyCanWidth * this.bYPadding;
-        let contentLeft   = this.bodyCanWidth * this.bXPadding / 2;
-        let contentRight  = this.bodyCanWidth - this.bodyCanWidth * this.bXPadding / 2;
-        let contentTop    = this.bodyCanWidth * this.bYPadding / 2;
-        let contentBottom = this.bodyCanWidth - this.bodyCanWidth * this.bYPadding / 2;
-        let rowHeight     = contentHeight / 9;
-        let dayWidth      = contentWidth  / 7;
-        let clockRadius   = rowHeight * .5 - this.clockPad * rowHeight;
-        
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        
+    {        
         //Draw a grid on the canvas. For debugging purposes.
-        if(this.debug)
-        {
-            this.ctxDTP.beginPath();
-            this.ctxDTP.strokeStyle = "#000000";
-            this.ctxDTP.lineWidth = 1;
-            this.ctxDTP.rect(contentLeft, contentTop, contentWidth, contentHeight);
-            for(let i = 1; i < 9; i++)
-            {
-                this.ctxDTP.moveTo(contentLeft, contentTop + i * rowHeight);
-                this.ctxDTP.lineTo(contentRight, contentTop + i * rowHeight);
-            }
-            for(let i = 1; i < 7; i++)
-            {
-                this.ctxDTP.moveTo(contentLeft + i * dayWidth, contentTop + rowHeight);
-                this.ctxDTP.lineTo(contentLeft + i * dayWidth, contentTop + 8 * rowHeight);
-            }
-
-            this.ctxDTP.moveTo(contentLeft + 1 * dayWidth, contentTop);
-            this.ctxDTP.lineTo(contentLeft + 1 * dayWidth, contentTop + rowHeight);
-
-            this.ctxDTP.moveTo(contentLeft + 6 * dayWidth, contentTop);
-            this.ctxDTP.lineTo(contentLeft + 6 * dayWidth, contentTop + rowHeight);
-
-            this.ctxDTP.stroke();
-        }
-        
-        ///////////////////////////////////////////////////////////////////////////////////////////
+        if(this.debug) this.gridDraw(CanvDTP.GRID_MONTH);
 
         //Create an array of hit boundaries for the various buttons.
         //Each element has 4 points representing the upper left and lower right corners.
@@ -881,45 +1197,20 @@ class CanvDTP
         {
             for(let j = 0; j < 7; j++)
             {
-                x1 = contentLeft + j * dayWidth;
-                x2 = contentLeft + (j + 1) * dayWidth - 1;
-                y1 = contentTop + i * rowHeight;
-                y2 = contentTop + (i + 1) * rowHeight - 1;
+                x1 = this.contentLeft + j * this.smallBoxWidth;
+                x2 = this.contentLeft + (j + 1) * this.smallBoxWidth - 1;
+                y1 = this.contentTop + i * this.smallBoxHeight;
+                y2 = this.contentTop + (i + 1) * this.smallBoxHeight - 1;
                 this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_DAY});
             }
         }
 
-        //Hit boundaries for previous.
-        x1 = contentLeft;
-        x2 = contentLeft + dayWidth - 1;
-        y1 = contentTop;
-        y2 = contentTop + rowHeight - 1;
-        this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_PREVIOUS});
-
-        //Hit boundaries for next.
-        x1 = contentLeft + 6 * dayWidth;
-        x2 = contentLeft + 7 * dayWidth - 1;
-        y1 = contentTop;
-        y2 = contentTop + rowHeight - 1;
-        this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_NEXT});
-
-        //Hit boundaries for month year.
-        x1 = contentLeft + dayWidth;
-        x2 = contentLeft + 6 * dayWidth - 1;
-        y1 = contentTop;
-        y2 = contentTop + rowHeight - 1;
-        this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_VIEW});
-
-        //Hit boundaries for time.
-        x1 = contentLeft;
-        x2 = contentLeft + 7 * dayWidth - 1;
-        y1 = contentTop  + 8 * rowHeight;
-        y2 = contentTop + 9 * rowHeight - 1;
-        this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_TIME});
+        //Do remaining hit boundaries.
+        this.doCommonHitBounds(false, true, null);
 
         //Draw the day numbers.
         this.ctxDTP.beginPath();
-        this.ctxDTP.font = (rowHeight * this.dayScale) + "px " + this.dayFontStyle;
+        this.ctxDTP.font = (this.smallBoxHeight * this.dayScale) + "px " + this.dayFontStyle;
         for(let i = 0; i < CanvDTP.NUM_DAYS; i++)
         {
             let isSelected = false;
@@ -971,33 +1262,7 @@ class CanvDTP
             }
 
             //Fill in the currently selected day on the calendar.
-            if(isSelected)
-            {
-                
-                //Calculate border thickness and radius based on height.
-                let currentBorder = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.currentWeight;
-                let currentRadius = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.currentRadius;
-
-                try //Prevent exceptions if canvas calculations go negative.
-                {
-                    //Draw the border and fill the space.
-                    this.ctxDTP.beginPath();
-                    this.ctxDTP.strokeStyle = this.currentBorderColor;
-                    this.ctxDTP.fillStyle   = this.currentFillColor;
-                    this.ctxDTP.lineWidth   = currentBorder;
-                    this.ctxDTP.arc(this.hitBounds[i].x1 + currentRadius, this.hitBounds[i].y1 + currentRadius, currentRadius, -Math.PI, -Math.PI / 2);
-                    this.ctxDTP.arc(this.hitBounds[i].x2 - currentRadius, this.hitBounds[i].y1 + currentRadius, currentRadius, -Math.PI / 2, 0);
-                    this.ctxDTP.arc(this.hitBounds[i].x2 - currentRadius, this.hitBounds[i].y2 - currentRadius, currentRadius, 0, Math.PI / 2);
-                    this.ctxDTP.arc(this.hitBounds[i].x1 + currentRadius, this.hitBounds[i].y2 - currentRadius, currentRadius, Math.PI / 2, Math.PI);
-                    this.ctxDTP.lineTo(this.hitBounds[i].x1, this.hitBounds[i].y1 + currentRadius);
-                    this.ctxDTP.fill();
-                    this.ctxDTP.stroke();
-                }
-                catch
-                {
-                    //Do nothing. Just catch exception.
-                }
-            }
+            if(isSelected)this.fillCurrent(i);
         
             //Highlight today's date.
             switch(this.dayArray[i].type)
@@ -1039,7 +1304,7 @@ class CanvDTP
                     if(this.tempYear === this.nowYear && this.tempMonth === this.nowMonth && this.nowDay === this.dayArray[i].day)
                     {
                         isToday = true;
-                     }
+                    }
                     break;
             }
 
@@ -1052,11 +1317,11 @@ class CanvDTP
                 this.ctxDTP.fillStyle   = this.nowColor;
                 this.ctxDTP.lineWidth   = 1;
                 this.ctxDTP.moveTo(this.hitBounds[i].x1, this.hitBounds[i].y1);
-                this.ctxDTP.lineTo(this.hitBounds[i].x1 + this.nowWeight * dayWidth, this.hitBounds[i].y1);
-                this.ctxDTP.lineTo(this.hitBounds[i].x1, this.hitBounds[i].y1 + this.nowWeight * dayWidth);
+                this.ctxDTP.lineTo(this.hitBounds[i].x1 + this.nowWeight * this.smallBoxWidth, this.hitBounds[i].y1);
+                this.ctxDTP.lineTo(this.hitBounds[i].x1, this.hitBounds[i].y1 + this.nowWeight * this.smallBoxWidth);
                 this.ctxDTP.moveTo(this.hitBounds[i].x2, this.hitBounds[i].y2);
-                this.ctxDTP.lineTo(this.hitBounds[i].x2 - this.nowWeight * dayWidth, this.hitBounds[i].y2);
-                this.ctxDTP.lineTo(this.hitBounds[i].x2, this.hitBounds[i].y2 - this.nowWeight * dayWidth);
+                this.ctxDTP.lineTo(this.hitBounds[i].x2 - this.nowWeight * this.smallBoxWidth, this.hitBounds[i].y2);
+                this.ctxDTP.lineTo(this.hitBounds[i].x2, this.hitBounds[i].y2 - this.nowWeight * this.smallBoxWidth);
                 this.ctxDTP.fill();
                 this.ctxDTP.stroke();
             }
@@ -1068,8 +1333,8 @@ class CanvDTP
             this.ctxDTP.fillText
             (
                 this.dayArray[i].day,
-                this.hitBounds[i].x1 + dayWidth * this.dayHorzAdj[this.dayArray[i].day - 1],
-                this.hitBounds[i].y2 - rowHeight * this.dayVertAdj
+                this.hitBounds[i].x1 + this.smallBoxWidth * this.dayHorzAdj[this.dayArray[i].day - 1],
+                this.hitBounds[i].y2 - this.smallBoxHeight * this.dayVertAdj
             );
         }
         this.ctxDTP.stroke();
@@ -1077,14 +1342,14 @@ class CanvDTP
         //Draw the days of the week header.
         this.ctxDTP.beginPath();
         this.ctxDTP.fillStyle = this.headerColor;
-        this.ctxDTP.font = (rowHeight * this.headerScale) + "px " + this.headerFontStyle;
+        this.ctxDTP.font = (this.smallBoxHeight * this.headerScale) + "px " + this.headerFontStyle;
         for(let i = 0; i < 7; i++)
         {
             this.ctxDTP.fillText
             (
                 this.days[i],
-                contentLeft + i * dayWidth + dayWidth * this.headerHorzAdj[i],
-                contentTop + 2 * rowHeight - rowHeight * this.headerVertAdj
+                this.contentLeft + i * this.smallBoxWidth + this.smallBoxWidth * this.headerHorzAdj[i],
+                this.contentTop + 2 * this.smallBoxHeight - this.smallBoxHeight * this.headerVertAdj
             );
         }
         this.ctxDTP.stroke();
@@ -1092,53 +1357,18 @@ class CanvDTP
         //Draw the date and year.
         this.ctxDTP.beginPath();
         this.ctxDTP.fillStyle = this.monthYearn;
-        this.ctxDTP.font = (rowHeight * this.monthYearScale) + "px " + this.monthYearFontStyle;
+        this.ctxDTP.font = (this.smallBoxHeight * this.monthYearScale) + "px " + this.monthYearFontStyle;
         this.ctxDTP.fillText
         (
             this.MonthsArray[this.tempMonth - 1] + " " + this.tempYear, 
-            contentLeft + dayWidth + dayWidth * this.monthYearHorzAdj[this.tempMonth - 1],
-            contentTop + rowHeight - rowHeight * this.monthYearVertAdj
+            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.monthYearHorzAdj[this.tempMonth - 1],
+            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.monthYearVertAdj
         );
         this.ctxDTP.stroke();
         
-        //Draw the previous graphic.
-        this.ctxDTP.beginPath();
-        this.ctxDTP.strokeStyle = this.prevNextColorn;
-        this.ctxDTP.fillStyle   = this.prevNextColorn;
-        this.ctxDTP.lineWidth   = 1;
-        this.ctxDTP.moveTo(contentLeft + this.prevNextXPad * dayWidth, contentTop + .5 * rowHeight);
-        this.ctxDTP.lineTo(contentLeft + dayWidth - this.prevNextXPad * dayWidth, contentTop + this.prevNextYPad * contentTop);
-        this.ctxDTP.lineTo(contentLeft + dayWidth - this.prevNextXPad * dayWidth, contentTop + rowHeight - this.prevNextYPad * contentTop);
-        this.ctxDTP.fill();
-        this.ctxDTP.stroke();
-
-        //Draw the next graphic.
-        this.ctxDTP.beginPath();
-        this.ctxDTP.strokeStyle = this.prevNextColorn;
-        this.ctxDTP.fillStyle   = this.prevNextColorn;
-        this.ctxDTP.lineWidth   = 1;
-        this.ctxDTP.moveTo(contentRight - this.prevNextXPad * dayWidth, contentTop + .5 * rowHeight);
-        this.ctxDTP.lineTo(contentRight - dayWidth + this.prevNextXPad * dayWidth, contentTop + this.prevNextYPad * contentTop);
-        this.ctxDTP.lineTo(contentRight - dayWidth + this.prevNextXPad * dayWidth, contentTop + rowHeight - this.prevNextYPad * contentTop);
-        this.ctxDTP.fill();
-        this.ctxDTP.stroke();
-
-        //Draw the clock
-        this.ctxDTP.beginPath();
-        this.ctxDTP.strokeStyle = this.clockColorn;
-        this.ctxDTP.lineWidth   = rowHeight * this.clockWeight;
-        this.ctxDTP.arc
-        (
-            contentLeft + .5 * (contentWidth),
-            contentTop + 8 * rowHeight + .5 * rowHeight,
-            clockRadius,
-            0,
-            2 * Math.PI
-        );
-        this.ctxDTP.moveTo(contentLeft + .5 * contentWidth - .60 * clockRadius, contentTop + 8 * rowHeight + .5 * rowHeight);
-        this.ctxDTP.lineTo(contentLeft + .5 * contentWidth, contentTop + 8 * rowHeight + .5 * rowHeight);
-        this.ctxDTP.lineTo(contentLeft + .5 * contentWidth, contentTop + 8 * rowHeight + .5 * rowHeight - .85 * clockRadius);
-        this.ctxDTP.stroke();
+        this.drawPrevious(); //Draw the previous button.
+        this.drawNext();     //Draw the next button.
+        this.drawClock();    //Draw the clock button.
 
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
@@ -1153,33 +1383,7 @@ class CanvDTP
                 this.bodyY <= this.hitBounds[i].y2
             )
             {
-                //Indicate something can be picked.
-                this.isPicked   = true;
-                this.pickedType = this.hitBounds[i].type;
-
-                //Get additional info for days of month.
-                if(i < CanvDTP.NUM_DAYS)
-                {
-                    this.pickedDay  = this.dayArray[i].day;
-                    this.dayType    = this.dayArray[i].type;
-                }
-                
-                //Calculate border thickness and radius based on height.
-                let selectBorder = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.selectWeight;
-                let selectRadius = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.selectRadius;
-
-                //Draw the border and fill the space.
-                this.ctxDTP.beginPath();
-                this.ctxDTP.strokeStyle = this.selectBorderColor;
-                this.ctxDTP.fillStyle   = this.selectFillColor;
-                this.ctxDTP.lineWidth   = selectBorder;
-                this.ctxDTP.arc(this.hitBounds[i].x1 + selectRadius, this.hitBounds[i].y1 + selectRadius, selectRadius, -Math.PI, -Math.PI / 2);
-                this.ctxDTP.arc(this.hitBounds[i].x2 - selectRadius, this.hitBounds[i].y1 + selectRadius, selectRadius, -Math.PI / 2, 0);
-                this.ctxDTP.arc(this.hitBounds[i].x2 - selectRadius, this.hitBounds[i].y2 - selectRadius, selectRadius, 0, Math.PI / 2);
-                this.ctxDTP.arc(this.hitBounds[i].x1 + selectRadius, this.hitBounds[i].y2 - selectRadius, selectRadius, Math.PI / 2, Math.PI);
-                this.ctxDTP.lineTo(this.hitBounds[i].x1, this.hitBounds[i].y1 + selectRadius);
-                this.ctxDTP.fill();
-                this.ctxDTP.stroke();
+                this.highlightHovItem(i); //Highlight the hovered item.
                 
                 //Draw the highlighted text.
                 switch(this.hitBounds[i].type)
@@ -1187,7 +1391,7 @@ class CanvDTP
                     //Draw the day numbers.
                     case CanvDTP.SEL_DAY:
                         this.ctxDTP.beginPath();
-                        this.ctxDTP.font = (rowHeight * this.dayScale) + "px " + this.dayFontStyle;
+                        this.ctxDTP.font = (this.smallBoxHeight * this.dayScale) + "px " + this.dayFontStyle;
                         this.ctxDTP.fillStyle = this.nonDayColorh;
                         
                         if(this.dayArray[i].type === CanvDTP.DAY_THIS)
@@ -1202,8 +1406,8 @@ class CanvDTP
                         this.ctxDTP.fillText
                         (
                             this.dayArray[i].day,
-                            this.hitBounds[i].x1 + dayWidth * this.dayHorzAdj[this.dayArray[i].day - 1],
-                            this.hitBounds[i].y2 - rowHeight * this.dayVertAdj
+                            this.hitBounds[i].x1 + this.smallBoxWidth * this.dayHorzAdj[this.dayArray[i].day - 1],
+                            this.hitBounds[i].y2 - this.smallBoxHeight * this.dayVertAdj
                         );
                         
                         this.ctxDTP.stroke();
@@ -1213,60 +1417,30 @@ class CanvDTP
                     case CanvDTP.SEL_VIEW:
                         this.ctxDTP.beginPath();
                         this.ctxDTP.fillStyle = this.monthYearh;
-                        this.ctxDTP.font = (rowHeight * this.monthYearScale) + "px " + this.monthYearFontStyle;
+                        this.ctxDTP.font = (this.smallBoxHeight * this.monthYearScale) + "px " + this.monthYearFontStyle;
                         this.ctxDTP.fillText
                         (
                             this.MonthsArray[this.tempMonth - 1] + " " + this.tempYear, 
-                            contentLeft + dayWidth + dayWidth * this.monthYearHorzAdj[this.tempMonth - 1],
-                            contentTop + rowHeight - rowHeight * this.monthYearVertAdj
+                            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.monthYearHorzAdj[this.tempMonth - 1],
+                            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.monthYearVertAdj
                         );
                         this.ctxDTP.stroke();
                         break;
 
                     //Highlight the previous button.
                     case CanvDTP.SEL_PREVIOUS:
-                        this.ctxDTP.beginPath();
-                        this.ctxDTP.strokeStyle = this.prevNextColorh;
-                        this.ctxDTP.fillStyle   = this.prevNextColorh;
-                        this.ctxDTP.lineWidth   = 1;
-                        this.ctxDTP.moveTo(contentLeft + this.prevNextXPad * dayWidth, contentTop + .5 * rowHeight);
-                        this.ctxDTP.lineTo(contentLeft + dayWidth - this.prevNextXPad * dayWidth, contentTop + this.prevNextYPad * contentTop);
-                        this.ctxDTP.lineTo(contentLeft + dayWidth - this.prevNextXPad * dayWidth, contentTop + rowHeight - this.prevNextYPad * contentTop);
-                        this.ctxDTP.fill();
-                        this.ctxDTP.stroke();
+                        this.highlightPrevious();
                         break;
 
                     //Highlight the next button.
                     case CanvDTP.SEL_NEXT:
-                        this.ctxDTP.beginPath();
-                        this.ctxDTP.strokeStyle = this.prevNextColorh;
-                        this.ctxDTP.fillStyle   = this.prevNextColorh;
-                        this.ctxDTP.lineWidth   = 1;
-                        this.ctxDTP.moveTo(contentRight - this.prevNextXPad * dayWidth, contentTop + .5 * rowHeight);
-                        this.ctxDTP.lineTo(contentRight - dayWidth + this.prevNextXPad * dayWidth, contentTop + this.prevNextYPad * contentTop);
-                        this.ctxDTP.lineTo(contentRight - dayWidth + this.prevNextXPad * dayWidth, contentTop + rowHeight - this.prevNextYPad * contentTop);
-                        this.ctxDTP.fill();
-                        this.ctxDTP.stroke();
+                        this.highlightNext();
                         break;
 
                     //Highlight the clock graphic.
                     case CanvDTP.SEL_TIME:
                     default:
-                        this.ctxDTP.beginPath();
-                        this.ctxDTP.strokeStyle = this.clockColorh;
-                        this.ctxDTP.lineWidth   = rowHeight * this.clockWeight;
-                        this.ctxDTP.arc
-                        (
-                            contentLeft + .5 * (contentWidth),
-                            contentTop + 8 * rowHeight + .5 * rowHeight,
-                            clockRadius,
-                            0,
-                            2 * Math.PI
-                        );
-                        this.ctxDTP.moveTo(contentLeft + .5 * contentWidth - .60 * clockRadius, contentTop + 8 * rowHeight + .5 * rowHeight);
-                        this.ctxDTP.lineTo(contentLeft + .5 * contentWidth, contentTop + 8 * rowHeight + .5 * rowHeight);
-                        this.ctxDTP.lineTo(contentLeft + .5 * contentWidth, contentTop + 8 * rowHeight + .5 * rowHeight - .85 * clockRadius);
-                        this.ctxDTP.stroke();
+                        this.highlightClock();
                         break;
                 }
             }
@@ -1280,132 +1454,27 @@ class CanvDTP
     
     drawYear()
     {
-        let contentWidth  = this.bodyCanWidth - this.bodyCanWidth * this.bXPadding;
-        let contentHeight = this.bodyCanWidth - this.bodyCanWidth * this.bYPadding;
-        let contentLeft   = this.bodyCanWidth * this.bXPadding / 2;
-        let contentRight  = this.bodyCanWidth - this.bodyCanWidth * this.bXPadding / 2;
-        let contentTop    = this.bodyCanWidth * this.bYPadding / 2;
-        let contentBottom = this.bodyCanWidth - this.bodyCanWidth * this.bYPadding / 2;
-        let rowHeight     = contentHeight / 9;
-        let nextPrevWidth = contentWidth  / 7;
-        let monthsTop     = contentTop + rowHeight;
-        let monthsBottom  = contentBottom - rowHeight;
-        let monthsLeft    = contentLeft;
-        let monthsRight   = contentRight;
-        let monthsWidth   = contentWidth / 3;
-        let monthsHeight  = (monthsBottom - monthsTop) / 4;
-        let clockRadius   = rowHeight * .5 - this.clockPad * rowHeight;
-
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        
         //Draw a grid on the canvas. For debugging purposes.
-        if(this.debug)
-        {
-            this.ctxDTP.beginPath();
-            this.ctxDTP.strokeStyle = "#000000";
-            this.ctxDTP.lineWidth = 1;
-            this.ctxDTP.rect(contentLeft, contentTop, contentWidth, contentHeight);
-            this.ctxDTP.moveTo(monthsLeft, monthsTop);
-            this.ctxDTP.lineTo(monthsRight, monthsTop);
-            this.ctxDTP.moveTo(monthsLeft, monthsBottom);
-            this.ctxDTP.lineTo(monthsRight, monthsBottom);
-            for(let i = 1; i < 4; i++)
-            {
-                this.ctxDTP.moveTo(monthsLeft, monthsTop + i * monthsHeight);
-                this.ctxDTP.lineTo(monthsRight, monthsTop + i * monthsHeight);
-            }
-            for(let i = 1; i < 3; i++)
-            {
-                this.ctxDTP.moveTo(monthsLeft + i * monthsWidth, monthsTop);
-                this.ctxDTP.lineTo(monthsLeft + i * monthsWidth, monthsBottom);
-            }
-            this.ctxDTP.moveTo(contentLeft + nextPrevWidth, contentTop);
-            this.ctxDTP.lineTo(contentLeft + nextPrevWidth, contentTop + rowHeight);
-            this.ctxDTP.moveTo(contentRight - nextPrevWidth, contentTop);
-            this.ctxDTP.lineTo(contentRight - nextPrevWidth, contentTop + rowHeight);
-            this.ctxDTP.stroke();
-        }
-        
-        ///////////////////////////////////////////////////////////////////////////////////////////
+        if(this.debug) this.gridDraw(CanvDTP.GRID_GENERAL);
 
-        //Create an array of hit boundaries for the various buttons.
-        //Each element has 4 points representing the upper left and lower right corners.
+        //Do hit bounds for previous, next, time and the banner.
         this.hitBounds = [];
-        let x1, x2, y1, y2;
-
-        //Hit boundaries for the months.
-        for(let i = 0; i < 4; i++)
-        {
-            for(let j = 0; j < 3; j++)
-            {
-                x1 = monthsLeft + j * monthsWidth;
-                x2 = monthsLeft + (j + 1) * monthsWidth - 1;
-                y1 = monthsTop + i * monthsHeight;
-                y2 = monthsTop + (i + 1) * monthsHeight - 1;
-                this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_MONTH});
-            }
-        }
-
-        //Hit boundaries for previous.
-        x1 = contentLeft;
-        x2 = contentLeft + nextPrevWidth - 1;
-        y1 = contentTop;
-        y2 = contentTop + rowHeight - 1;
-        this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_PREVIOUS});
-
-        //Hit boundaries for next.
-        x1 = contentLeft + 6 * nextPrevWidth;
-        x2 = contentLeft + 7 * nextPrevWidth - 1;
-        y1 = contentTop;
-        y2 = contentTop + rowHeight - 1;
-        this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_NEXT});
-
-        //Hit boundaries for year.
-        x1 = contentLeft + nextPrevWidth;
-        x2 = contentLeft + 6 * nextPrevWidth - 1;
-        y1 = contentTop;
-        y2 = contentTop + rowHeight - 1;
-        this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_VIEW});
-
-        //Hit boundaries for time.
-        x1 = contentLeft;
-        x2 = contentLeft + 7 * nextPrevWidth - 1;
-        y1 = contentTop  + 8 * rowHeight;
-        y2 = contentTop + 9 * rowHeight - 1;
-        this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_TIME});
+        this.doCommonHitBounds(true, true, CanvDTP.SEL_MONTH);
 
         //Draw the months.
         for(let i = 0; i < 12; i++)
         {
             //Highlight the current selected month.
-            if(this.tempYear === this.year && this.month === i + 1)
-            {
-                //Calculate border thickness and radius based on height.
-                let currentBorder = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.currentWeight;
-                let currentRadius = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.currentRadius;
-
-                //Draw the border and fill the space.
-                this.ctxDTP.beginPath();
-                this.ctxDTP.strokeStyle = this.currentBorderColor;
-                this.ctxDTP.fillStyle   = this.currentFillColor;
-                this.ctxDTP.lineWidth   = currentBorder;
-                this.ctxDTP.arc(this.hitBounds[i].x1 + currentRadius, this.hitBounds[i].y1 + currentRadius, currentRadius, -Math.PI, -Math.PI / 2);
-                this.ctxDTP.arc(this.hitBounds[i].x2 - currentRadius, this.hitBounds[i].y1 + currentRadius, currentRadius, -Math.PI / 2, 0);
-                this.ctxDTP.arc(this.hitBounds[i].x2 - currentRadius, this.hitBounds[i].y2 - currentRadius, currentRadius, 0, Math.PI / 2);
-                this.ctxDTP.arc(this.hitBounds[i].x1 + currentRadius, this.hitBounds[i].y2 - currentRadius, currentRadius, Math.PI / 2, Math.PI);
-                this.ctxDTP.lineTo(this.hitBounds[i].x1, this.hitBounds[i].y1 + currentRadius);
-                this.ctxDTP.fill();
-                this.ctxDTP.stroke();
-            }
+            if(this.tempYear === this.year && this.month === i + 1) this.fillCurrent(i);
 
             this.ctxDTP.beginPath();
-            this.ctxDTP.font = (monthsHeight * this.monthScale) + "px " + this.monthFontStyle;
+            this.ctxDTP.font = (this.bigBoxHeight * this.monthScale) + "px " + this.monthFontStyle;
             this.ctxDTP.fillStyle = this.monthn;
             this.ctxDTP.fillText
             (
                 this.shortMonthsArray[i], 
-                this.hitBounds[i].x1 + this.monthHorzAdj[i] * monthsWidth,
-                this.hitBounds[i].y2 - this.monthVertAdj * monthsHeight
+                this.hitBounds[i].x1 + this.monthHorzAdj[i] * this.bigBoxWidth,
+                this.hitBounds[i].y2 - this.monthVertAdj * this.bigBoxHeight
             );
             this.ctxDTP.stroke();
         }
@@ -1413,53 +1482,18 @@ class CanvDTP
         //Draw the year
         this.ctxDTP.beginPath();
         this.ctxDTP.fillStyle = this.onlyYearn;
-        this.ctxDTP.font = (rowHeight * this.onlyYearScale) + "px " + this.onlyYearFontStyle;
+        this.ctxDTP.font = (this.smallBoxHeight * this.onlyYearScale) + "px " + this.onlyYearFontStyle;
         this.ctxDTP.fillText
         (
             this.tempYear, 
-            contentLeft + nextPrevWidth + nextPrevWidth * this.onlyYearHorzAdj,
-            contentTop + rowHeight - rowHeight * this.onlyYearVertAdj
+            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.onlyYearHorzAdj,
+            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.onlyYearVertAdj
         );
         this.ctxDTP.stroke();
        
-        //Draw the previous graphic.
-        this.ctxDTP.beginPath();
-        this.ctxDTP.strokeStyle = this.prevNextColorn;
-        this.ctxDTP.fillStyle   = this.prevNextColorn;
-        this.ctxDTP.lineWidth   = 1;
-        this.ctxDTP.moveTo(contentLeft + this.prevNextXPad * nextPrevWidth, contentTop + .5 * rowHeight);
-        this.ctxDTP.lineTo(contentLeft + nextPrevWidth - this.prevNextXPad * nextPrevWidth, contentTop + this.prevNextYPad * contentTop);
-        this.ctxDTP.lineTo(contentLeft + nextPrevWidth - this.prevNextXPad * nextPrevWidth, contentTop + rowHeight - this.prevNextYPad * contentTop);
-        this.ctxDTP.fill();
-        this.ctxDTP.stroke();
-
-        //Draw the next graphic.
-        this.ctxDTP.beginPath();
-        this.ctxDTP.strokeStyle = this.prevNextColorn;
-        this.ctxDTP.fillStyle   = this.prevNextColorn;
-        this.ctxDTP.lineWidth   = 1;
-        this.ctxDTP.moveTo(contentRight - this.prevNextXPad * nextPrevWidth, contentTop + .5 * rowHeight);
-        this.ctxDTP.lineTo(contentRight - nextPrevWidth + this.prevNextXPad * nextPrevWidth, contentTop + this.prevNextYPad * contentTop);
-        this.ctxDTP.lineTo(contentRight - nextPrevWidth + this.prevNextXPad * nextPrevWidth, contentTop + rowHeight - this.prevNextYPad * contentTop);
-        this.ctxDTP.fill();
-        this.ctxDTP.stroke();
-
-        //Draw the clock
-        this.ctxDTP.beginPath();
-        this.ctxDTP.strokeStyle = this.clockColorn;
-        this.ctxDTP.lineWidth   = rowHeight * this.clockWeight;
-        this.ctxDTP.arc
-        (
-            contentLeft + .5 * (contentWidth),
-            contentTop + 8 * rowHeight + .5 * rowHeight,
-            clockRadius,
-            0,
-            2 * Math.PI
-        );
-        this.ctxDTP.moveTo(contentLeft + .5 * contentWidth - .60 * clockRadius, contentTop + 8 * rowHeight + .5 * rowHeight);
-        this.ctxDTP.lineTo(contentLeft + .5 * contentWidth, contentTop + 8 * rowHeight + .5 * rowHeight);
-        this.ctxDTP.lineTo(contentLeft + .5 * contentWidth, contentTop + 8 * rowHeight + .5 * rowHeight - .85 * clockRadius);
-        this.ctxDTP.stroke();
+        this.drawPrevious(); //Draw the previous button.
+        this.drawNext();     //Draw the next button.
+        this.drawClock();    //Draw the clock button.
 
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
@@ -1474,109 +1508,57 @@ class CanvDTP
                 this.bodyY <= this.hitBounds[i].y2
             )
             {
-                //Indicate something can be picked.
-                this.isPicked    = true;
-                this.pickedType  = this.hitBounds[i].type;
-                this.pickedMonth = i + 1; 
-
+                this.highlightHovItem(i); //Highlight the hovered item.
+                
                 //Get additional info for days of month.
+                this.pickedMonth = i + 1; 
                 if(i < CanvDTP.NUM_DAYS)
                 {
                     this.pickedDay  = this.dayArray[i].day;
                     this.dayType    = this.dayArray[i].type;
                 }
                 
-                //Calculate border thickness and radius based on height.
-                let selectBorder = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.selectWeight;
-                let selectRadius = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.selectRadius;
-
-                //Draw the border and fill the space.
-                this.ctxDTP.beginPath();
-                this.ctxDTP.strokeStyle = this.selectBorderColor;
-                this.ctxDTP.fillStyle   = this.selectFillColor;
-                this.ctxDTP.lineWidth   = selectBorder;
-                this.ctxDTP.arc(this.hitBounds[i].x1 + selectRadius, this.hitBounds[i].y1 + selectRadius, selectRadius, -Math.PI, -Math.PI / 2);
-                this.ctxDTP.arc(this.hitBounds[i].x2 - selectRadius, this.hitBounds[i].y1 + selectRadius, selectRadius, -Math.PI / 2, 0);
-                this.ctxDTP.arc(this.hitBounds[i].x2 - selectRadius, this.hitBounds[i].y2 - selectRadius, selectRadius, 0, Math.PI / 2);
-                this.ctxDTP.arc(this.hitBounds[i].x1 + selectRadius, this.hitBounds[i].y2 - selectRadius, selectRadius, Math.PI / 2, Math.PI);
-                this.ctxDTP.lineTo(this.hitBounds[i].x1, this.hitBounds[i].y1 + selectRadius);
-                this.ctxDTP.fill();
-                this.ctxDTP.stroke();
-
                 //Draw the highlighted text.
                 switch(this.hitBounds[i].type)
                 {
                     case CanvDTP.SEL_MONTH:
                         this.ctxDTP.beginPath();
-                        this.ctxDTP.font = (monthsHeight * this.monthScale) + "px " + this.monthFontStyle;
+                        this.ctxDTP.font = (this.bigBoxHeight * this.monthScale) + "px " + this.monthFontStyle;
                         this.ctxDTP.fillStyle = this.monthh;
                         this.ctxDTP.fillText
                         (
                             this.shortMonthsArray[i], 
-                            this.hitBounds[i].x1 + this.monthHorzAdj[i] * monthsWidth,
-                            this.hitBounds[i].y2 - this.monthVertAdj * monthsHeight
+                            this.hitBounds[i].x1 + this.monthHorzAdj[i] * this.bigBoxWidth,
+                            this.hitBounds[i].y2 - this.monthVertAdj * this.bigBoxHeight
                         );
-                        this.ctxDTP.stroke();
-                        break;
-
-                    case CanvDTP.SEL_PREVIOUS:
-                        this.ctxDTP.beginPath();
-                        this.ctxDTP.strokeStyle = this.prevNextColorh;
-                        this.ctxDTP.fillStyle   = this.prevNextColorh;
-                        this.ctxDTP.lineWidth   = 1;
-                        this.ctxDTP.moveTo(contentLeft + this.prevNextXPad * nextPrevWidth, contentTop + .5 * rowHeight);
-                        this.ctxDTP.lineTo(contentLeft + nextPrevWidth - this.prevNextXPad * nextPrevWidth,
-                            contentTop + this.prevNextYPad * contentTop);
-                        this.ctxDTP.lineTo(contentLeft + nextPrevWidth - this.prevNextXPad * nextPrevWidth,
-                            contentTop + rowHeight - this.prevNextYPad * contentTop);
-                        this.ctxDTP.fill();
-                        this.ctxDTP.stroke();
-                        break;
-
-                    case CanvDTP.SEL_NEXT:
-                        this.ctxDTP.beginPath();
-                        this.ctxDTP.strokeStyle = this.prevNextColorh;
-                        this.ctxDTP.fillStyle   = this.prevNextColorh;
-                        this.ctxDTP.lineWidth   = 1;
-                        this.ctxDTP.moveTo(contentRight - this.prevNextXPad * nextPrevWidth, contentTop + .5 * rowHeight);
-                        this.ctxDTP.lineTo(contentRight - nextPrevWidth + this.prevNextXPad * nextPrevWidth,
-                            contentTop + this.prevNextYPad * contentTop);
-                        this.ctxDTP.lineTo(contentRight - nextPrevWidth + this.prevNextXPad * nextPrevWidth,
-                            contentTop + rowHeight - this.prevNextYPad * contentTop);
-                        this.ctxDTP.fill();
                         this.ctxDTP.stroke();
                         break;
 
                     case CanvDTP.SEL_VIEW:
                         this.ctxDTP.beginPath();
                         this.ctxDTP.fillStyle = this.monthYearh;
-                        this.ctxDTP.font = (rowHeight * this.monthYearScale) + "px " + this.monthYearFontStyle;
+                        this.ctxDTP.font = (this.smallBoxHeight * this.monthYearScale) + "px " + this.monthYearFontStyle;
                         this.ctxDTP.fillText
                         (
                             this.tempYear, 
-                            contentLeft + nextPrevWidth + nextPrevWidth * this.onlyYearHorzAdj,
-                            contentTop + rowHeight - rowHeight * this.onlyYearVertAdj
+                            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.onlyYearHorzAdj,
+                            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.onlyYearVertAdj
                         );
                         this.ctxDTP.stroke();
                         break;
 
+                    case CanvDTP.SEL_PREVIOUS:
+                        this.highlightPrevious();
+                        break;
+
+                    case CanvDTP.SEL_NEXT:
+                        this.highlightNext();
+                        break;
+
+                    //Highlight the clock graphic.
                     case CanvDTP.SEL_TIME:
                     default:
-                        this.ctxDTP.beginPath();
-                        this.ctxDTP.strokeStyle = this.clockColorh;
-                        this.ctxDTP.lineWidth   = rowHeight * this.clockWeight;
-                        this.ctxDTP.arc
-                        (
-                            contentLeft + .5 * (contentWidth),
-                            contentTop + 8 * rowHeight + .5 * rowHeight,
-                            clockRadius,
-                            0,
-                            2 * Math.PI
-                        );
-                        this.ctxDTP.moveTo(contentLeft + .5 * contentWidth - .60 * clockRadius, contentTop + 8 * rowHeight + .5 * rowHeight);
-                        this.ctxDTP.lineTo(contentLeft + .5 * contentWidth, contentTop + 8 * rowHeight + .5 * rowHeight);
-                        this.ctxDTP.lineTo(contentLeft + .5 * contentWidth, contentTop + 8 * rowHeight + .5 * rowHeight - .85 * clockRadius);
-                        this.ctxDTP.stroke();
+                        this.highlightClock();
                         break;
                 }
             }
@@ -1590,99 +1572,12 @@ class CanvDTP
 
     drawDecade()
     {
-        let contentWidth  = this.bodyCanWidth - this.bodyCanWidth * this.bXPadding;
-        let contentHeight = this.bodyCanWidth - this.bodyCanWidth * this.bYPadding;
-        let contentLeft   = this.bodyCanWidth * this.bXPadding / 2;
-        let contentRight  = this.bodyCanWidth - this.bodyCanWidth * this.bXPadding / 2;
-        let contentTop    = this.bodyCanWidth * this.bYPadding / 2;
-        let contentBottom = this.bodyCanWidth - this.bodyCanWidth * this.bYPadding / 2;
-        let rowHeight     = contentHeight / 9;
-        let nextPrevWidth = contentWidth  / 7;
-        let monthsTop     = contentTop + rowHeight;
-        let monthsBottom  = contentBottom - rowHeight;
-        let monthsLeft    = contentLeft;
-        let monthsRight   = contentRight;
-        let monthsWidth   = contentWidth / 3;
-        let monthsHeight  = (monthsBottom - monthsTop) / 4;
-        let clockRadius   = rowHeight * .5 - this.clockPad * rowHeight;
-
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        
         //Draw a grid on the canvas. For debugging purposes.
-        if(this.debug)
-        {
-            this.ctxDTP.beginPath();
-            this.ctxDTP.strokeStyle = "#000000";
-            this.ctxDTP.lineWidth = 1;
-            this.ctxDTP.rect(contentLeft, contentTop, contentWidth, contentHeight);
-            this.ctxDTP.moveTo(monthsLeft, monthsTop);
-            this.ctxDTP.lineTo(monthsRight, monthsTop);
-            this.ctxDTP.moveTo(monthsLeft, monthsBottom);
-            this.ctxDTP.lineTo(monthsRight, monthsBottom);
-            for(let i = 1; i < 4; i++)
-            {
-                this.ctxDTP.moveTo(monthsLeft, monthsTop + i * monthsHeight);
-                this.ctxDTP.lineTo(monthsRight, monthsTop + i * monthsHeight);
-            }
-            for(let i = 1; i < 3; i++)
-            {
-                this.ctxDTP.moveTo(monthsLeft + i * monthsWidth, monthsTop);
-                this.ctxDTP.lineTo(monthsLeft + i * monthsWidth, monthsBottom);
-            }
-            this.ctxDTP.moveTo(contentLeft + nextPrevWidth, contentTop);
-            this.ctxDTP.lineTo(contentLeft + nextPrevWidth, contentTop + rowHeight);
-            this.ctxDTP.moveTo(contentRight - nextPrevWidth, contentTop);
-            this.ctxDTP.lineTo(contentRight - nextPrevWidth, contentTop + rowHeight);
-            this.ctxDTP.stroke();
-        }
+        if(this.debug) this.gridDraw(CanvDTP.GRID_GENERAL);
         
-        ///////////////////////////////////////////////////////////////////////////////////////////
-
-        //Create an array of hit boundaries for the various buttons.
-        //Each element has 4 points representing the upper left and lower right corners.
+        //Do hit bounds for previous, next, time and the banner.
         this.hitBounds = [];
-        let x1, x2, y1, y2;
-
-        //Hit boundaries for the months.
-        for(let i = 0; i < 4; i++)
-        {
-            for(let j = 0; j < 3; j++)
-            {
-                x1 = monthsLeft + j * monthsWidth;
-                x2 = monthsLeft + (j + 1) * monthsWidth - 1;
-                y1 = monthsTop + i * monthsHeight;
-                y2 = monthsTop + (i + 1) * monthsHeight - 1;
-                this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_YEAR});
-            }
-        }
-
-        //Hit boundaries for previous.
-        x1 = contentLeft;
-        x2 = contentLeft + nextPrevWidth - 1;
-        y1 = contentTop;
-        y2 = contentTop + rowHeight - 1;
-        this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_PREVIOUS});
-
-        //Hit boundaries for next.
-        x1 = contentLeft + 6 * nextPrevWidth;
-        x2 = contentLeft + 7 * nextPrevWidth - 1;
-        y1 = contentTop;
-        y2 = contentTop + rowHeight - 1;
-        this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_NEXT});
-
-        //Hit boundaries for year.
-        x1 = contentLeft + nextPrevWidth;
-        x2 = contentLeft + 6 * nextPrevWidth - 1;
-        y1 = contentTop;
-        y2 = contentTop + rowHeight - 1;
-        this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_VIEW});
-
-        //Hit boundaries for time.
-        x1 = contentLeft;
-        x2 = contentLeft + 7 * nextPrevWidth - 1;
-        y1 = contentTop  + 8 * rowHeight;
-        y2 = contentTop + 9 * rowHeight - 1;
-        this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_TIME});
+        this.doCommonHitBounds(true, true, CanvDTP.SEL_YEAR);
 
         let yearBase = parseInt(this.tempYear / 10) * 10 - 1;
 
@@ -1690,34 +1585,16 @@ class CanvDTP
         for(let i = 0; i < 12; i++)
         {
             //Highlight the current selected year.
-            if(yearBase + i === this.tempYear)
-            {
-                //Calculate border thickness and radius based on height.
-                let currentBorder = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.currentWeight;
-                let currentRadius = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.currentRadius;
-
-                //Draw the border and fill the space.
-                this.ctxDTP.beginPath();
-                this.ctxDTP.strokeStyle = this.currentBorderColor;
-                this.ctxDTP.fillStyle   = this.currentFillColor;
-                this.ctxDTP.lineWidth   = currentBorder;
-                this.ctxDTP.arc(this.hitBounds[i].x1 + currentRadius, this.hitBounds[i].y1 + currentRadius, currentRadius, -Math.PI, -Math.PI / 2);
-                this.ctxDTP.arc(this.hitBounds[i].x2 - currentRadius, this.hitBounds[i].y1 + currentRadius, currentRadius, -Math.PI / 2, 0);
-                this.ctxDTP.arc(this.hitBounds[i].x2 - currentRadius, this.hitBounds[i].y2 - currentRadius, currentRadius, 0, Math.PI / 2);
-                this.ctxDTP.arc(this.hitBounds[i].x1 + currentRadius, this.hitBounds[i].y2 - currentRadius, currentRadius, Math.PI / 2, Math.PI);
-                this.ctxDTP.lineTo(this.hitBounds[i].x1, this.hitBounds[i].y1 + currentRadius);
-                this.ctxDTP.fill();
-                this.ctxDTP.stroke();
-            }
+            if(yearBase + i === this.year) this.fillCurrent(i);
             
             this.ctxDTP.beginPath();
-            this.ctxDTP.font = (monthsHeight * this.yearScale) + "px " + this.yearFontStyle;
-            this.ctxDTP.fillStyle = (!i || i === 11) ? this.nonYear : this.ctxDTP.fillStyle = this.yearn;
+            this.ctxDTP.font = (this.bigBoxHeight * this.yearScale) + "px " + this.yearFontStyle;
+            this.ctxDTP.fillStyle = (!i || i === 11) ? this.nonYearn : this.ctxDTP.fillStyle = this.yearn;
             this.ctxDTP.fillText
             (
                 yearBase + i, 
-                this.hitBounds[i].x1 + this.yearHorzAdj * monthsWidth,
-                this.hitBounds[i].y2 - this.yearVertAdj * monthsHeight
+                this.hitBounds[i].x1 + this.yearHorzAdj * this.bigBoxWidth,
+                this.hitBounds[i].y2 - this.yearVertAdj * this.bigBoxHeight
                 
             );
             this.ctxDTP.stroke();          
@@ -1726,57 +1603,18 @@ class CanvDTP
         //Draw the decade.
         this.ctxDTP.beginPath();
         this.ctxDTP.fillStyle = this.onlyDecaden;
-        this.ctxDTP.font = (rowHeight * this.onlyDecadeScale) + "px " + this.onlyDecadeFontStyle;
+        this.ctxDTP.font = (this.smallBoxHeight * this.onlyDecadeScale) + "px " + this.onlyDecadeFontStyle;
         this.ctxDTP.fillText
         (
             (yearBase + 1) + "-" + (yearBase + 10),
-            contentLeft + nextPrevWidth + nextPrevWidth * this.onlyDecadeHorzAdj,
-            contentTop + rowHeight - rowHeight * this.onlyDecadeVertAdj
+            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.onlyDecadeHorzAdj,
+            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.onlyDecadeVertAdj
         );
         this.ctxDTP.stroke();
 
-
-
-
-
-        //Draw the previous graphic.
-        this.ctxDTP.beginPath();
-        this.ctxDTP.strokeStyle = this.prevNextColorn;
-        this.ctxDTP.fillStyle   = this.prevNextColorn;
-        this.ctxDTP.lineWidth   = 1;
-        this.ctxDTP.moveTo(contentLeft + this.prevNextXPad * nextPrevWidth, contentTop + .5 * rowHeight);
-        this.ctxDTP.lineTo(contentLeft + nextPrevWidth - this.prevNextXPad * nextPrevWidth, contentTop + this.prevNextYPad * contentTop);
-        this.ctxDTP.lineTo(contentLeft + nextPrevWidth - this.prevNextXPad * nextPrevWidth, contentTop + rowHeight - this.prevNextYPad * contentTop);
-        this.ctxDTP.fill();
-        this.ctxDTP.stroke();
-
-        //Draw the next graphic.
-        this.ctxDTP.beginPath();
-        this.ctxDTP.strokeStyle = this.prevNextColorn;
-        this.ctxDTP.fillStyle   = this.prevNextColorn;
-        this.ctxDTP.lineWidth   = 1;
-        this.ctxDTP.moveTo(contentRight - this.prevNextXPad * nextPrevWidth, contentTop + .5 * rowHeight);
-        this.ctxDTP.lineTo(contentRight - nextPrevWidth + this.prevNextXPad * nextPrevWidth, contentTop + this.prevNextYPad * contentTop);
-        this.ctxDTP.lineTo(contentRight - nextPrevWidth + this.prevNextXPad * nextPrevWidth, contentTop + rowHeight - this.prevNextYPad * contentTop);
-        this.ctxDTP.fill();
-        this.ctxDTP.stroke();
-
-        //Draw the clock
-        this.ctxDTP.beginPath();
-        this.ctxDTP.strokeStyle = this.clockColorn;
-        this.ctxDTP.lineWidth   = rowHeight * this.clockWeight;
-        this.ctxDTP.arc
-        (
-            contentLeft + .5 * (contentWidth),
-            contentTop + 8 * rowHeight + .5 * rowHeight,
-            clockRadius,
-            0,
-            2 * Math.PI
-        );
-        this.ctxDTP.moveTo(contentLeft + .5 * contentWidth - .60 * clockRadius, contentTop + 8 * rowHeight + .5 * rowHeight);
-        this.ctxDTP.lineTo(contentLeft + .5 * contentWidth, contentTop + 8 * rowHeight + .5 * rowHeight);
-        this.ctxDTP.lineTo(contentLeft + .5 * contentWidth, contentTop + 8 * rowHeight + .5 * rowHeight - .85 * clockRadius);
-        this.ctxDTP.stroke();
+        this.drawPrevious(); //Draw the previous button.
+        this.drawNext();     //Draw the next button.
+        this.drawClock();    //Draw the clock button.
 
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
@@ -1791,40 +1629,58 @@ class CanvDTP
                 this.bodyY <= this.hitBounds[i].y2
             )
             {
-                //Indicate something can be picked.
-                this.isPicked    = true;
-                this.pickedType  = this.hitBounds[i].type;
-                this.pickedMonth = i + 1; 
+                this.highlightHovItem(i); //Highlight the hovered item.
 
                 //Get additional info for days of month.
+                this.pickedYear = yearBase + i; 
                 if(i < CanvDTP.NUM_DAYS)
                 {
                     this.pickedDay  = this.dayArray[i].day;
                     this.dayType    = this.dayArray[i].type;
                 }
                 
-                //Calculate border thickness and radius based on height.
-                let selectBorder = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.selectWeight;
-                let selectRadius = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.selectRadius;
+                //Draw the highlighted text.
+                switch(this.hitBounds[i].type)
+                {
+                    case CanvDTP.SEL_YEAR:
+                        this.ctxDTP.beginPath();
+                        this.ctxDTP.font = (this.bigBoxHeight * this.monthScale) + "px " + this.yearFontStyle;
+                        this.ctxDTP.fillStyle = (!i || i === 11) ? this.nonYearh : this.ctxDTP.fillStyle = this.yearh;
+                        this.ctxDTP.fillText
+                        (
+                            yearBase + i, 
+                            this.hitBounds[i].x1 + this.yearHorzAdj * this.bigBoxWidth,
+                            this.hitBounds[i].y2 - this.yearVertAdj * this.bigBoxHeight
+                        );
+                        this.ctxDTP.stroke();
+                        break;
 
-                //Draw the border and fill the space.
-                this.ctxDTP.beginPath();
-                this.ctxDTP.strokeStyle = this.selectBorderColor;
-                this.ctxDTP.fillStyle   = this.selectFillColor;
-                this.ctxDTP.lineWidth   = selectBorder;
-                this.ctxDTP.arc(this.hitBounds[i].x1 + selectRadius, this.hitBounds[i].y1 + selectRadius, selectRadius, -Math.PI, -Math.PI / 2);
-                this.ctxDTP.arc(this.hitBounds[i].x2 - selectRadius, this.hitBounds[i].y1 + selectRadius, selectRadius, -Math.PI / 2, 0);
-                this.ctxDTP.arc(this.hitBounds[i].x2 - selectRadius, this.hitBounds[i].y2 - selectRadius, selectRadius, 0, Math.PI / 2);
-                this.ctxDTP.arc(this.hitBounds[i].x1 + selectRadius, this.hitBounds[i].y2 - selectRadius, selectRadius, Math.PI / 2, Math.PI);
-                this.ctxDTP.lineTo(this.hitBounds[i].x1, this.hitBounds[i].y1 + selectRadius);
-                this.ctxDTP.fill();
-                this.ctxDTP.stroke();
+                    case CanvDTP.SEL_VIEW:
+                        this.ctxDTP.beginPath();
+                        this.ctxDTP.fillStyle = this.onlyDecadeh;
+                        this.ctxDTP.font = (this.smallBoxHeight * this.onlyDecadeScale) + "px " + this.onlyDecadeFontStyle;
+                        this.ctxDTP.fillText
+                        (
+                            (yearBase + 1) + "-" + (yearBase + 10),
+                            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.onlyDecadeHorzAdj,
+                            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.onlyDecadeVertAdj
+                        );
+                        this.ctxDTP.stroke();
+                        break;
 
+                    case CanvDTP.SEL_PREVIOUS:
+                        this.highlightPrevious();
+                        break;
 
+                    case CanvDTP.SEL_NEXT:
+                        this.highlightNext();
+                        break;
 
-
-
-
+                    case CanvDTP.SEL_TIME:
+                    default:
+                        this.highlightClock();
+                        break;
+                }
             }
         }
 
@@ -1836,11 +1692,33 @@ class CanvDTP
 
     drawCentury()
     {
-        this.ctxDTP.beginPath();
-        this.ctxDTP.font = "20px Arial"
-        this.ctxDTP.fillStyle = "#000000";
-        this.ctxDTP.fillText("Century View", 20, 25);
-        this.ctxDTP.stroke();
+        //Draw a grid on the canvas. For debugging purposes.
+        if(this.debug) this.gridDraw(CanvDTP.GRID_GENERAL);
+        
+        //Do hit bounds for previous, next, time and the banner.
+        this.hitBounds = [];
+        this.doCommonHitBounds(true, false, CanvDTP.SEL_DECADE);
+
+        this.drawPrevious(); //Draw the previous button.
+        this.drawNext();     //Draw the next button.
+        this.drawClock();    //Draw the clock button.
+
+        for(let i = 0; i < this.hitBounds.length; i++)
+        {
+            if
+            (
+                this.bodyX >= this.hitBounds[i].x1 &&
+                this.bodyX <= this.hitBounds[i].x2 &&
+                this.bodyY >= this.hitBounds[i].y1 &&
+                this.bodyY <= this.hitBounds[i].y2
+            )
+            {
+                this.highlightHovItem(i); //Highlight the hovered item.
+            }
+        }
+
+        //Change pointer if hovering over selectable item.
+        this.isPicked ? document.body.style.cursor = "pointer" : document.body.style.cursor = "default";
     }
 
     /***************************************** Draw Time *****************************************/
@@ -1864,16 +1742,6 @@ class CanvDTP
 
 
 
-
-
-
-
-
-
-
-
-
-    
     /******************************** Body Canvas Click Functions ********************************/
 
     //Update the selected date.
@@ -1904,7 +1772,7 @@ class CanvDTP
         this.year  = this.tempYear;
         this.day   = this.pickedDay;
         this.textBoxDateTime();
-        this.drawBody();
+        this.bodyDraw();
     }
 
     //Increment the month and redraw the calendar.
@@ -1917,7 +1785,7 @@ class CanvDTP
             this.tempMonth = 1;
             this.tempYear++;
         }
-        this.drawBody();
+        this.bodyDraw();
     }
 
     //Decrement the month and redraw the calendar.
@@ -1930,7 +1798,7 @@ class CanvDTP
             this.tempMonth = 12;
             this.tempYear--;
         }
-        this.drawBody();
+        this.bodyDraw();
     }
 
     //Determine which action to perform when the body canvas is clicked.
@@ -1958,14 +1826,14 @@ class CanvDTP
                         case CanvDTP.SEL_TIME:
                             this.dateTime = CanvDTP.CAL_TIME;
                             document.body.style.cursor = "default";
-                            this.drawBody();
+                            this.bodyDraw();
                             break;
 
                         case CanvDTP.SEL_VIEW:
                         default:
                             this.calView = CanvDTP.CAL_YEAR;
                             document.body.style.cursor = "default";
-                            this.drawBody();
+                            this.bodyDraw();
                             break;
                     }
                     break;
@@ -1977,30 +1845,30 @@ class CanvDTP
                             this.calView = CanvDTP.CAL_MONTH;
                             this.tempMonth = this.pickedMonth;
                             document.body.style.cursor = "default";
-                            this.drawBody();
+                            this.bodyDraw();
                             break;
 
                         case CanvDTP.SEL_PREVIOUS:
                             this.tempYear--;
-                            this.drawBody();
+                            this.bodyDraw();
                             break;
 
                         case CanvDTP.SEL_NEXT:
                             this.tempYear++;
-                            this.drawBody();
+                            this.bodyDraw();
                             break;
 
                         case CanvDTP.SEL_TIME:
                             this.dateTime = CanvDTP.CAL_TIME;
                             document.body.style.cursor = "default";
-                            this.drawBody();
+                            this.bodyDraw();
                             break;
 
                         case CanvDTP.SEL_VIEW:
                         default:
                             this.calView = CanvDTP.CAL_DECADE;
                             document.body.style.cursor = "default";
-                            this.drawBody();
+                            this.bodyDraw();
                             break;
                     }
                     break;
@@ -2009,26 +1877,33 @@ class CanvDTP
                     switch(this.pickedType)
                     {
                         case CanvDTP.SEL_YEAR:
-                            
+                            this.calView = CanvDTP.CAL_YEAR;
+                            this.tempYear = this.pickedYear;
+                            document.body.style.cursor = "default";
+                            this.bodyDraw();
                             break;
 
                         case CanvDTP.SEL_PREVIOUS:
-                            
+                            this.tempYear -= 10;
+                            this.bodyDraw();
                             break;
 
                         case CanvDTP.SEL_NEXT:
-                            
+                            this.tempYear += 10;
+                            this.bodyDraw();
                             break;
 
                         case CanvDTP.SEL_TIME:
-                            
+                            this.dateTime = CanvDTP.CAL_TIME;
+                            document.body.style.cursor = "default";
+                            this.bodyDraw();
                             break;
 
                         case CanvDTP.SEL_VIEW:
                         default:
                             this.calView = CanvDTP.CAL_CENTURY;
                             document.body.style.cursor = "default";
-                            this.drawBody();
+                            this.bodyDraw();
                             break;
                     }
                     break;

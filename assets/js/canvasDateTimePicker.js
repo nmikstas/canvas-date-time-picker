@@ -84,242 +84,312 @@ class CanvDTP
     //                                        Constructor                                        //
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
-    constructor(parentDiv)
-    {
-        this.debug = false;
+    constructor
+    (
+        parentDiv,
+        {
+            //Enable/disable debug.
+            debug = false,
 
-        //HTML nodes required for date/time picker.
-        this.parentDiv = parentDiv;
-        this.paddingDiv;
-        this.dtpText;
-        this.bodyCanvas;
-        this.iconCanvas;
+            //Icon canvas prameters.
+            iBorderRadius = .20,
+            iBorderWeight = .05,
+            iXPadding     = .20,
+            iYPadding     = .20,
+            iLineWidth    = .02,
+            iBorderColorn = "#a0a0a0",
+            iFillColorn   = "#d0d0d0",
+            iCalColorn    = "#000000",
+            iBorderColorh = "#202020",
+            iFillColorh   = "#808080",
+            iCalColorh    = "#ffffff",
 
-        //Contexts of the canvases.
-        this.ctxDTP;
-        this.ctxIcon;
+            //Selectable Items
+            selectRadius = .25,
+            selectWeight = .07,
+            selectBorderColor = "#0087b6",
+            selectFillColor   = "#a4e3f7",
 
-        //Keep track of the body canvas animation state.
-        this.bodyCanAnim = CanvDTP.BODY_CLOSED;
-        this.bodyAnimTimer;
-        this.bodyAnimStep;
+            //Mouse Pointer
+            PointerWidth = .005,
+            PointerRad   = .01,
+            PointerColor = "#000000",
 
-        //Both canvases are squares.  Keep track of their dimensions.
-        this.bodyCanWidth = 0;
-        this.bodyCanMaxWidth;
-        this.iconCanWidth;
+            //Days of Week
+            days            = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+            headerHorzAdj   = [.12, .08, .15, .05, .15, .20, .12],
+            headerVertAdj   = .20,
+            headerScale     = .80,
+            headerColor     = "#0087b6",
+            headerFontStyle = "Arial",
 
-        //Animation variables.
-        this.animTime  = 25;
-        this.animSteps = 10;
+            //Days of Month
+            nonDayColorn = "#888888",
+            dayColorn    = "#000000",
+            nonDayColorh = "#ff8888",
+            dayColorh    = "#8800ff",
+            dayScale     = .80,
+            dayFontStyle = "Arial",
+            dayVertAdj   = .20,
+            dayHorzAdj   = 
+            [
+                .30, .30, .30, .30, .30, .30, .30, .30, .30, .10,
+                .15, .10, .10, .10, .10, .10, .12, .12, .10, .15,
+                .15, .15, .15, .15, .15, .15, .15, .15, .15, .15,
+                .18
+            ],
 
-        //Keep track of the x and y mouse position over the body canvas.
-        this.bodyX = -1000;
-        this.bodyY = -1000;
+            //Month and Year
+            monthYearn         = "#000000",
+            monthYearh         = "#8800ff",
+            monthYearScale     = .80,
+            monthYearFontStyle = "Arial",
+            monthYearVertAdj   = .20,
+            monthYearHorzAdj   = [.60, .50, .90, 1.15, 1.15, 1.05, 1.15, .75, .20, .60, .30, .30],
 
-        /************************************ Icon Parameters ************************************/
-
-        //Parameters of the icon canvas.
-        this.iBorderRadius = .20;
-        this.iBorderWeight = .05;
-        this.iXPadding     = .20;
-        this.iYPadding     = .20;
-        this.iLineWidth    = .02;
-
-        //Normal icon colors.
-        this.iBorderColorn = "#a0a0a0";
-        this.iFillColorn   = "#d0d0d0";
-        this.iCalColorn    = "#000000";
-
-        //Hover icon colors.
-        this.iBorderColorh = "#202020";
-        this.iFillColorh   = "#808080";
-        this.iCalColorh    = "#ffffff";
-
-        //Current icon colors.
-        this.iBorderColor = this.iBorderColorn;
-        this.iFillColor   = this.iFillColorn;
-        this.iCalColor    = this.iCalColorn;
-
-        //*********************************** Selectable Items ************************************
-
-        this.selectRadius = .25;
-        this.selectWeight = .07;
-        this.selectBorderColor = "#0087b6";
-        this.selectFillColor   = "#a4e3f7";
-
-        /************************************* Mouse Pointer *************************************/
-
-        //Mouse pointer.
-        this.bPointerWidth = .005;
-        this.bPointerRad   = .01;
-        this.bPointerColor = "#000000";
-
-        /************************************* Days of Week **************************************/
-
-        //Days of week header info.
-        this.days            = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-        this.headerHorzAdj   = [.12, .08, .15, .05, .15, .20, .12];
-        this.headerVertAdj   = .20;
-        this.headerScale     = .80;
-        this.headerColor     = "#0087b6";
-        this.headerFontStyle = "Arial";
-
-        /************************************* Days of Month *************************************/
-
-        this.nonDayColorn = "#888888";
-        this.dayColorn    = "#000000";
-        this.nonDayColorh = "#ff8888";
-        this.dayColorh    = "#8800ff";
-        this.dayScale     = .80;
-        this.dayFontStyle = "Arial";
-        this.dayVertAdj   = .20;
-        this.dayHorzAdj   = 
-        [
-            .30, .30, .30, .30, .30, .30, .30, .30, .30, .10,
-            .15, .10, .10, .10, .10, .10, .12, .12, .10, .15,
-            .15, .15, .15, .15, .15, .15, .15, .15, .15, .15,
-            .18
-        ];
-
-        /************************************ Month and Year *************************************/
-
-        this.monthYearn         = "#000000";
-        this.monthYearh         = "#8800ff";
-        this.monthYearScale     = .80;
-        this.monthYearFontStyle = "Arial";
-        this.monthYearVertAdj   = .20;
-        this.monthYearHorzAdj   = [.60, .50, .90, 1.15, 1.15, 1.05, 1.15, .75, .20, .60, .30, .30];
-
-        /******************************* Previous/Next Parameters ********************************/
-
-        this.prevNextColorn = "#000000";
-        this.prevNextColorh = "#8800ff";
-        this.prevNextXPad   = .20;
-        this.prevNextYPad   = .35;
+            //Previous/Next Parameters
+            prevNextColorn = "#000000",
+            prevNextColorh = "#8800ff",
+            prevNextXPad   = .20,
+            prevNextYPad   = .35,
         
-        /******************************* Clock Graphic Parameters ********************************/
+            //Clock Graphic Parameters
+            clockColorn = "#000000",
+            clockColorh = "#8800ff",
+            clockPad    = .10,
+            clockWeight = .07,
 
-        this.clockColorn = "#000000";
-        this.clockColorh = "#8800ff";
-        this.clockPad    = .10;
-        this.clockWeight = .07;
+            //Currently Selected Day
+            currentRadius      = .25,
+            currentWeight      = .07,
+            currentBorderColor = "#00f7ff",
+            currentFillColor   = "#aefcff",
 
-        /******************************** Currently Selected Day *********************************/
+            //Today's Date
+            nowWeight = .25,
+            nowColor  = "#000000",
 
-        this.currentRadius      = .25;
-        this.currentWeight      = .07;
-        this.currentBorderColor = "#00f7ff";
-        this.currentFillColor   = "#aefcff";
+            //Month Text
+            monthn         = "#000000",
+            monthh         = "#8800ff",
+            monthScale     = .60,
+            monthFontStyle = "Arial",
+            monthVertAdj   = .25,
+            monthHorzAdj   = [.20, .20, .20, .20, .15, .20, .22, .18, .17, .20, .17, .17],
 
-        /************************************* Today's Date **************************************/
+            //Year
+            bannerYearn         = "#000000",
+            bannerYearh         = "#8800ff",
+            bannerYearScale     = .80,
+            bannerYearFontStyle = "Arial",
+            bannerYearVertAdj   = .20,
+            bannerYearHorzAdj   = 1.80,
 
-        this.nowWeight = .25;
-        this.nowColor  = "#000000";
+            //Year Text
+            nonYearn      = "#888888",
+            yearn         = "#000000",
+            nonYearh      = "#ff8888",
+            yearh         = "#8800ff",
+            yearScale     = .60,
+            yearFontStyle = "Arial",
+            yearVertAdj   = .25,
+            yearHorzAdj   = .10,
 
-        /*************************************** Month Text **************************************/
+            //Decade
+            bannerDecaden         = "#000000",
+            bannerDecadeh         = "#8800ff",
+            bannerDecadeScale     = .80,
+            bannerDecadeFontStyle = "Arial",
+            bannerDecadeVertAdj   = .20,
+            bannerDecadeHorzAdj   = 1.0,
 
-        this.monthn         = "#000000";
-        this.monthh         = "#8800ff";
-        this.monthScale     = .60;
-        this.monthFontStyle = "Arial";
-        this.monthVertAdj   = .25;
-        this.monthHorzAdj   = [.20, .20, .20, .20, .15, .20, .22, .18, .17, .20, .17, .17];
+            //Decade Text
+            nonDecaden      = "#888888",
+            decaden         = "#000000",
+            nonDecadeh      = "#ff8888",
+            decadeh         = "#8800ff",
+            decadeScale     = .50,
+            decadeFontStyle = "Arial",
+            decadeVertAdj1  = .55,
+            decadeVertAdj2  = .08,
+            decadeHorzAdj   = .20,
 
-        /***************************************** Year ******************************************/
+            //Century
+            bannerCenturyn         = "#000000",
+            bannerCenturyh         = "#8800ff",
+            bannerCenturyScale     = .80,
+            bannerCenturyFontStyle = "Arial",
+            bannerCenturyVertAdj   = .20,
+            bannerCenturyHorzAdj   = 1.0,
 
-        this.bannerYearn         = "#000000";
-        this.bannerYearh         = "#8800ff";
-        this.bannerYearScale     = .80;
-        this.bannerYearFontStyle = "Arial";
-        this.bannerYearVertAdj   = .20;
-        this.bannerYearHorzAdj   = 1.80;
+            //Calendar Icon
+            calXPadding  = .20,
+            calYPadding  = .10,
+            calLineWidth = .05,
+            calCalColorn = "#000000",
+            calCalColorh = "#8800ff",
 
-        /*************************************** Year Text ***************************************/
+            //Time Parameters
+            timeVertAdj     = .20,
+            timeDivVertAdj  = .25,
+            timeDivHorzAdj  = .15,
+            timehourHorzAdj = [.30, .30, .30, .30, .30, .30, .30, .30, .30, .07, .10, .07],
+            timeMinHorzAdj  = .10,
+            timeFont        = "Arial",
+            timeColorn      = "#000000",
+            timeColorh      = "#8800ff",
+            timeWeight      = .80,
+            timeAmPmFont    = "Arial",
+            timeAmPmColorn  = "#000000",
+            timeAmPmColorh  = "#8800ff",
+            timeAmPmWeight  = .60,
+            timeAmPmVertAdj = .27,
+            timeAmPmHorzAdj = .10,
 
-        this.nonYearn      = "#888888";
-        this.yearn         = "#000000";
-        this.nonYearh      = "#ff8888";
-        this.yearh         = "#8800ff";
-        this.yearScale     = .60;
-        this.yearFontStyle = "Arial";
-        this.yearVertAdj   = .25;
-        this.yearHorzAdj   = .10;
+            //Increment/Decrement Parameters
+            incXPad    = .25,
+            incYPad    = .10,
+            incWeight  = .25,
+            incColorn  = "#000000",
+            incColorh  = "#8800ff",
 
-        /**************************************** Decade *****************************************/
-
-        this.bannerDecaden         = "#000000";
-        this.bannerDecadeh         = "#8800ff";
-        this.bannerDecadeScale     = .80;
-        this.bannerDecadeFontStyle = "Arial";
-        this.bannerDecadeVertAdj   = .20;
-        this.bannerDecadeHorzAdj   = 1.0;
-
-        /************************************** Decade Text **************************************/
-
-        this.nonDecaden      = "#888888";
-        this.decaden         = "#000000";
-        this.nonDecadeh      = "#ff8888";
-        this.decadeh         = "#8800ff";
-        this.decadeScale     = .50;
-        this.decadeFontStyle = "Arial";
-        this.decadeVertAdj1  = .55;
-        this.decadeVertAdj2  = .08;
-        this.decadeHorzAdj   = .20;
-
-        /**************************************** Century ****************************************/
-
-        this.bannerCenturyn         = "#000000";
-        this.bannerCenturyh         = "#8800ff";
-        this.bannerCenturyScale     = .80;
-        this.bannerCenturyFontStyle = "Arial";
-        this.bannerCenturyVertAdj   = .20;
-        this.bannerCenturyHorzAdj   = 1.0;
-
-        /************************************* Calendar Icon *************************************/
-
-        this.calXPadding  = .20;
-        this.calYPadding  = .10;
-        this.calLineWidth = .05;
-        this.calCalColorn = "#000000";
-        this.calCalColorh = "#8800ff";
-
-        /************************************ Time Parameters ************************************/
-
-        this.timeVertAdj     = .20;
-        this.timeDivVertAdj  = .25;
-        this.timeDivHorzAdj  = .15;
-        this.timehourHorzAdj = [.30, .30, .30, .30, .30, .30, .30, .30, .30, .07, .10, .07];
-        this.timeMinHorzAdj  = .10;
-        this.timeFont        = "Arial";
-        this.timeColorn      = "#000000";
-        this.timeColorh      = "#8800ff";
-        this.timeWeight      = .80;
-        this.timeAmPmFont    = "Arial";
-        this.timeAmPmColorn  = "#000000";
-        this.timeAmPmColorh  = "#8800ff";
-        this.timeAmPmWeight  = .60;
-        this.timeAmPmVertAdj = .27;
-        this.timeAmPmHorzAdj = .10;
-
-        /**************************** Increment/Decrement Parameters *****************************/
-
-        this.incXPad    = .25;
-        this.incYPad    = .10;
-        this.incWeight  = .25;
-        this.incColorn  = "#000000";
-        this.incColorh  = "#8800ff";
-
-        /************************************ Body Parameters ************************************/
-
-        //Parameters of the body canvas.
-        this.bBorderRadius = .05;
-        this.bBorderWeight = .01;
-        this.bXPadding     = .10;
-        this.bYPadding     = .10;
-        this.bLineWidth    = .02;
-        this.bBorderColor  = "#a4e3f7";
-        this.bFillColor    = "#e5f5fa";
+            //Parameters of the body canvas.
+            bBorderRadius = .05,
+            bBorderWeight = .01,
+            bXPadding     = .10,
+            bYPadding     = .10,
+            bLineWidth    = .02,
+            bBorderColor  = "#a4e3f7",
+            bFillColor    = "#e5f5fa"
+        } = {}
+    )
+    {
+        this.debug                  = debug;
+        this.iBorderRadius          = iBorderRadius;
+        this.iBorderWeight          = iBorderWeight;
+        this.iXPadding              = iXPadding;
+        this.iYPadding              = iYPadding;
+        this.iLineWidth             = iLineWidth;
+        this.iBorderColorn          = iBorderColorn;
+        this.iFillColorn            = iFillColorn;
+        this.iCalColorn             = iCalColorn;
+        this.iBorderColorh          = iBorderColorh;
+        this.iFillColorh            = iFillColorh;
+        this.iCalColorh             = iCalColorh;
+        this.selectRadius           = selectRadius;
+        this.selectWeight           = selectWeight;
+        this.selectBorderColor      = selectBorderColor;
+        this.selectFillColor        = selectFillColor;
+        this.PointerWidth           = PointerWidth;
+        this.PointerRad             = PointerRad;
+        this.PointerColor           = PointerColor;
+        this.days                   = days;
+        this.headerHorzAdj          = headerHorzAdj;
+        this.headerVertAdj          = headerVertAdj;
+        this.headerScale            = headerScale;
+        this.headerColor            = headerColor;
+        this.headerFontStyle        = headerFontStyle;
+        this.nonDayColorn           = nonDayColorn;
+        this.dayColorn              = dayColorn;
+        this.nonDayColorh           = nonDayColorh;
+        this.dayColorh              = dayColorh;
+        this.dayScale               = dayScale;
+        this.dayFontStyle           = dayFontStyle;
+        this.dayVertAdj             = dayVertAdj;
+        this.dayHorzAdj             = dayHorzAdj;
+        this.monthYearn             = monthYearn;
+        this.monthYearh             = monthYearh;
+        this.monthYearScale         = monthYearScale;
+        this.monthYearFontStyle     = monthYearFontStyle;
+        this.monthYearVertAdj       = monthYearVertAdj;
+        this.monthYearHorzAdj       = monthYearHorzAdj;
+        this.prevNextColorn         = prevNextColorn;
+        this.prevNextColorh         = prevNextColorh;
+        this.prevNextXPad           = prevNextXPad;
+        this.prevNextYPad           = prevNextYPad;
+        this.clockColorn            = clockColorn;
+        this.clockColorh            = clockColorh;
+        this.clockPad               = clockPad;
+        this.clockWeight            = clockWeight;
+        this.currentRadius          = currentRadius;
+        this.currentWeight          = currentWeight;
+        this.currentBorderColor     = currentBorderColor;
+        this.currentFillColor       = currentFillColor;
+        this.nowWeight              = nowWeight;
+        this.nowColor               = nowColor;
+        this.monthn                 = monthn;
+        this.monthh                 = monthh;
+        this.monthScale             = monthScale;
+        this.monthFontStyle         = monthFontStyle;
+        this.monthVertAdj           = monthVertAdj;
+        this.monthHorzAdj           = monthHorzAdj;
+        this.bannerYearn            = bannerYearn;
+        this.bannerYearh            = bannerYearh;
+        this.bannerYearScale        = bannerYearScale;
+        this.bannerYearFontStyle    = bannerYearFontStyle;
+        this.bannerYearVertAdj      = bannerYearVertAdj;
+        this.bannerYearHorzAdj      = bannerYearHorzAdj;
+        this.nonYearn               = nonYearn;
+        this.yearn                  = yearn;
+        this.nonYearh               = nonYearh;
+        this.yearh                  = yearh;
+        this.yearScale              = yearScale;
+        this.yearFontStyle          = yearFontStyle;
+        this.yearVertAdj            = yearVertAdj;
+        this.yearHorzAdj            = yearHorzAdj;
+        this.bannerDecaden          = bannerDecaden;
+        this.bannerDecadeh          = bannerDecadeh;
+        this.bannerDecadeScale      = bannerDecadeScale;
+        this.bannerDecadeFontStyle  = bannerDecadeFontStyle;
+        this.bannerDecadeVertAdj    = bannerDecadeVertAdj;
+        this.bannerDecadeHorzAdj    = bannerDecadeHorzAdj;
+        this.nonDecaden             = nonDecaden;
+        this.decaden                = decaden;
+        this.nonDecadeh             = nonDecadeh;
+        this.decadeh                = decadeh;
+        this.decadeScale            = decadeScale;
+        this.decadeFontStyle        = decadeFontStyle;
+        this.decadeVertAdj1         = decadeVertAdj1;
+        this.decadeVertAdj2         = decadeVertAdj2;
+        this.decadeHorzAdj          = decadeHorzAdj;
+        this.bannerCenturyn         = bannerCenturyn;
+        this.bannerCenturyh         = bannerCenturyh;
+        this.bannerCenturyScale     = bannerCenturyScale;
+        this.bannerCenturyFontStyle = bannerCenturyFontStyle;
+        this.bannerCenturyVertAdj   = bannerCenturyVertAdj;
+        this.bannerCenturyHorzAdj   = bannerCenturyHorzAdj;
+        this.calXPadding            = calXPadding;
+        this.calYPadding            = calYPadding;
+        this.calLineWidth           = calLineWidth;
+        this.calCalColorn           = calCalColorn;
+        this.calCalColorh           = calCalColorh;
+        this.timeVertAdj            = timeVertAdj;
+        this.timeDivVertAdj         = timeDivVertAdj;
+        this.timeDivHorzAdj         = timeDivHorzAdj;
+        this.timehourHorzAdj        = timehourHorzAdj;
+        this.timeMinHorzAdj         = timeMinHorzAdj;
+        this.timeFont               = timeFont;
+        this.timeColorn             = timeColorn;
+        this.timeColorh             = timeColorh;
+        this.timeWeight             = timeWeight;
+        this.timeAmPmFont           = timeAmPmFont;
+        this.timeAmPmColorn         = timeAmPmColorn;
+        this.timeAmPmColorh         = timeAmPmColorh;
+        this.timeAmPmWeight         = timeAmPmWeight;
+        this.timeAmPmVertAdj        = timeAmPmVertAdj;
+        this.timeAmPmHorzAdj        = timeAmPmHorzAdj;
+        this.incXPad                = incXPad;
+        this.incYPad                = incYPad;
+        this.incWeight              = incWeight;
+        this.incColorn              = incColorn;
+        this.incColorh              = incColorh;
+        this.bBorderRadius          = bBorderRadius;
+        this.bBorderWeight          = bBorderWeight;
+        this.bXPadding              = bXPadding;
+        this.bYPadding              = bYPadding;
+        this.bLineWidth             = bLineWidth;
+        this.bBorderColor           = bBorderColor;
+        this.bFillColor             = bFillColor;
 
         /***************************** Rendering Dimension Variables *****************************/
 
@@ -357,6 +427,40 @@ class CanvDTP
         this.clockRadius;
 
         /************************************ Misc Variables *************************************/
+
+        //HTML nodes required for date/time picker.
+        this.parentDiv = parentDiv;
+        this.paddingDiv;
+        this.dtpText;
+        this.bodyCanvas;
+        this.iconCanvas;
+
+        //Contexts of the canvases.
+        this.ctxDTP;
+        this.ctxIcon;
+
+        //Current icon colors.
+        this.iBorderColor = this.iBorderColorn;
+        this.iFillColor   = this.iFillColorn;
+        this.iCalColor    = this.iCalColorn;
+
+        //Keep track of the body canvas animation state.
+        this.bodyCanAnim = CanvDTP.BODY_CLOSED;
+        this.bodyAnimTimer;
+        this.bodyAnimStep;
+
+        //Both canvases are squares.  Keep track of their dimensions.
+        this.bodyCanWidth = 0;
+        this.bodyCanMaxWidth;
+        this.iconCanWidth;
+
+        //Animation variables.
+        this.animTime  = 25;
+        this.animSteps = 10;
+
+        //Keep track of the x and y mouse position over the body canvas.
+        this.bodyX = -1000;
+        this.bodyY = -1000;
 
         //Variables for keeping track of date and time.
         this.isFirstPicked = false;
@@ -428,6 +532,9 @@ class CanvDTP
         this.dtpText = document.createElement("input");
         this.bodyCanvas = document.createElement("canvas");
         this.iconCanvas = document.createElement("canvas");
+
+        //Add an id to the text box.
+        this.dtpText.setAttribute("id", this.parentDiv.id + "-tb");
 
         //Get 2D contexts of the canvases.
         this.ctxDTP = this.bodyCanvas.getContext("2d");
@@ -838,12 +945,12 @@ class CanvDTP
     pointerDraw()
     {
         //Calculate the pointer radius and line width;
-        let pointerRadius = this.bodyCanWidth * this.bPointerRad;
-        let pointerWidth  = this.bodyCanWidth * this.bPointerWidth;
+        let pointerRadius = this.bodyCanWidth * this.PointerRad;
+        let pointerWidth  = this.bodyCanWidth * this.PointerWidth;
 
         //Draw a mouse indicator. For debug purposes.
         this.ctxDTP.beginPath();
-        this.ctxDTP.strokeStyle = this.bPointerColor;
+        this.ctxDTP.strokeStyle = this.PointerColor;
         this.ctxDTP.lineWidth = pointerWidth;
         this.ctxDTP.moveTo(this.bodyX, this.bodyY);
         this.ctxDTP.lineTo(this.bodyX - pointerRadius, this.bodyY);
@@ -1962,9 +2069,9 @@ class CanvDTP
 
         //Calendar hit boundaries.
         x1 = this.contentLeft;
-        x2 = this.contentRight;
+        x2 = this.contentRight  - 1;
         y1 = this.contentBottom - this.smallBoxHeight;
-        y2 = this.contentBottom;
+        y2 = this.contentBottom - 1;
         this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_DATE});
 
         //Hour increment hit boundaries.
@@ -2162,7 +2269,7 @@ class CanvDTP
                     case CanvDTP.SEL_HINC1:
                         this.hour++;
                         if(this.hour > 12) this.hour = 1;
-                        if(this.hour === 12) this.isAM = ~this.isAM;
+                        if(this.hour === 12) this.isAM = this.isAM ? false : true;
                         this.textBoxDateTime();
                         this.bodyDraw();
                         break;
@@ -2170,7 +2277,7 @@ class CanvDTP
                     case CanvDTP.SEL_HDEC1:
                         this.hour--;
                         if(this.hour < 1) this.hour = 12;
-                        if(this.hour === 11) this.isAM = ~this.isAM;
+                        if(this.hour === 11) this.isAM = this.isAM ? false : true;
                         this.textBoxDateTime();
                         this.bodyDraw();
                         break;
@@ -2182,7 +2289,7 @@ class CanvDTP
                             this.minute = 0;
                             this.hour++;
                             if(this.hour > 12) this.hour = 1;
-                            if(this.hour === 12) this.isAM = ~this.isAM;
+                            if(this.hour === 12) this.isAM = this.isAM ? false : true;
                         }
                         this.textBoxDateTime();
                         this.bodyDraw();
@@ -2195,7 +2302,7 @@ class CanvDTP
                             this.minute = 59;
                             this.hour--;
                             if(this.hour < 1) this.hour = 12;
-                            if(this.hour === 11) this.isAM = ~this.isAM;
+                            if(this.hour === 11) this.isAM = this.isAM ? false : true;
                         }
                         this.textBoxDateTime();
                         this.bodyDraw();
@@ -2208,7 +2315,7 @@ class CanvDTP
                             this.minute -= 60;
                             this.hour++;
                             if(this.hour > 12) this.hour = 1;
-                            if(this.hour === 12) this.isAM = ~this.isAM;
+                            if(this.hour === 12) this.isAM = this.isAM ? false : true; 
                         }
                         this.textBoxDateTime();
                         this.bodyDraw();
@@ -2221,14 +2328,14 @@ class CanvDTP
                             this.minute += 60;
                             this.hour--;
                             if(this.hour < 1) this.hour = 12;
-                            if(this.hour === 11) this.isAM = ~this.isAM;
+                            if(this.hour === 11) this.isAM = this.isAM ? false : true;
                         }
                         this.textBoxDateTime();
                         this.bodyDraw();
                         break;
 
                     case CanvDTP.SEL_AMPM:
-                        this.isAM = ~this.isAM;
+                        this.isAM = this.isAM ? false : true;
                         this.textBoxDateTime();
                         this.bodyDraw();
                         break;

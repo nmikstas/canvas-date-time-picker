@@ -91,6 +91,12 @@ class CanvDTP
             //Enable/disable debug.
             debug = false,
 
+            //Callback functions for data collection.
+            dateTimeStringCb = null,
+            dateStringCb     = null,
+            timeStringCb     = null,
+            dateTimeJSONCb   = null,
+
             //Icon canvas prameters.
             iBorderRadius = .20,
             iBorderWeight = .05,
@@ -265,6 +271,10 @@ class CanvDTP
     )
     {
         this.debug                  = debug;
+        this.dateTimeStringCb       = dateTimeStringCb;
+        this.dateStringCb           = dateStringCb;
+        this.timeStringCb           = timeStringCb;
+        this.dateTimeJSONCb         = dateTimeJSONCb;
         this.iBorderRadius          = iBorderRadius;
         this.iBorderWeight          = iBorderWeight;
         this.iXPadding              = iXPadding;
@@ -866,12 +876,36 @@ class CanvDTP
     //Update the date and time in the textbox.
     textBoxDateTime()
     {
+        //Calculate the day of the week.
+        let d = new Date(this.year, this.month - 1, this.day);
+        this.dayOfWeek = d.getDay();
+
         let date = this.month + "/" + this.day + "/" + this.year;
         let min  = this.minute > 9 ? "" : "0";
         min += this.minute;
         let ampm = this.isAM ? "AM" : "PM";
         let time = this.hour + ":" + min + " " + ampm;
         this.dtpText.value = date + " " + time;
+
+        //Check if any callbacks have been set and return the data.
+        if(this.dateTimeStringCb) this.dateTimeStringCb(this.dtpText.value);
+        if(this.dateStringCb) this.dateStringCb(date);
+        if(this.timeStringCb) this.timeStringCb(time);
+        
+        if(this.dateTimeJSONCb)
+        {
+            this.dateTimeJSONCb(
+            {
+                isPicked:  this.isFirstPicked,
+                month:     this.month - 1,
+                day:       this.day,
+                year:      this.year,
+                hour:      this.hour,
+                minute:    this.minute,
+                ampm:      this.isAM ? "AM" : "PM",
+                dayOfWeek: this.dayOfWeek
+            });
+        }
     }
 
     //Calculate if a year is a leap year.
@@ -938,6 +972,56 @@ class CanvDTP
         y1 = this.contentTop  + 8 * this.smallBoxHeight;
         y2 = this.contentTop + 9 * this.smallBoxHeight - 1;
         this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_TIME});
+    }
+
+    /*********************************** Data Access Functions ***********************************/
+
+    getDateTimeString()
+    {
+        if(!this.isFirstPicked) return null;
+
+        let date = this.month + "/" + this.day + "/" + this.year;
+        let min  = this.minute > 9 ? "" : "0";
+        min += this.minute;
+        let ampm = this.isAM ? "AM" : "PM";
+        let time = this.hour + ":" + min + " " + ampm;
+        return date + " " + time;
+    }
+
+    getDateString()
+    {
+        if(!this.isFirstPicked) return null;
+
+        return this.month + "/" + this.day + "/" + this.year;
+    }
+
+    getTimeString()
+    {
+        if(!this.isFirstPicked) return null;
+
+        let min  = this.minute > 9 ? "" : "0";
+        min += this.minute;
+        let ampm = this.isAM ? "AM" : "PM";
+        let time = this.hour + ":" + min + " " + ampm;
+        return time;
+    }
+
+    getDateTimeJSON()
+    {
+        //Calculate the day of the week.
+        let d = new Date(this.year, this.month - 1, this.day);
+        this.dayOfWeek = d.getDay();
+
+        return {
+            isPicked:  this.isFirstPicked,
+            month:     this.month - 1,
+            day:       this.day,
+            year:      this.year,
+            hour:      this.hour,
+            minute:    this.minute,
+            ampm:      this.isAM ? "AM" : "PM",
+            dayOfWeek: this.dayOfWeek
+        };
     }
 
     /************************************** Debug Functions **************************************/

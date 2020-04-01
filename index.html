@@ -18,11 +18,46 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-md-5"></div>
-
             <div class="col-md-4">
                 <div id="dtp">Date/Time Picker Div</div>
                 <div>Some text below the calendar</div>
+            </div>
+            <div class="col-md-4">
+                <div class="col-md-12 border">
+                    <h1>Callbacks</h1>
+                    <span>Date-Time String: </span><span id="date-time-span"></span><br>
+                    <span>Date String: </span><span id="date-span"></span><br>
+                    <span>Time String: </span><span id="time-span"></span><br><br>
+                    <h4>JSON Return Values</h4>
+                    <span>Is Picked: </span><span id="json-picked-span"></span><br>
+                    <span>Month: </span><span id="json-month-span"></span><br>
+                    <span>Day: </span><span id="json-day-span"></span><br>
+                    <span>Year: </span><span id="json-year-span"></span><br>
+                    <span>Day Of Week: </span><span id="json-day-of-week-span"></span><br>
+                    <span>Hour: </span><span id="json-hour-span"></span><br>
+                    <span>Minute: </span><span id="json-minute-span"></span><br>
+                    <span>AM/PM: </span><span id="json-am-pm-span"></span><br>
+                </div>
+                <br>
+                <div class="col-md-12 border">
+                    <h1>Textbox Value</h1>
+                    <span>Date-Time String: </span><span id="tb-span"></span><br>
+                </div>
+            </div>
+            <div class="col-md-4 border">
+                <h1>Function Calls</h1>
+                <span>Date-Time String: </span><span id="date-time-span1"></span><br>
+                <span>Date String: </span><span id="date-span1"></span><br>
+                <span>Time String: </span><span id="time-span1"></span><br><br>
+                <h4>JSON Return Values</h4>
+                <span>Is Picked: </span><span id="json-picked-span1"></span><br>
+                <span>Month: </span><span id="json-month-span1"></span><br>
+                <span>Day: </span><span id="json-day-span1"></span><br>
+                <span>Year: </span><span id="json-year-span1"></span><br>
+                <span>Day Of Week: </span><span id="json-day-of-week-span1"></span><br>
+                <span>Hour: </span><span id="json-hour-span1"></span><br>
+                <span>Minute: </span><span id="json-minute-span1"></span><br>
+                <span>AM/PM: </span><span id="json-am-pm-span1"></span><br>
             </div>
         </div>
     </div>
@@ -37,6 +72,6 @@
     
     <!--Javascript-->
     <script src="assets/js/canvasDateTimePicker.js"></script>
-    <script>new CanvDTP(document.getElementById("dtp"))</script>
+    <script src="assets/js/javascript.js"></script>
 </body>
 </html>

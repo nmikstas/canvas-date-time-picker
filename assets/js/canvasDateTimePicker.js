@@ -56,11 +56,13 @@ class CanvDTP
     static get SEL_MONTH()    {return 0x06}
     static get SEL_YEAR()     {return 0x07}
     static get SEL_DECADE()   {return 0x08}
-    static get SEL_INC1()     {return 0x09}
-    static get SEL_INC10()    {return 0x0A}
-    static get SEL_DEC1()     {return 0x0B}
-    static get SEL_DEC10()    {return 0x0C}
-    static get SEL_AMPM()     {return 0x0D}
+    static get SEL_MINC1()    {return 0x09}
+    static get SEL_MINC10()   {return 0x0A}
+    static get SEL_MDEC1()    {return 0x0B}
+    static get SEL_MDEC10()   {return 0x0C}
+    static get SEL_HINC1()    {return 0x0D}
+    static get SEL_HDEC1()    {return 0x0E}
+    static get SEL_AMPM()     {return 0x0F}
 
     //Displayed days of month types.
     static get DAY_THIS() {return 0x00}
@@ -72,13 +74,19 @@ class CanvDTP
     static get GRID_GENERAL() {return 0x01}
     static get GRID_TIME()    {return 0x02}
 
+    //Time increment types.
+    static get INC_1()  {return 0x00}
+    static get DEC_1()  {return 0x01}
+    static get INC_10() {return 0x02}
+    static get DEC_10() {return 0x03}
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //                                        Constructor                                        //
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     constructor(parentDiv)
     {
-        this.debug = true;
+        this.debug = false;
 
         //HTML nodes required for date/time picker.
         this.parentDiv = parentDiv;
@@ -281,32 +289,27 @@ class CanvDTP
         this.timeVertAdj     = .20;
         this.timeDivVertAdj  = .25;
         this.timeDivHorzAdj  = .15;
-        this.timeAmPmHorzAdj = -.045;
-        this.timehourHorzAdj = [.10, .10, .10, .10, .30, .10, .10, .10, .10, .10, .10, .10];
-        this.timeMinHorzAdj  =
-        [
-            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10,
-            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10,
-            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10,
-            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10,
-            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10,
-            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10
-        ];
-        this.timeFont   = "Arial";
-        this.timeColor  = "#000000";
-        this.timeWeight = .80;
+        this.timehourHorzAdj = [.30, .30, .30, .30, .30, .30, .30, .30, .30, .07, .10, .07];
+        this.timeMinHorzAdj  = .10;
+        this.timeFont        = "Arial";
+        this.timeColorn      = "#000000";
+        this.timeColorh      = "#8800ff";
+        this.timeWeight      = .80;
+        this.timeAmPmFont    = "Arial";
+        this.timeAmPmColorn  = "#000000";
+        this.timeAmPmColorh  = "#8800ff";
+        this.timeAmPmWeight  = .60;
+        this.timeAmPmVertAdj = .27;
+        this.timeAmPmHorzAdj = .10;
 
+        /**************************** Increment/Decrement Parameters *****************************/
 
+        this.incXPad    = .25;
+        this.incYPad    = .10;
+        this.incWeight  = .25;
+        this.incColorn  = "#000000";
+        this.incColorh  = "#8800ff";
 
-
-
-
-
-        
-
-
-
-        
         /************************************ Body Parameters ************************************/
 
         //Parameters of the body canvas.
@@ -655,63 +658,6 @@ class CanvDTP
 
     /************************************* Helper Functions **************************************/
 
-    //This function draws the calendar icon on the body canvas. Similar to above.
-    calDraw(calColor)
-    {
-        //Calculate the padding pixels and line width.
-        let calTop     = this.contentBottom - this.smallBoxHeight;
-        let calBottom  = this.contentBottom;
-        let calLeft    = this.contentLeft + (this.contentWidth / 2 - this.smallBoxWidth / 2);
-        let calRight   = this.contentLeft + (this.contentWidth / 2 + this.smallBoxWidth / 2);
-        let calWidth   = calRight - calLeft;
-        let calHeight  = calBottom - calTop;
-        let iXPad      = this.smallBoxWidth * this.calXPadding;
-        let iYPad      = this.smallBoxHeight * this.calYPadding;
-        let iLWidth    = calWidth * this.calLineWidth;
-        let iXWidth    = calWidth - 2 * iXPad;
-        let topWidth   = iXWidth / 5;
-        let gridTop    = calTop + iYPad + 2 * iLWidth;
-        let gridBottom = calBottom - iYPad;
-        let gridWidth  = iXWidth / 4;
-        let gridHeight = (gridBottom - gridTop) / 4;
-      
-        //Draw the top of the calendar.
-        this.ctxDTP.beginPath();
-        this.ctxDTP.lineWidth   = iLWidth;
-        this.ctxDTP.strokeStyle = calColor;
-        this.ctxDTP.moveTo(calLeft + iXPad, calTop + iYPad);        
-        this.ctxDTP.lineTo(calLeft + iXPad + 1 * topWidth, calTop + iYPad);
-        this.ctxDTP.moveTo(calLeft + iXPad + 2 * topWidth, calTop + iYPad);
-        this.ctxDTP.lineTo(calLeft + iXPad + 3 * topWidth, calTop + iYPad);
-        this.ctxDTP.moveTo(calLeft + iXPad + 4 * topWidth, calTop + iYPad);
-        this.ctxDTP.lineTo(calLeft + iXPad + 5 * topWidth, calTop + iYPad);
-        this.ctxDTP.moveTo(calLeft + iXPad, calTop + iYPad + iLWidth);
-        this.ctxDTP.lineTo(calLeft + iXPad + 5 * topWidth, calTop + iYPad + iLWidth);
-        this.ctxDTP.moveTo(calLeft + iXPad, calTop + iYPad + 2 * iLWidth);
-        this.ctxDTP.lineTo(calLeft + iXPad + 5 * topWidth, calTop + iYPad + 2 * iLWidth);
-
-        //Draw calendar grid.
-        this.ctxDTP.moveTo(calLeft + iXPad, calTop + iYPad - iLWidth / 2);
-        this.ctxDTP.lineTo(calLeft + iXPad, gridBottom);
-        this.ctxDTP.moveTo(calLeft + iXPad + gridWidth, gridTop);
-        this.ctxDTP.lineTo(calLeft + iXPad + gridWidth, gridBottom);
-        this.ctxDTP.moveTo(calLeft + iXPad + 2 * gridWidth, gridTop);
-        this.ctxDTP.lineTo(calLeft + iXPad + 2 * gridWidth, gridBottom);
-        this.ctxDTP.moveTo(calLeft + iXPad + 3 * gridWidth, gridTop);
-        this.ctxDTP.lineTo(calLeft + iXPad + 3 * gridWidth, gridBottom);
-        this.ctxDTP.moveTo(calLeft + iXPad + 4 * gridWidth, calTop + iYPad - iLWidth / 2);
-        this.ctxDTP.lineTo(calLeft + iXPad + 4 * gridWidth, gridBottom);
-        this.ctxDTP.moveTo(calLeft + iXPad, gridTop + gridHeight);
-        this.ctxDTP.lineTo(calLeft + iXPad + iXWidth, gridTop + gridHeight);
-        this.ctxDTP.moveTo(calLeft + iXPad, gridTop + 2 * gridHeight);
-        this.ctxDTP.lineTo(calLeft + iXPad + iXWidth, gridTop + 2 * gridHeight);
-        this.ctxDTP.moveTo(calLeft + iXPad, gridTop + 3 * gridHeight);
-        this.ctxDTP.lineTo(calLeft + iXPad + iXWidth, gridTop + 3 * gridHeight);
-        this.ctxDTP.moveTo(calLeft + iXPad, gridTop + 4 * gridHeight);
-        this.ctxDTP.lineTo(calLeft + iXPad + iXWidth, gridTop + 4 * gridHeight);
-        this.ctxDTP.stroke();
-    }
-
     //This function is called only once on the first pick after a page load.
     firstPick()
     {
@@ -994,11 +940,11 @@ class CanvDTP
     /******************************** Graphical Helper Functions *********************************/
 
     //Draw the previous button.
-    drawPrevious()
+    drawPrevious(color)
     {
         this.ctxDTP.beginPath();
-        this.ctxDTP.strokeStyle = this.prevNextColorn;
-        this.ctxDTP.fillStyle   = this.prevNextColorn;
+        this.ctxDTP.strokeStyle = color;
+        this.ctxDTP.fillStyle   = color;
         this.ctxDTP.lineWidth   = 1;
         this.ctxDTP.moveTo(this.contentLeft + this.prevNextXPad * this.smallBoxWidth,
             this.contentTop + .5 * this.smallBoxHeight);
@@ -1010,46 +956,12 @@ class CanvDTP
         this.ctxDTP.stroke();
     }
 
-    //Highlight the previous button.
-    highlightPrevious()
-    {
-        this.ctxDTP.beginPath();
-        this.ctxDTP.strokeStyle = this.prevNextColorh;
-        this.ctxDTP.fillStyle   = this.prevNextColorh;
-        this.ctxDTP.lineWidth   = 1;
-        this.ctxDTP.moveTo(this.contentLeft + this.prevNextXPad * this.smallBoxWidth, 
-            this.contentTop + .5 * this.smallBoxHeight);
-        this.ctxDTP.lineTo(this.contentLeft + this.smallBoxWidth - this.prevNextXPad * this.smallBoxWidth,
-            this.contentTop + this.prevNextYPad * this.contentTop);
-        this.ctxDTP.lineTo(this.contentLeft + this.smallBoxWidth - this.prevNextXPad * this.smallBoxWidth,
-            this.contentTop + this.smallBoxHeight - this.prevNextYPad * this.contentTop);
-        this.ctxDTP.fill();
-        this.ctxDTP.stroke();
-    }
-
     //Draw the next button.
-    drawNext()
+    drawNext(color)
     {
         this.ctxDTP.beginPath();
-        this.ctxDTP.strokeStyle = this.prevNextColorn;
-        this.ctxDTP.fillStyle   = this.prevNextColorn;
-        this.ctxDTP.lineWidth   = 1;
-        this.ctxDTP.moveTo(this.contentRight - this.prevNextXPad * this.smallBoxWidth,
-            this.contentTop + .5 * this.smallBoxHeight);
-        this.ctxDTP.lineTo(this.contentRight - this.smallBoxWidth + this.prevNextXPad * this.smallBoxWidth,
-            this.contentTop + this.prevNextYPad * this.contentTop);
-        this.ctxDTP.lineTo(this.contentRight - this.smallBoxWidth + this.prevNextXPad * this.smallBoxWidth,
-            this.contentTop + this.smallBoxHeight - this.prevNextYPad * this.contentTop);
-        this.ctxDTP.fill();
-        this.ctxDTP.stroke();
-    }
-
-    //Highlight the next button.
-    highlightNext()
-    {
-        this.ctxDTP.beginPath();
-        this.ctxDTP.strokeStyle = this.prevNextColorh;
-        this.ctxDTP.fillStyle   = this.prevNextColorh;
+        this.ctxDTP.strokeStyle = color;
+        this.ctxDTP.fillStyle   = color;
         this.ctxDTP.lineWidth   = 1;
         this.ctxDTP.moveTo(this.contentRight - this.prevNextXPad * this.smallBoxWidth,
             this.contentTop + .5 * this.smallBoxHeight);
@@ -1062,10 +974,10 @@ class CanvDTP
     }
 
     //Draw the clock button.
-    drawClock()
+    drawClock(color)
     {
         this.ctxDTP.beginPath();
-        this.ctxDTP.strokeStyle = this.clockColorn;
+        this.ctxDTP.strokeStyle = color;
         this.ctxDTP.lineWidth   = this.smallBoxHeight * this.clockWeight;
         this.ctxDTP.arc(this.contentLeft + .5 * this.contentWidth,
             this.contentTop + 8 * this.smallBoxHeight + .5 * this.smallBoxHeight, this.clockRadius, 0, 2 * Math.PI);
@@ -1078,20 +990,114 @@ class CanvDTP
         this.ctxDTP.stroke();
     }
 
-    //Highlight the clock button.
-    highlightClock()
+    incDraw(x1, x2, y1, y2, color, incType)
     {
+        let xPad = this.incXPad * (x2 - x1);
+        let yPad = this.incYPad * (y2 - y1);
+        let incLeft   = x1 + xPad;
+        let incRight  = x2 - xPad;
+        let incTop    = y1 + yPad;
+        let incBottom = y2 - yPad;
+        let incHeight = incBottom - incTop;
+        let incWidth  = incRight  - incLeft;
+
         this.ctxDTP.beginPath();
-        this.ctxDTP.strokeStyle = this.clockColorh;
-        this.ctxDTP.lineWidth   = this.smallBoxHeight * this.clockWeight;
-        this.ctxDTP.arc(this.contentLeft + .5 * (this.contentWidth),
-            this.contentTop + 8 * this.smallBoxHeight + .5 * this.smallBoxHeight, this.clockRadius, 0, 2 * Math.PI);
-        this.ctxDTP.moveTo(this.contentLeft + .5 * this.contentWidth - .60 * this.clockRadius,
-            this.contentTop + 8 * this.smallBoxHeight + .5 * this.smallBoxHeight);
-        this.ctxDTP.lineTo(this.contentLeft + .5 * this.contentWidth,
-            this.contentTop + 8 * this.smallBoxHeight + .5 * this.smallBoxHeight);
-        this.ctxDTP.lineTo(this.contentLeft + .5 * this.contentWidth,
-            this.contentTop + 8 * this.smallBoxHeight + .5 * this.smallBoxHeight - .85 * this.clockRadius);
+        this.ctxDTP.lineWidth   = incHeight * this.incWeight;
+        this.ctxDTP.strokeStyle = color;
+
+        switch(incType)
+        {
+            //Increment by 1 unit.
+            case CanvDTP.INC_1:
+                this.ctxDTP.moveTo(incLeft, incBottom);
+                this.ctxDTP.lineTo(incLeft + incWidth / 2, incBottom - incHeight / 2);
+                this.ctxDTP.lineTo(incRight, incBottom);
+                break;
+
+            //Increment by 10 units.
+            case CanvDTP.INC_10:
+                this.ctxDTP.moveTo(incLeft, incBottom);
+                this.ctxDTP.lineTo(incLeft + incWidth / 2, incBottom - incHeight / 2);
+                this.ctxDTP.lineTo(incRight, incBottom);
+                this.ctxDTP.moveTo(incLeft, incBottom - incHeight / 2);
+                this.ctxDTP.lineTo(incLeft + incWidth / 2, incTop);
+                this.ctxDTP.lineTo(incRight, incBottom - incHeight / 2);
+                break;
+
+            //Decrement by 1 unit.
+            case CanvDTP.DEC_1:
+                this.ctxDTP.moveTo(incLeft, incTop);
+                this.ctxDTP.lineTo(incLeft + incWidth / 2, incBottom - incHeight / 2);
+                this.ctxDTP.lineTo(incRight, incTop);
+                break;
+
+            //Decrement by 10 units.
+            default:
+                this.ctxDTP.moveTo(incLeft, incTop);
+                this.ctxDTP.lineTo(incLeft + incWidth / 2, incBottom - incHeight / 2);
+                this.ctxDTP.lineTo(incRight, incTop);
+                this.ctxDTP.moveTo(incLeft, incBottom - incHeight / 2);
+                this.ctxDTP.lineTo(incLeft + incWidth / 2, incBottom);
+                this.ctxDTP.lineTo(incRight, incBottom - incHeight / 2);
+                break;
+        }
+
+        this.ctxDTP.stroke();
+    }
+
+    //This function draws the calendar icon on the body canvas. Similar to above.
+    calDraw(color)
+    {
+        //Calculate the padding pixels and line width.
+        let calTop     = this.contentBottom - this.smallBoxHeight;
+        let calBottom  = this.contentBottom;
+        let calLeft    = this.contentLeft + (this.contentWidth / 2 - this.smallBoxWidth / 2);
+        let calRight   = this.contentLeft + (this.contentWidth / 2 + this.smallBoxWidth / 2);
+        let calWidth   = calRight - calLeft;
+        let iXPad      = this.smallBoxWidth * this.calXPadding;
+        let iYPad      = this.smallBoxHeight * this.calYPadding;
+        let iLWidth    = calWidth * this.calLineWidth;
+        let iXWidth    = calWidth - 2 * iXPad;
+        let topWidth   = iXWidth / 5;
+        let gridTop    = calTop + iYPad + 2 * iLWidth;
+        let gridBottom = calBottom - iYPad;
+        let gridWidth  = iXWidth / 4;
+        let gridHeight = (gridBottom - gridTop) / 4;
+      
+        //Draw the top of the calendar.
+        this.ctxDTP.beginPath();
+        this.ctxDTP.lineWidth   = iLWidth;
+        this.ctxDTP.strokeStyle = color;
+        this.ctxDTP.moveTo(calLeft + iXPad, calTop + iYPad);        
+        this.ctxDTP.lineTo(calLeft + iXPad + 1 * topWidth, calTop + iYPad);
+        this.ctxDTP.moveTo(calLeft + iXPad + 2 * topWidth, calTop + iYPad);
+        this.ctxDTP.lineTo(calLeft + iXPad + 3 * topWidth, calTop + iYPad);
+        this.ctxDTP.moveTo(calLeft + iXPad + 4 * topWidth, calTop + iYPad);
+        this.ctxDTP.lineTo(calLeft + iXPad + 5 * topWidth, calTop + iYPad);
+        this.ctxDTP.moveTo(calLeft + iXPad, calTop + iYPad + iLWidth);
+        this.ctxDTP.lineTo(calLeft + iXPad + 5 * topWidth, calTop + iYPad + iLWidth);
+        this.ctxDTP.moveTo(calLeft + iXPad, calTop + iYPad + 2 * iLWidth);
+        this.ctxDTP.lineTo(calLeft + iXPad + 5 * topWidth, calTop + iYPad + 2 * iLWidth);
+
+        //Draw calendar grid.
+        this.ctxDTP.moveTo(calLeft + iXPad, calTop + iYPad - iLWidth / 2);
+        this.ctxDTP.lineTo(calLeft + iXPad, gridBottom);
+        this.ctxDTP.moveTo(calLeft + iXPad + gridWidth, gridTop);
+        this.ctxDTP.lineTo(calLeft + iXPad + gridWidth, gridBottom);
+        this.ctxDTP.moveTo(calLeft + iXPad + 2 * gridWidth, gridTop);
+        this.ctxDTP.lineTo(calLeft + iXPad + 2 * gridWidth, gridBottom);
+        this.ctxDTP.moveTo(calLeft + iXPad + 3 * gridWidth, gridTop);
+        this.ctxDTP.lineTo(calLeft + iXPad + 3 * gridWidth, gridBottom);
+        this.ctxDTP.moveTo(calLeft + iXPad + 4 * gridWidth, calTop + iYPad - iLWidth / 2);
+        this.ctxDTP.lineTo(calLeft + iXPad + 4 * gridWidth, gridBottom);
+        this.ctxDTP.moveTo(calLeft + iXPad, gridTop + gridHeight);
+        this.ctxDTP.lineTo(calLeft + iXPad + iXWidth, gridTop + gridHeight);
+        this.ctxDTP.moveTo(calLeft + iXPad, gridTop + 2 * gridHeight);
+        this.ctxDTP.lineTo(calLeft + iXPad + iXWidth, gridTop + 2 * gridHeight);
+        this.ctxDTP.moveTo(calLeft + iXPad, gridTop + 3 * gridHeight);
+        this.ctxDTP.lineTo(calLeft + iXPad + iXWidth, gridTop + 3 * gridHeight);
+        this.ctxDTP.moveTo(calLeft + iXPad, gridTop + 4 * gridHeight);
+        this.ctxDTP.lineTo(calLeft + iXPad + iXWidth, gridTop + 4 * gridHeight);
         this.ctxDTP.stroke();
     }
 
@@ -1514,9 +1520,9 @@ class CanvDTP
         );
         this.ctxDTP.stroke();
         
-        this.drawPrevious(); //Draw the previous button.
-        this.drawNext();     //Draw the next button.
-        this.drawClock();    //Draw the clock button.
+        this.drawPrevious(this.prevNextColorn); //Draw the previous button.
+        this.drawNext(this.prevNextColorn);     //Draw the next button.
+        this.drawClock(this.clockColorn);       //Draw the clock button.
 
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
@@ -1577,18 +1583,18 @@ class CanvDTP
 
                     //Highlight the previous button.
                     case CanvDTP.SEL_PREVIOUS:
-                        this.highlightPrevious();
+                        this.drawPrevious(this.prevNextColorh);
                         break;
 
                     //Highlight the next button.
                     case CanvDTP.SEL_NEXT:
-                        this.highlightNext();
+                        this.drawNext(this.prevNextColorh);
                         break;
 
                     //Highlight the clock graphic.
                     case CanvDTP.SEL_TIME:
                     default:
-                        this.highlightClock();
+                        this.drawClock(this.clockColorh);
                         break;
                 }
             }
@@ -1639,9 +1645,9 @@ class CanvDTP
         );
         this.ctxDTP.stroke();
        
-        this.drawPrevious(); //Draw the previous button.
-        this.drawNext();     //Draw the next button.
-        this.drawClock();    //Draw the clock button.
+        this.drawPrevious(this.prevNextColorn); //Draw the previous button.
+        this.drawNext(this.prevNextColorn);     //Draw the next button.
+        this.drawClock(this.clockColorn);       //Draw the clock button.
 
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
@@ -1691,17 +1697,17 @@ class CanvDTP
                         break;
 
                     case CanvDTP.SEL_PREVIOUS:
-                        this.highlightPrevious();
+                        this.drawPrevious(this.prevNextColorh);
                         break;
 
                     case CanvDTP.SEL_NEXT:
-                        this.highlightNext();
+                        this.drawNext(this.prevNextColorh);
                         break;
 
                     //Highlight the clock graphic.
                     case CanvDTP.SEL_TIME:
                     default:
-                        this.highlightClock();
+                        this.drawClock(this.clockColorh);
                         break;
                 }
             }
@@ -1755,9 +1761,9 @@ class CanvDTP
         );
         this.ctxDTP.stroke();
 
-        this.drawPrevious(); //Draw the previous button.
-        this.drawNext();     //Draw the next button.
-        this.drawClock();    //Draw the clock button.
+        this.drawPrevious(this.prevNextColorn); //Draw the previous button.
+        this.drawNext(this.prevNextColorn);     //Draw the next button.
+        this.drawClock(this.clockColorn);       //Draw the clock button.
 
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
@@ -1807,16 +1813,16 @@ class CanvDTP
                         break;
 
                     case CanvDTP.SEL_PREVIOUS:
-                        this.highlightPrevious();
+                        this.drawPrevious(this.prevNextColorh);
                         break;
 
                     case CanvDTP.SEL_NEXT:
-                        this.highlightNext();
+                        this.drawNext(this.prevNextColorh);
                         break;
 
                     case CanvDTP.SEL_TIME:
                     default:
-                        this.highlightClock();
+                        this.drawClock(this.clockColorh);
                         break;
                 }
             }
@@ -1879,9 +1885,9 @@ class CanvDTP
         );
         this.ctxDTP.stroke();
 
-        this.drawPrevious(); //Draw the previous button.
-        this.drawNext();     //Draw the next button.
-        this.drawClock();    //Draw the clock button.
+        this.drawPrevious(this.prevNextColorn); //Draw the previous button.
+        this.drawNext(this.prevNextColorn);     //Draw the next button.
+        this.drawClock(this.clockColorn);       //Draw the clock button.
 
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
@@ -1924,16 +1930,16 @@ class CanvDTP
                         break;
 
                     case CanvDTP.SEL_PREVIOUS:
-                        this.highlightPrevious();
+                        this.drawPrevious(this.prevNextColorh);
                         break;
 
                     case CanvDTP.SEL_NEXT:
-                        this.highlightNext();
+                        this.drawNext(this.prevNextColorh);
                         break;
 
                     case CanvDTP.SEL_TIME:
                     default:
-                        this.highlightClock();
+                        this.drawClock(this.clockColorh);
                         break;
                 }
             }
@@ -1947,26 +1953,6 @@ class CanvDTP
     
     drawTime()
     {
-        /*
-        this.timeVertAdj     = .20;
-        this.timeDivHorzAdj  = .20;
-        this.timeAmPmHorzAdj = .20;
-        this.timehourHorzAdj = [.10, .10, .10, .10, .10, .10, .10, .10, .10, .10, .10, .10];
-        this.timeMinHorzAdj  =
-        [
-            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10,
-            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10,
-            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10,
-            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10,
-            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10,
-            .10, .10, .10, .10, .10, .10, .10, .10, .10, .10
-        ];
-        this.timeFont   = "Arial";
-        this.timeColorn = "#000000";
-        this.timeColorh = "#8800ff";
-        this.timeWeight = .80;
-        */
-
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_TIME);
 
@@ -1981,19 +1967,61 @@ class CanvDTP
         y2 = this.contentBottom;
         this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_DATE});
 
+        //Hour increment hit boundaries.
+        x1 = this.contentLeft;
+        x2 = this.contentLeft + this.timeBoxWidth;
+        y1 = this.contentTop + .5 * this.timeBoxHeight;
+        y2 = this.contentTop + this.timeBoxHeight;
+        this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_HINC1});
 
+        //Hour decrement hit boundaries.
+        x1 = this.contentLeft;
+        x2 = this.contentLeft + this.timeBoxWidth;
+        y1 = this.contentTop + 2 * this.timeBoxHeight;
+        y2 = this.contentTop + 2.5 * this.timeBoxHeight;
+        this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_HDEC1});
 
+        //Minute increment 1 hit boundaries.
+        x1 = this.contentLeft + 1.5 * this.timeBoxWidth;
+        x2 = this.contentLeft + 2.5 * this.timeBoxWidth;
+        y1 = this.contentTop + .5 * this.timeBoxHeight;
+        y2 = this.contentTop + this.timeBoxHeight;
+        this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_MINC1});
 
+        //Minute increment 10 hit boundaries.
+        x1 = this.contentLeft + 1.5 * this.timeBoxWidth;
+        x2 = this.contentLeft + 2.5 * this.timeBoxWidth;
+        y1 = this.contentTop;
+        y2 = this.contentTop + .5 * this.timeBoxHeight;
+        this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_MINC10});
 
+        //Minute deccrement 1 hit boundaries.
+        x1 = this.contentLeft + 1.5 * this.timeBoxWidth;
+        x2 = this.contentLeft + 2.5 * this.timeBoxWidth;
+        y1 = this.contentTop + 2 * this.timeBoxHeight;
+        y2 = this.contentTop + 2.5 * this.timeBoxHeight;
+        this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_MDEC1});
 
+        //Minute deccrement 10 hit boundaries.
+        x1 = this.contentLeft + 1.5 * this.timeBoxWidth;
+        x2 = this.contentLeft + 2.5 * this.timeBoxWidth;
+        y1 = this.contentTop + 2.5 * this.timeBoxHeight;
+        y2 = this.contentTop + 3 * this.timeBoxHeight;
+        this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_MDEC10});
 
+        //AM/PM hit boundaries.
+        x1 = this.contentLeft + 2.5 * this.timeBoxWidth;
+        x2 = this.contentLeft + 3.5 * this.timeBoxWidth;
+        y1 = this.contentTop + this.timeBoxHeight;
+        y2 = this.contentTop + 2 * this.timeBoxHeight;
+        this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_AMPM});
 
         //Draw the calendar icon.
         this.calDraw(this.calCalColorn);
 
         this.ctxDTP.beginPath();
         this.ctxDTP.font = (this.timeBoxHeight * this.timeWeight) + "px " + this.timeFont;
-        this.ctxDTP.fillStyle = this.timeColor;
+        this.ctxDTP.fillStyle = this.timeColorn;
         this.ctxDTP.fillText //Draw the hours.
         (
             this.hour, 
@@ -2005,26 +2033,50 @@ class CanvDTP
             ":", 
             this.contentLeft + this.timeBoxWidth + this.timeBoxWidth * this.timeDivHorzAdj,
             this.contentTop + 2 * this.timeBoxHeight - this.timeBoxHeight * this.timeDivVertAdj
-        );                
+        );            
         this.ctxDTP.fillText //Draw the minutes.
         (
-            this.minute, 
-            this.contentLeft + 1.5 * this.timeBoxWidth + this.timeBoxWidth * this.timeMinHorzAdj[this.minute - 1],
+            this.minute < 10 ? "0" + this.minute : this.minute, 
+            this.contentLeft + 1.5 * this.timeBoxWidth + this.timeBoxWidth * this.timeMinHorzAdj,
             this.contentTop + 2 * this.timeBoxHeight - this.timeBoxHeight * this.timeVertAdj
         );
-        this.ctxDTP.fillText //Draw AM/PM.
+        
+        //Draw the hour inc1 icon.
+        this.incDraw(this.hitBounds[1].x1, this.hitBounds[1].x2, this.hitBounds[1].y1,
+            this.hitBounds[1].y2, this.incColorn, CanvDTP.INC_1);
+
+        //Draw the minute inc1 icon.
+        this.incDraw(this.hitBounds[3].x1, this.hitBounds[3].x2, this.hitBounds[3].y1,
+            this.hitBounds[3].y2, this.incColorn, CanvDTP.INC_1);
+
+        //Draw the minute inc10 icon.
+        this.incDraw(this.hitBounds[4].x1, this.hitBounds[4].x2, this.hitBounds[4].y1,
+            this.hitBounds[4].y2, this.incColorn, CanvDTP.INC_10);
+
+        //Draw the hour dec1 icon.
+        this.incDraw(this.hitBounds[2].x1, this.hitBounds[2].x2, this.hitBounds[2].y1,
+            this.hitBounds[2].y2, this.incColorn, CanvDTP.DEC_1);
+
+        //Draw the minute dec1 icon.
+        this.incDraw(this.hitBounds[5].x1, this.hitBounds[5].x2, this.hitBounds[5].y1,
+            this.hitBounds[5].y2, this.incColorn, CanvDTP.DEC_1);
+
+        //Draw the minute dec10 icon.
+        this.incDraw(this.hitBounds[6].x1, this.hitBounds[6].x2, this.hitBounds[6].y1,
+            this.hitBounds[6].y2, this.incColorn, CanvDTP.DEC_10);
+        this.ctxDTP.stroke();
+
+        //Draw AM/PM.
+        this.ctxDTP.beginPath();
+        this.ctxDTP.font = (this.timeBoxHeight * this.timeAmPmWeight) + "px " + this.timeAmPmFont;
+        this.ctxDTP.fillStyle = this.timeAmPmColorn;
+        this.ctxDTP.fillText
         (
             this.isAM ? "AM" : "PM", 
             this.contentLeft + 2.5 * this.timeBoxWidth + this.timeBoxWidth * this.timeAmPmHorzAdj,
-            this.contentTop + 2 * this.timeBoxHeight - this.timeBoxHeight * this.timeVertAdj
-        );  
-        
-        
-
-
-
+            this.contentTop + 2 * this.timeBoxHeight - this.timeBoxHeight * this.timeAmPmVertAdj
+        );
         this.ctxDTP.stroke();
-
 
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
@@ -2049,12 +2101,40 @@ class CanvDTP
                         this.calDraw(this.calCalColorh);
                         break;
 
+                    case CanvDTP.SEL_HINC1:
+                    case CanvDTP.SEL_MINC1:
+                        this.incDraw(this.hitBounds[i].x1, this.hitBounds[i].x2, this.hitBounds[i].y1, 
+                            this.hitBounds[i].y2, this.incColorh, CanvDTP.INC_1);
+                        break;
 
+                    case CanvDTP.SEL_MINC10:
+                        this.incDraw(this.hitBounds[i].x1, this.hitBounds[i].x2, this.hitBounds[i].y1,
+                            this.hitBounds[i].y2, this.incColorh, CanvDTP.INC_10);
+                        break;
 
+                    case CanvDTP.SEL_HDEC1:
+                    case CanvDTP.SEL_MDEC1:
+                        this.incDraw(this.hitBounds[i].x1, this.hitBounds[i].x2, this.hitBounds[i].y1,
+                            this.hitBounds[i].y2, this.incColorh, CanvDTP.DEC_1);
+                        break;
 
+                    case CanvDTP.SEL_MDEC10:
+                        this.incDraw(this.hitBounds[i].x1, this.hitBounds[i].x2, this.hitBounds[i].y1,
+                            this.hitBounds[i].y2, this.incColorh, CanvDTP.DEC_10);
+                        break;
 
-
-
+                    case CanvDTP.SEL_AMPM:
+                        this.ctxDTP.beginPath();
+                        this.ctxDTP.font = (this.timeBoxHeight * this.timeAmPmWeight) + "px " + this.timeAmPmFont;
+                        this.ctxDTP.fillStyle = this.timeAmPmColorh;
+                        this.ctxDTP.fillText //Draw AM/PM.
+                        (
+                            this.isAM ? "AM" : "PM", 
+                            this.contentLeft + 2.5 * this.timeBoxWidth + this.timeBoxWidth * this.timeAmPmHorzAdj,
+                            this.contentTop + 2 * this.timeBoxHeight - this.timeBoxHeight * this.timeAmPmVertAdj
+                        );
+                        this.ctxDTP.stroke();
+                        break;
                 }
             }
         }
@@ -2076,6 +2156,80 @@ class CanvDTP
                 {
                     case CanvDTP.SEL_DATE:
                         this.dateTime = CanvDTP.CAL_DATE;
+                        this.bodyDraw();
+                        break;
+
+                    case CanvDTP.SEL_HINC1:
+                        this.hour++;
+                        if(this.hour > 12) this.hour = 1;
+                        if(this.hour === 12) this.isAM = ~this.isAM;
+                        this.textBoxDateTime();
+                        this.bodyDraw();
+                        break;
+
+                    case CanvDTP.SEL_HDEC1:
+                        this.hour--;
+                        if(this.hour < 1) this.hour = 12;
+                        if(this.hour === 11) this.isAM = ~this.isAM;
+                        this.textBoxDateTime();
+                        this.bodyDraw();
+                        break;
+
+                    case CanvDTP.SEL_MINC1:
+                        this.minute++;
+                        if(this.minute > 59)
+                        {
+                            this.minute = 0;
+                            this.hour++;
+                            if(this.hour > 12) this.hour = 1;
+                            if(this.hour === 12) this.isAM = ~this.isAM;
+                        }
+                        this.textBoxDateTime();
+                        this.bodyDraw();
+                        break;
+
+                    case CanvDTP.SEL_MDEC1:
+                        this.minute--;
+                        if(this.minute < 0)
+                        {
+                            this.minute = 59;
+                            this.hour--;
+                            if(this.hour < 1) this.hour = 12;
+                            if(this.hour === 11) this.isAM = ~this.isAM;
+                        }
+                        this.textBoxDateTime();
+                        this.bodyDraw();
+                        break;
+
+                    case CanvDTP.SEL_MINC10:
+                        this.minute += 10;
+                        if(this.minute > 59)
+                        {
+                            this.minute -= 60;
+                            this.hour++;
+                            if(this.hour > 12) this.hour = 1;
+                            if(this.hour === 12) this.isAM = ~this.isAM;
+                        }
+                        this.textBoxDateTime();
+                        this.bodyDraw();
+                        break;
+
+                    case CanvDTP.SEL_MDEC10:
+                        this.minute -= 10;
+                        if(this.minute < 0)
+                        {
+                            this.minute += 60;
+                            this.hour--;
+                            if(this.hour < 1) this.hour = 12;
+                            if(this.hour === 11) this.isAM = ~this.isAM;
+                        }
+                        this.textBoxDateTime();
+                        this.bodyDraw();
+                        break;
+
+                    case CanvDTP.SEL_AMPM:
+                        this.isAM = ~this.isAM;
+                        this.textBoxDateTime();
                         this.bodyDraw();
                         break;
                 }
@@ -2249,7 +2403,6 @@ class CanvDTP
                         break;
                 }
             }
-            
         }
     }
 }

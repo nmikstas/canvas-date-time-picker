@@ -11,6 +11,7 @@ h1
 
 #dtp
 {
+    z-index: 99;
     font-size: 20px;
     margin-top: 50px;
 }
@@ -20,4 +21,9 @@ h1
     height: 700px;
     width: 200px;
     background-color: aqua;
+}
+
+.col-style
+{
+    z-index: -1;
 }

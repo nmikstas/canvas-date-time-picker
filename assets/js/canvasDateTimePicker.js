@@ -88,6 +88,8 @@ class CanvDTP
     (
         parentDiv,
         {
+            /********************************** Misc Parameters **********************************/
+
             //Enable/disable debug.
             debug = false,
 
@@ -97,45 +99,73 @@ class CanvDTP
             timeStringCb     = null,
             dateTimeJSONCb   = null,
 
-            //Icon canvas prameters.
-            iBorderRadius = .20,
-            iBorderWeight = .05,
-            iXPadding     = .20,
-            iYPadding     = .20,
-            iLineWidth    = .02,
+            /********************************* Common Parameters *********************************/
+
+            //Selectable Items.
+            selectBorderColor = "#0087b6",
+            selectFillColor   = "#a4e3f7",
+            selectRadius      = .25,
+            selectWeight      = .07,
+            
+            //Previous/Next Parameters.
+            prevNextColorn = "#000000",
+            prevNextColorh = "#8800ff",
+            prevNextXPad   = .20,
+            prevNextYPad   = .35,
+        
+            //Clock Graphic Parameters.
+            clockColorn = "#000000",
+            clockColorh = "#8800ff",
+            clockPad    = .10,
+            clockWeight = .07,
+
+            //Calendar Graphic Parameters.
+            calCalColorn = "#000000",
+            calCalColorh = "#8800ff",
+            calXPadding  = .20,
+            calYPadding  = .10,
+            calLineWidth = .05,
+
+            /****************************** Icon Canvas Parameters *******************************/
+
             iBorderColorn = "#a0a0a0",
             iFillColorn   = "#d0d0d0",
             iCalColorn    = "#000000",
             iBorderColorh = "#202020",
             iFillColorh   = "#808080",
             iCalColorh    = "#ffffff",
+            iBorderRadius = .20,
+            iBorderWeight = .05,
+            iXPadding     = .20,
+            iYPadding     = .20,
+            iLineWidth    = .02,
 
-            //Selectable Items
-            selectRadius = .25,
-            selectWeight = .07,
-            selectBorderColor = "#0087b6",
-            selectFillColor   = "#a4e3f7",
+            /****************************** Body Canvas Parameters *******************************/
 
-            //Mouse Pointer
-            PointerWidth = .005,
-            PointerRad   = .01,
-            PointerColor = "#000000",
+            bBorderColor  = "#a4e3f7",
+            bFillColor    = "#e5f5fa",
+            bBorderRadius = .05,
+            bBorderWeight = .01,
+            bXPadding     = .10,
+            bYPadding     = .10,
+            bLineWidth    = .02,
+            
+            /******************************* Month View Parameters *******************************/
 
-            //Days of Week
-            days            = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+            //Days of Week.
+            headerColor     = "#0087b6",
+            headerFontStyle = "Arial",
             headerHorzAdj   = [.12, .08, .15, .05, .15, .20, .12],
             headerVertAdj   = .20,
             headerScale     = .80,
-            headerColor     = "#0087b6",
-            headerFontStyle = "Arial",
-
-            //Days of Month
+            
+            //Days of Month.
             nonDayColorn = "#888888",
             dayColorn    = "#000000",
             nonDayColorh = "#ff8888",
             dayColorh    = "#8800ff",
-            dayScale     = .80,
             dayFontStyle = "Arial",
+            dayScale     = .80,
             dayVertAdj   = .20,
             dayHorzAdj   = 
             [
@@ -145,128 +175,110 @@ class CanvDTP
                 .18
             ],
 
-            //Month and Year
+            //Month and Year.
             monthYearn         = "#000000",
             monthYearh         = "#8800ff",
-            monthYearScale     = .80,
             monthYearFontStyle = "Arial",
+            monthYearScale     = .80,
             monthYearVertAdj   = .20,
             monthYearHorzAdj   = [.60, .50, .90, 1.15, 1.15, 1.05, 1.15, .75, .20, .60, .30, .30],
 
-            //Previous/Next Parameters
-            prevNextColorn = "#000000",
-            prevNextColorh = "#8800ff",
-            prevNextXPad   = .20,
-            prevNextYPad   = .35,
-        
-            //Clock Graphic Parameters
-            clockColorn = "#000000",
-            clockColorh = "#8800ff",
-            clockPad    = .10,
-            clockWeight = .07,
-
-            //Currently Selected Day
-            currentRadius      = .25,
-            currentWeight      = .07,
+            //Currently Selected Day.
             currentBorderColor = "#00f7ff",
             currentFillColor   = "#aefcff",
+            currentRadius      = .25,
+            currentWeight      = .07,
 
-            //Today's Date
-            nowWeight = .25,
+            //Today's Date.
             nowColor  = "#000000",
+            nowWeight = .25,
 
-            //Month Text
+            /******************************* Year View Parameters ********************************/
+
+            //Month Text.
             monthn         = "#000000",
             monthh         = "#8800ff",
-            monthScale     = .60,
             monthFontStyle = "Arial",
+            monthScale     = .60,
             monthVertAdj   = .25,
             monthHorzAdj   = [.20, .20, .20, .20, .15, .20, .22, .18, .17, .20, .17, .17],
 
-            //Year
+            //Year.
             bannerYearn         = "#000000",
             bannerYearh         = "#8800ff",
-            bannerYearScale     = .80,
             bannerYearFontStyle = "Arial",
+            bannerYearScale     = .80,
             bannerYearVertAdj   = .20,
             bannerYearHorzAdj   = 1.80,
 
-            //Year Text
+            /****************************** Decade View Parameters *******************************/
+
+            //Year Text.
             nonYearn      = "#888888",
             yearn         = "#000000",
             nonYearh      = "#ff8888",
             yearh         = "#8800ff",
-            yearScale     = .60,
             yearFontStyle = "Arial",
+            yearScale     = .60,
             yearVertAdj   = .25,
             yearHorzAdj   = .10,
 
-            //Decade
+            //Decade.
             bannerDecaden         = "#000000",
             bannerDecadeh         = "#8800ff",
-            bannerDecadeScale     = .80,
             bannerDecadeFontStyle = "Arial",
+            bannerDecadeScale     = .80,
             bannerDecadeVertAdj   = .20,
             bannerDecadeHorzAdj   = 1.0,
 
-            //Decade Text
+            /****************************** Century View Parameters ******************************/
+
+            //Decade Text.
             nonDecaden      = "#888888",
             decaden         = "#000000",
             nonDecadeh      = "#ff8888",
             decadeh         = "#8800ff",
-            decadeScale     = .50,
             decadeFontStyle = "Arial",
+            decadeScale     = .50,
             decadeVertAdj1  = .55,
             decadeVertAdj2  = .08,
             decadeHorzAdj   = .20,
 
-            //Century
+            //Century.
             bannerCenturyn         = "#000000",
             bannerCenturyh         = "#8800ff",
-            bannerCenturyScale     = .80,
             bannerCenturyFontStyle = "Arial",
+            bannerCenturyScale     = .80,
             bannerCenturyVertAdj   = .20,
             bannerCenturyHorzAdj   = 1.0,
 
-            //Calendar Icon
-            calXPadding  = .20,
-            calYPadding  = .10,
-            calLineWidth = .05,
-            calCalColorn = "#000000",
-            calCalColorh = "#8800ff",
+            /******************************* Time View Parameters ********************************/
 
-            //Time Parameters
+            //Time Parameters.
+            timeColorn      = "#000000",
+            timeColorh      = "#8800ff",
+            timeFont        = "Arial",
+            timeWeight      = .80,
             timeVertAdj     = .20,
             timeDivVertAdj  = .25,
             timeDivHorzAdj  = .15,
-            timehourHorzAdj = [.30, .30, .30, .30, .30, .30, .30, .30, .30, .07, .10, .07],
             timeMinHorzAdj  = .10,
-            timeFont        = "Arial",
-            timeColorn      = "#000000",
-            timeColorh      = "#8800ff",
-            timeWeight      = .80,
-            timeAmPmFont    = "Arial",
+            timehourHorzAdj = [.30, .30, .30, .30, .30, .30, .30, .30, .30, .07, .10, .07],
+            
+            //AM/PM Parameters.
             timeAmPmColorn  = "#000000",
             timeAmPmColorh  = "#8800ff",
+            timeAmPmFont    = "Arial",
             timeAmPmWeight  = .60,
             timeAmPmVertAdj = .27,
             timeAmPmHorzAdj = .10,
 
-            //Increment/Decrement Parameters
-            incXPad    = .25,
-            incYPad    = .10,
-            incWeight  = .25,
+            //Increment/Decrement Parameters.
             incColorn  = "#000000",
             incColorh  = "#8800ff",
-
-            //Parameters of the body canvas.
-            bBorderRadius = .05,
-            bBorderWeight = .01,
-            bXPadding     = .10,
-            bYPadding     = .10,
-            bLineWidth    = .02,
-            bBorderColor  = "#a4e3f7",
-            bFillColor    = "#e5f5fa"
+            incXPad    = .25,
+            incYPad    = .10,
+            incWeight  = .25
         } = {}
     )
     {
@@ -290,10 +302,6 @@ class CanvDTP
         this.selectWeight           = selectWeight;
         this.selectBorderColor      = selectBorderColor;
         this.selectFillColor        = selectFillColor;
-        this.PointerWidth           = PointerWidth;
-        this.PointerRad             = PointerRad;
-        this.PointerColor           = PointerColor;
-        this.days                   = days;
         this.headerHorzAdj          = headerHorzAdj;
         this.headerVertAdj          = headerVertAdj;
         this.headerScale            = headerScale;
@@ -472,6 +480,11 @@ class CanvDTP
         this.bodyX = -1000;
         this.bodyY = -1000;
 
+        //Mouse Pointer
+        this.PointerWidth = .005,
+        this.PointerRad   = .01,
+        this.PointerColor = "#000000",
+
         //Variables for keeping track of date and time.
         this.isFirstPicked = false;
         this.isLeapYear    = false;
@@ -511,6 +524,7 @@ class CanvDTP
         //Calendar drawing and hit detection variables.
         this.dayArray       = new Array(42);
         this.hitBounds      = [];
+        this.days           = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
         this.monthDaysArray = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         this.MonthsArray    =
         [

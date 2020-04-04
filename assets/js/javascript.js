@@ -1,6 +1,4 @@
 let dateTimeSpan       = document.getElementById("date-time-span");
-let dateSpan           = document.getElementById("date-span");
-let timeSpan           = document.getElementById("time-span");
 let jsonPickedSpan     = document.getElementById("json-picked-span");
 let jsonMonthSpan      = document.getElementById("json-month-span");
 let jsonDaySpan        = document.getElementById("json-day-span");
@@ -12,8 +10,6 @@ let jsonIsAMSpan       = document.getElementById("json-am-pm-span");
 let jsonDayOfWeekSpan  = document.getElementById("json-day-of-week-span");
 let jsonDayOfYearSpan  = document.getElementById("json-day-of-year-span");
 let dateTimeSpan1      = document.getElementById("date-time-span1");
-let dateSpan1          = document.getElementById("date-span1");
-let timeSpan1          = document.getElementById("time-span1");
 let jsonPickedSpan1    = document.getElementById("json-picked-span1");
 let jsonMonthSpan1     = document.getElementById("json-month-span1");
 let jsonDaySpan1       = document.getElementById("json-day-span1");
@@ -27,8 +23,6 @@ let jsonDayOfYearSpan1 = document.getElementById("json-day-of-year-span1");
 
 //Callback functions.
 let showDateTimeString = (dateTimeString) => dateTimeSpan.innerHTML = dateTimeString;
-let showDateString = (dateString) => dateSpan.innerHTML = dateString;
-let showTimeString = (timeString) => timeSpan.innerHTML = timeString;
 let showDateTimeJSON = (dateTimeJSON) =>
 {
     jsonPickedSpan.innerHTML    = dateTimeJSON.isPicked;
@@ -48,12 +42,10 @@ let canDTP = new CanvDTP
     document.getElementById("dtp"),
     {
         dateTimeStringCb: showDateTimeString,
-        dateStringCb:     showDateString,
-        timeStringCb:     showTimeString,
         dateTimeJSONCb:   showDateTimeJSON,
         //isDate:           false,
         //isTime:           false,
-        dateTimeFormat:   "dddd, MMMM Do YYYY HH:mm [mt -or- ]h:mm a. [The] DDDo [Day of the Year]"
+        dateTimeFormat:   "dddd, MMMM Do YYYY h:mm a. DDDo [Day of the Year]"
     }
 )
 
@@ -65,16 +57,12 @@ let tbSpan = document.getElementById("tb-span");
 let getData = () =>
 {
     let dateTime = canDTP.getDateTimeString();
-    let date     = canDTP.getDateString();
-    let time     = canDTP.getTimeString();
     let json     = canDTP.getDateTimeJSON();
 
     //Get the text from the textbox.
     tbSpan.innerHTML = tb.value ? tb.value : "Null";
 
     dateTimeSpan1.innerHTML      = dateTime ? dateTime : "Null";
-    dateSpan1.innerHTML          = date ? date : "Null";
-    timeSpan1.innerHTML          = time ? time: "Null";
     jsonPickedSpan1.innerHTML    = json.isPicked;
     jsonMonthSpan1.innerHTML     = json.month;
     jsonDaySpan1.innerHTML       = json.day;

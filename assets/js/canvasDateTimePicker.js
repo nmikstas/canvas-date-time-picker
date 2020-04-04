@@ -97,8 +97,6 @@ class CanvDTP
 
             //Callback functions for data collection.
             dateTimeStringCb = null,
-            dateStringCb     = null,
-            timeStringCb     = null,
             dateTimeJSONCb   = null,
 
             //Enable date and/or time and set the string format.
@@ -291,8 +289,6 @@ class CanvDTP
     {
         this.debug                  = debug;
         this.dateTimeStringCb       = dateTimeStringCb;
-        this.dateStringCb           = dateStringCb;
-        this.timeStringCb           = timeStringCb;
         this.dateTimeJSONCb         = dateTimeJSONCb;
         this.dateTimeFormat         = dateTimeFormat,
         this.isDate                 = isDate,
@@ -970,29 +966,29 @@ class CanvDTP
     }
 
     //Takes user defined date/time string and generates a custom formatted date and time.
-    formatDateTime()
+    formatDateTime(formatString)
     {
         let currentIndex = 0;
         let tokenLength  = 0;
         let nextChar     = null;
-        let lastIndex    = this.dateTimeFormat.length;
+        let lastIndex    = formatString.length;
         let dtString     = "";
         let yearInt     = parseInt(this.year);
 
         //Process whole format string.
         while(currentIndex < lastIndex)
         {
-            let currentToken = this.dateTimeFormat[currentIndex];
-            let firstChar = this.dateTimeFormat[currentIndex++];
+            let currentToken = formatString[currentIndex];
+            let firstChar = formatString[currentIndex++];
 
             //Get string of same characters.
-            while((currentIndex < lastIndex) && (this.dateTimeFormat[currentIndex] === firstChar))
+            while((currentIndex < lastIndex) && (formatString[currentIndex] === firstChar))
             {
-                currentToken += this.dateTimeFormat[currentIndex++];
+                currentToken += formatString[currentIndex++];
             }
 
             //Get the next character after token, if it exists.
-            nextChar = (currentIndex < lastIndex) ? this.dateTimeFormat[currentIndex] : null;
+            nextChar = (currentIndex < lastIndex) ? formatString[currentIndex] : null;
             tokenLength = currentToken.length;
 
             //Figure out what the token is before formatting it.
@@ -1206,9 +1202,9 @@ class CanvDTP
                     break;
 
                 case '[': //Escaped characters.
-                    while((this.dateTimeFormat[currentIndex] !== ']') && currentIndex < lastIndex)
+                    while((formatString[currentIndex] !== ']') && currentIndex < lastIndex)
                     {
-                        dtString += this.dateTimeFormat[currentIndex++];
+                        dtString += formatString[currentIndex++];
                     }
                     currentIndex++;
                     break;
@@ -1218,7 +1214,6 @@ class CanvDTP
                     break;
             }
         }
-
         return dtString;
     }
 
@@ -1229,30 +1224,33 @@ class CanvDTP
         let d = new Date(this.year, this.month - 1, this.day);
         this.dayOfWeek = d.getDay();
         this.dayOfYear = this.getDayOfYear();
-        let date, time;
         let dateTimeString;
+        let formatString;
 
         //Check user defined format.
         if(this.dateTimeFormat)
         {
-            dateTimeString = this.formatDateTime();
-            this.dtpText.value = dateTimeString;
+            formatString = this.dateTimeFormat;
         }
         //Use default format if no user format defined.
+        else if(this.isDate && this.isTime)
+        {
+            formatString = "M/D/YYYY h:mm a";
+        }
+        else if(this.isDate)
+        {
+            formatString = "M/D/YYYY";
+        }
         else
         {
-            date = this.month + "/" + this.day + "/" + this.year;
-            let min  = this.minute > 9 ? "" : "0";
-            min += this.minute;
-            let ampm = this.isAM ? "AM" : "PM";
-            time = this.hour + ":" + min + " " + ampm;
-            this.dtpText.value = date + " " + time; 
+            formatString = "h:mm a";
         }
+
+        dateTimeString = this.formatDateTime(formatString);
+        this.dtpText.value = dateTimeString;
 
         //Check if any callbacks have been set and return the data.
         if(this.dateTimeStringCb) this.dateTimeStringCb(this.dtpText.value);
-        if(this.dateStringCb) this.dateStringCb(date);
-        if(this.timeStringCb) this.timeStringCb(time);
         
         if(this.dateTimeJSONCb)
         {
@@ -1344,30 +1342,30 @@ class CanvDTP
     {
         if(!this.isFirstPicked) return null;
 
-        let date = this.month + "/" + this.day + "/" + this.year;
-        let min  = this.minute > 9 ? "" : "0";
-        min += this.minute;
-        let ampm = this.isAM ? "AM" : "PM";
-        let time = this.hour + ":" + min + " " + ampm;
-        return date + " " + time;
-    }
+        let dateTimeString;
+        let formatString;
 
-    getDateString()
-    {
-        if(!this.isFirstPicked) return null;
+        //Check user defined format.
+        if(this.dateTimeFormat)
+        {
+            formatString = this.dateTimeFormat;
+        }
+        //Use default format if no user format defined.
+        else if(this.isDate && this.isTime)
+        {
+            formatString = "M/D/YYYY h:mm a";
+        }
+        else if(this.isDate)
+        {
+            formatString = "M/D/YYYY";
+        }
+        else
+        {
+            formatString = "h:mm a";
+        }
 
-        return this.month + "/" + this.day + "/" + this.year;
-    }
-
-    getTimeString()
-    {
-        if(!this.isFirstPicked) return null;
-
-        let min  = this.minute > 9 ? "" : "0";
-        min += this.minute;
-        let ampm = this.isAM ? "AM" : "PM";
-        let time = this.hour + ":" + min + " " + ampm;
-        return time;
+        dateTimeString = this.formatDateTime(formatString);
+        return dateTimeString;
     }
 
     getDateTimeJSON()

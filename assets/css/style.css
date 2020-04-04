@@ -16,13 +16,6 @@ h1
     margin-top: 50px;
 }
 
-.big-div
-{
-    height: 700px;
-    width: 200px;
-    background-color: aqua;
-}
-
 .col-style
 {
     z-index: -1;

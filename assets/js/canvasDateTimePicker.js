@@ -1,3 +1,5 @@
+"use strict";
+
 class CanvDTP
 {
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -88,7 +90,7 @@ class CanvDTP
     (
         parentDiv,
         {
-            /********************************** Misc Parameters **********************************/
+            /***************************** Configuration Parameters ******************************/
 
             //Enable/disable debug.
             debug = false,
@@ -98,6 +100,11 @@ class CanvDTP
             dateStringCb     = null,
             timeStringCb     = null,
             dateTimeJSONCb   = null,
+
+            //Enable date and/or time and set the string format.
+            dateTimeFormat = null,
+            isDate = true,
+            isTime = true,
 
             /********************************* Common Parameters *********************************/
 
@@ -287,6 +294,9 @@ class CanvDTP
         this.dateStringCb           = dateStringCb;
         this.timeStringCb           = timeStringCb;
         this.dateTimeJSONCb         = dateTimeJSONCb;
+        this.dateTimeFormat         = dateTimeFormat,
+        this.isDate                 = isDate,
+        this.isTime                 = isTime,
         this.iBorderRadius          = iBorderRadius;
         this.iBorderWeight          = iBorderWeight;
         this.iXPadding              = iXPadding;
@@ -496,9 +506,11 @@ class CanvDTP
         this.day           = 1;
         this.year          = 2000;
         this.hour          = 12;
+        this.milHour       = 12;
         this.minute        = 0;
         this.isAM          = true;
         this.dayOfWeek     = 6;
+        this.dayofYear     = 1;
         this.dayMonthStart = 6;
 
         //Date used for drawing current canvas values.
@@ -525,6 +537,8 @@ class CanvDTP
         this.dayArray       = new Array(42);
         this.hitBounds      = [];
         this.days           = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+        this.days3          = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+        this.daysFull       = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         this.monthDaysArray = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         this.MonthsArray    =
         [
@@ -800,9 +814,11 @@ class CanvDTP
         this.day        = date.getDate();
         this.year       = date.getFullYear();
         this.dayOfWeek  = date.getDay();
+        this.dayOfYear  = this.getDayOfYear();
         this.isLeapYear = this.leapCalc(this.year);
         this.minute     = date.getMinutes();
         this.hour       = date.getHours();
+        this.milHour    = this.hour;
 
         //Convert military time to AM/PM.
         if(this.hour === 0)
@@ -829,6 +845,57 @@ class CanvDTP
 
         this.textBoxDateTime();
         this.updateDayArray();
+    }
+
+    //Calculate the day of the year.
+    getDayOfYear()
+    {
+        let dayCount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+        let dayOfYear = dayCount[this.month - 1] + this.day;
+        if(this.month > 2 && this.isLeapYear) dayOfYear++;
+        return dayOfYear;
+    }
+
+    //Increment minute.
+    incMinute(num)
+    {
+        this.minute += num;
+        if(this.minute > 59)
+        {
+            this.minute -= 60;
+            this.incHour();
+        }
+    }
+
+    //Decrement minute.
+    decMinute(num)
+    {
+        this.minute -= num;
+        if(this.minute < 0)
+        {
+            this.minute += 60;
+            this.decHour();
+        }
+    }
+
+    //Increment hour.
+    incHour()
+    {
+        this.hour++;
+        if(this.hour > 12) this.hour = 1;
+        if(this.hour === 12) this.isAM = this.isAM ? false : true;
+        this.milHour++;
+        if(this.milHour > 23) this.milHour = 0;
+    }
+
+    //Decrement hour.
+    decHour()
+    {
+        this.hour--;
+        if(this.hour < 1) this.hour = 12;
+        if(this.hour === 11) this.isAM = this.isAM ? false : true;
+        this.milHour--;
+        if(this.milHour < 0) this.milHour = 23;
     }
 
     //Update the array that holds the individual day to render.
@@ -887,19 +954,300 @@ class CanvDTP
         }
     }
 
+    //return st, nd, rd or th depending on value.
+    getOrdinal(value)
+    {
+        value = parseInt(value);
+        value %= 100;
+        if(value > 20) value %= 10;
+        switch(value)
+        {
+            case 1: return "st";
+            case 2: return "nd";
+            case 3: return "rd";
+            default: return "th";                        
+        }
+    }
+
+    //Takes user defined date/time string and generates a custom formatted date and time.
+    formatDateTime()
+    {
+        let currentIndex = 0;
+        let tokenLength  = 0;
+        let nextChar     = null;
+        let lastIndex    = this.dateTimeFormat.length;
+        let dtString     = "";
+        let yearInt     = parseInt(this.year);
+
+        //Process whole format string.
+        while(currentIndex < lastIndex)
+        {
+            let currentToken = this.dateTimeFormat[currentIndex];
+            let firstChar = this.dateTimeFormat[currentIndex++];
+
+            //Get string of same characters.
+            while((currentIndex < lastIndex) && (this.dateTimeFormat[currentIndex] === firstChar))
+            {
+                currentToken += this.dateTimeFormat[currentIndex++];
+            }
+
+            //Get the next character after token, if it exists.
+            nextChar = (currentIndex < lastIndex) ? this.dateTimeFormat[currentIndex] : null;
+            tokenLength = currentToken.length;
+
+            //Figure out what the token is before formatting it.
+            switch(currentToken[0])
+            {
+                case 'M': //Month
+                    if(!this.isDate)
+                    {
+                        //Date is disabled. Token non-meaningful.
+                        dtString += currentToken;
+                    }
+                    else if(tokenLength === 1)
+                    {
+                        dtString += this.month;
+
+                        //Add ordinal, if neccessary.
+                        if(nextChar === 'o')
+                        {
+                            dtString += this.getOrdinal(this.month);
+                            currentIndex++;
+                        }
+                    }
+                    else if(tokenLength === 2)
+                    {
+                        dtString += this.month < 10 ? "0" + this.month : this.month;
+                    }
+                    else if(tokenLength === 3)
+                    {
+                        dtString += this.shortMonthsArray[this.month - 1];
+                    }
+                    else
+                    {
+                        dtString += this.MonthsArray[this.month - 1];
+                        currentIndex -= tokenLength - 4; //Backup the string pointer, if necessary.
+                    }
+                    break;
+
+                case 'D': //Day
+                    if(!this.isDate)
+                    {
+                        //Date is disabled. Token non-meaningful.
+                        dtString += currentToken;
+                    }
+                    else if(tokenLength === 1)
+                    {
+                        dtString += this.day;
+
+                        //Add ordinal, if neccessary.
+                        if(nextChar === 'o')
+                        {
+                            dtString += this.getOrdinal(this.day);
+                            currentIndex++;
+                        }
+                    }
+                    else if(tokenLength === 2)
+                    {
+                        dtString += this.day < 10 ? "0" + this.day : this.day;
+                    }
+                    else if(tokenLength === 3)
+                    {
+                        dtString += this.dayOfYear
+
+                        //Add ordinal, if neccessary.
+                        if(nextChar === 'o')
+                        {
+                            dtString += this.getOrdinal(this.dayOfYear);
+                            currentIndex++;
+                        }
+                    }
+                    else
+                    {
+                        if(this.dayOfYear < 10) dtString += "00";
+                        else if (this.dayOfYear < 100) dtString += "0";
+                        dtString += this.dayOfYear;
+                        currentIndex -= tokenLength - 4; //Backup the string pointer, if necessary.
+                    }
+                    break;
+
+                case 'd': //Day of week.
+                    if(!this.isDate)
+                    {
+                        //Date is disabled. Token non-meaningful.
+                        dtString += currentToken;
+                    }
+                    else if(tokenLength === 1)
+                    {
+                        dtString += this.dayOfWeek;
+                    }
+                    else if(tokenLength === 2)
+                    {
+                        dtString += this.days[this.dayOfWeek];
+                    }
+                    else if(tokenLength === 3)
+                    {
+                        dtString += this.days3[this.dayOfWeek];
+                    }
+                    else
+                    {
+                        dtString += this.daysFull[this.dayOfWeek];
+                        currentIndex -= tokenLength - 4; //Backup the string pointer, if necessary.
+                    }
+                    break;
+
+                case 'Y': //Year
+                    if(!this.isDate)
+                    {
+                        //Date is disabled. Token non-meaningful.
+                        dtString += currentToken;
+                    }
+                    else if(tokenLength === 1)
+                    {
+                        dtString += this.year;
+                    }
+                    else if(tokenLength === 2)
+                    {
+                        dtString += yearInt % 100;
+                    }
+                    else if(tokenLength === 3)
+                    {
+                        dtString += this.year;
+                        dtString += yearInt % 100;
+                    }
+                    else
+                    {
+                        dtString += this.year;
+                        currentIndex -= tokenLength - 4; //Backup the string pointer, if necessary.
+                    }
+                    break;
+
+                case 'H': //Hour - military time.
+                    if(!this.isTime)
+                    {
+                        //Time is disabled. Token non-meaningful.
+                        dtString += currentToken;
+                    }
+                    else if(tokenLength === 1)
+                    {
+                        dtString += this.milHour;
+                    }
+                    else
+                    {
+                        dtString += (this.milHour < 10) ? "0" + this.milHour : this.milHour;
+                        currentIndex -= tokenLength - 2; //Backup the string pointer, if necessary.
+                    }
+                    break;
+
+                case 'h': //Hour - standard time.
+                    if(!this.isTime)
+                    {
+                        //Time is disabled. Token non-meaningful.
+                        dtString += currentToken;
+                    }
+                    else if(tokenLength === 1)
+                    {
+                        dtString += this.hour;
+                    }
+                    else
+                    {
+                        dtString += (this.hour < 10) ? "0" + this.hour : this.hour;
+                        currentIndex -= tokenLength - 2; //Backup the string pointer, if necessary.
+                    }
+                    break;
+
+                case 'm': //Minute
+                    if(!this.isTime)
+                    {
+                        //Time is disabled. Token non-meaningful.
+                        dtString += currentToken;
+                    }
+                    else if(tokenLength === 1)
+                    {
+                        dtString += this.minute;
+                    }
+                    else
+                    {
+                        dtString += (this.minute < 10) ? "0" + this.minute : this.minute;
+                        currentIndex -= tokenLength - 2; //Backup the string pointer, if necessary.
+                    }
+                    break;
+
+                case 'a': //am/pm
+                case 'p':
+                    if(!this.isTime)
+                    {
+                        //Time is disabled. Token non-meaningful.
+                        dtString += currentToken;
+                    }
+                    else
+                    {
+                        for(let i = 0; i < tokenLength; i++)
+                        {
+                        dtString += this.isAM ? "am" : "pm";
+                        }
+                    }
+                    break;
+
+                case 'A':  //AM/PM
+                case 'P':
+                    if(!this.isTime)
+                    {
+                        //Time is disabled. Token non-meaningful.
+                        dtString += currentToken;
+                    }
+                    else
+                    {
+                        for(let i = 0; i < tokenLength; i++)
+                        {
+                            dtString += this.isAM ? "AM" : "PM";
+                        }
+                    }
+                    break;
+
+                case '[': //Escaped characters.
+                    while((this.dateTimeFormat[currentIndex] !== ']') && currentIndex < lastIndex)
+                    {
+                        dtString += this.dateTimeFormat[currentIndex++];
+                    }
+                    currentIndex++;
+                    break;
+
+                default: //Non-meaningful tokens.
+                    dtString += currentToken;
+                    break;
+            }
+        }
+
+        return dtString;
+    }
+
     //Update the date and time in the textbox.
     textBoxDateTime()
     {
         //Calculate the day of the week.
         let d = new Date(this.year, this.month - 1, this.day);
         this.dayOfWeek = d.getDay();
+        this.dayOfYear = this.getDayOfYear();
+        let date, time;
+        let dateTimeString;
 
-        let date = this.month + "/" + this.day + "/" + this.year;
-        let min  = this.minute > 9 ? "" : "0";
-        min += this.minute;
-        let ampm = this.isAM ? "AM" : "PM";
-        let time = this.hour + ":" + min + " " + ampm;
-        this.dtpText.value = date + " " + time;
+        //Check user defined format.
+        if(this.dateTimeFormat)
+        {
+            dateTimeString = this.formatDateTime();
+            this.dtpText.value = dateTimeString;
+        }
+        //Use default format if no user format defined.
+        else
+        {
+            date = this.month + "/" + this.day + "/" + this.year;
+            let min  = this.minute > 9 ? "" : "0";
+            min += this.minute;
+            let ampm = this.isAM ? "AM" : "PM";
+            time = this.hour + ":" + min + " " + ampm;
+            this.dtpText.value = date + " " + time; 
+        }
 
         //Check if any callbacks have been set and return the data.
         if(this.dateTimeStringCb) this.dateTimeStringCb(this.dtpText.value);
@@ -915,9 +1263,11 @@ class CanvDTP
                 day:       this.day,
                 year:      this.year,
                 hour:      this.hour,
+                milHour:   this.milHour,
                 minute:    this.minute,
                 ampm:      this.isAM ? "AM" : "PM",
-                dayOfWeek: this.dayOfWeek
+                dayOfWeek: this.dayOfWeek,
+                dayOfYear: this.dayOfYear
             });
         }
     }
@@ -1032,9 +1382,11 @@ class CanvDTP
             day:       this.day,
             year:      this.year,
             hour:      this.hour,
+            milHour:   this.milHour,
             minute:    this.minute,
             ampm:      this.isAM ? "AM" : "PM",
-            dayOfWeek: this.dayOfWeek
+            dayOfWeek: this.dayOfWeek,
+            dayOfYear: this.dayOfYear
         };
     }
 
@@ -1374,7 +1726,7 @@ class CanvDTP
         this.contentWidth   = this.bodyCanWidth - this.bodyCanWidth * this.bXPadding;
         this.contentHeight  = this.bodyCanWidth - this.bodyCanWidth * this.bYPadding;
         this.contentLeft    = this.bodyCanWidth * this.bXPadding / 2;
-        this.contentRight   = this.bodyCanWidth - this.bodyCanWidth * this.bXPadding / 2;;
+        this.contentRight   = this.bodyCanWidth - this.bodyCanWidth * this.bXPadding / 2;
         this.contentTop     = this.bodyCanWidth * this.bYPadding / 2;
         this.contentBottom  = this.bodyCanWidth - this.bodyCanWidth * this.bYPadding / 2;
         this.smallBoxHeight = this.contentHeight / 9;
@@ -2365,74 +2717,43 @@ class CanvDTP
                         break;
 
                     case CanvDTP.SEL_HINC1:
-                        this.hour++;
-                        if(this.hour > 12) this.hour = 1;
-                        if(this.hour === 12) this.isAM = this.isAM ? false : true;
+                        this.incHour();
                         this.textBoxDateTime();
                         this.bodyDraw();
                         break;
 
                     case CanvDTP.SEL_HDEC1:
-                        this.hour--;
-                        if(this.hour < 1) this.hour = 12;
-                        if(this.hour === 11) this.isAM = this.isAM ? false : true;
+                        this.decHour();
                         this.textBoxDateTime();
                         this.bodyDraw();
                         break;
 
                     case CanvDTP.SEL_MINC1:
-                        this.minute++;
-                        if(this.minute > 59)
-                        {
-                            this.minute = 0;
-                            this.hour++;
-                            if(this.hour > 12) this.hour = 1;
-                            if(this.hour === 12) this.isAM = this.isAM ? false : true;
-                        }
+                        this.incMinute(1);
                         this.textBoxDateTime();
                         this.bodyDraw();
                         break;
 
                     case CanvDTP.SEL_MDEC1:
-                        this.minute--;
-                        if(this.minute < 0)
-                        {
-                            this.minute = 59;
-                            this.hour--;
-                            if(this.hour < 1) this.hour = 12;
-                            if(this.hour === 11) this.isAM = this.isAM ? false : true;
-                        }
+                        this.decMinute(1);
                         this.textBoxDateTime();
                         this.bodyDraw();
                         break;
 
                     case CanvDTP.SEL_MINC10:
-                        this.minute += 10;
-                        if(this.minute > 59)
-                        {
-                            this.minute -= 60;
-                            this.hour++;
-                            if(this.hour > 12) this.hour = 1;
-                            if(this.hour === 12) this.isAM = this.isAM ? false : true; 
-                        }
+                        this.incMinute(10);
                         this.textBoxDateTime();
                         this.bodyDraw();
                         break;
 
                     case CanvDTP.SEL_MDEC10:
-                        this.minute -= 10;
-                        if(this.minute < 0)
-                        {
-                            this.minute += 60;
-                            this.hour--;
-                            if(this.hour < 1) this.hour = 12;
-                            if(this.hour === 11) this.isAM = this.isAM ? false : true;
-                        }
+                        this.decMinute(10);
                         this.textBoxDateTime();
                         this.bodyDraw();
                         break;
 
                     case CanvDTP.SEL_AMPM:
+                        this.isAM ? this.milHour += 12 : this.milHour -= 12;
                         this.isAM = this.isAM ? false : true;
                         this.textBoxDateTime();
                         this.bodyDraw();

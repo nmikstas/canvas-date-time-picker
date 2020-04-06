@@ -1043,7 +1043,7 @@ class CanvDTP
                     }
                     else if(tokenLength === 2)
                     {
-                        dtString += this.month < 10 ? "0" + this.month : this.month;
+                        dtString += (this.month < 10) ? "0" + this.month : this.month;
                     }
                     else if(tokenLength === 3)
                     {
@@ -1075,7 +1075,7 @@ class CanvDTP
                     }
                     else if(tokenLength === 2)
                     {
-                        dtString += this.day < 10 ? "0" + this.day : this.day;
+                        dtString += (this.day < 10) ? "0" + this.day : this.day;
                     }
                     else if(tokenLength === 3)
                     {
@@ -1094,6 +1094,31 @@ class CanvDTP
                         else if (this.dayOfYear < 100) dtString += "0";
                         dtString += this.dayOfYear;
                         currentIndex -= tokenLength - 4; //Backup the string pointer, if necessary.
+                    }
+                    break;
+
+                case 'W':
+                    if(!this.isDate)
+                    {
+                        //Date is disabled. Token non-meaningful.
+                        dtString += currentToken;
+                    }
+                    else if(tokenLength === 1)
+                    {
+                        dtString += this.weekOfYear
+
+                        //Add ordinal, if neccessary.
+                        if(nextChar === 'o')
+                        {
+                            dtString += this.getOrdinal(this.weekOfYear);
+                            currentIndex++;
+                        }
+                    }
+                    else
+                    {
+
+                        dtString += (this.weekOfYear < 10) ? "0" + this.weekOfYear : this.weekOfYear;
+                        currentIndex -= tokenLength - 2; //Backup the string pointer, if necessary.
                     }
                     break;
 

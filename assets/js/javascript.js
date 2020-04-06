@@ -49,7 +49,7 @@ let canDTP = new CanvDTP
         //startOfWeek:      CanvDTP.MONDAY,
         //isDate:           false,
         //isTime:           false,
-        dateTimeFormat:   "dddd, MMMM Do YYYY h:mm a. DDDo [Day of the Year]"
+        dateTimeFormat:   "dddd, MMMM Do YYYY h:mm a. DDDo [Day of the Year], Wo [Week of the Year]"
     }
 )
 

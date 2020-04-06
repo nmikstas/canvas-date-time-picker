@@ -104,6 +104,9 @@ class CanvDTP
             isDate = true,
             isTime = true,
 
+            //Start of week.
+            startOfWeek = CanvDTP.SUNDAY,
+
             /********************************* Common Parameters *********************************/
 
             //Selectable Items.
@@ -293,6 +296,7 @@ class CanvDTP
         this.dateTimeFormat         = dateTimeFormat,
         this.isDate                 = isDate,
         this.isTime                 = isTime,
+        this.startOfWeek            = startOfWeek,
         this.iBorderRadius          = iBorderRadius;
         this.iBorderWeight          = iBorderWeight;
         this.iXPadding              = iXPadding;
@@ -456,8 +460,10 @@ class CanvDTP
         this.parentDiv = parentDiv;
         this.paddingDiv;
         this.dtpText;
+        this.canParent;
         this.bodyCanvas;
         this.iconCanvas;
+        this.infotext;
 
         //Contexts of the canvases.
         this.ctxDTP;
@@ -506,7 +512,8 @@ class CanvDTP
         this.minute        = 0;
         this.isAM          = true;
         this.dayOfWeek     = 6;
-        this.dayofYear     = 1;
+        this.dayOfYear     = 1;
+        this.weekOfYear    = 1;
         this.dayMonthStart = 6;
 
         //Date used for drawing current canvas values.
@@ -566,6 +573,22 @@ class CanvDTP
         this.dtpText = document.createElement("input");
         this.bodyCanvas = document.createElement("canvas");
         this.iconCanvas = document.createElement("canvas");
+        this.canParent = document.createElement("div");
+        this.infoText = document.createElement("span");
+
+        //Setup initial styling of the info text.
+        this.infoText.style.transform = "translate(-50%, -110%)";
+        this.infoText.style.top  = "50%";
+        this.infoText.style.left = "50%";
+        this.infoText.style.visibility = "hidden";
+        this.infoText.style.textAlign = "center";
+        this.infoText.style.position = "absolute";
+
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        //this.infoText.classList.add("infotext");
+        //this.canParent.classList.add("tooltips");
+        //this.infoText.innerHTML = "Tool Tip This is a real long string in the tool tip!!!";
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
         //Add an id to the text box.
         this.dtpText.setAttribute("id", this.parentDiv.id + "-tb");
@@ -580,8 +603,10 @@ class CanvDTP
         //Add all the components to the div.
         this.paddingDiv.appendChild(this.dtpText);
         this.paddingDiv.appendChild(this.iconCanvas);
-        this.paddingDiv.appendChild(this.bodyCanvas);
+        this.paddingDiv.appendChild(this.canParent);
+        this.canParent.appendChild(this.bodyCanvas);
         this.parentDiv.appendChild(this.paddingDiv);
+        this.canParent.appendChild(this.infoText);        
 
         //Add placeholder text to the textbox and make it read only.
         this.dtpText.placeholder = "Click Icon for Date/Time";
@@ -590,6 +615,7 @@ class CanvDTP
         //Setup positioning to ignore any parent padding.
         this.paddingDiv.style.position = "relative";
         this.iconCanvas.style.position = "absolute";
+        this.canParent.style.position  = "absolute";
         this.bodyCanvas.style.position = "absolute";
 
         //Setup default cursor for icon canvas.
@@ -630,17 +656,18 @@ class CanvDTP
 
         //Place the main date/time picker canvas below the text area.
         this.bodyCanvas.style.left = "0px";
-        this.bodyCanvas.style.top = rect.height + "px";
+        this.bodyCanvas.style.top = "0px";
+        this.canParent.style.left = "0px";
+        this.canParent.style.top = rect.height + "px";
 
         //Maximize the canvas size if it is open.
-        if(this.bodyCanAnim === CanvDTP.BODY_OPEN)
-        {
-            this.bodyCanWidth  = this.bodyCanMaxWidth;
-        }
+        if(this.bodyCanAnim === CanvDTP.BODY_OPEN) this.bodyCanWidth  = this.bodyCanMaxWidth;
 
         //Make the date/time picker a square the width of the parent container.
         this.bodyCanvas.width  = this.bodyCanWidth;
         this.bodyCanvas.height = this.bodyCanWidth;
+        this.canParent.style.width   = "" + this.bodyCanWidth + "px";
+        this.canParent.style.height  = "" + this.bodyCanWidth + "px";
         
         //Place the calendar icon to the right of the text box.
         this.iconCanvas.width  = this.iconCanWidth;
@@ -848,6 +875,7 @@ class CanvDTP
     {
         let dayCount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
         let dayOfYear = dayCount[this.month - 1] + this.day;
+        this.leapCalc(this.year);
         if(this.month > 2 && this.isLeapYear) dayOfYear++;
         return dayOfYear;
     }
@@ -903,6 +931,8 @@ class CanvDTP
 
         //Update the array with the current month days.
         let i = 0;
+        let startIndex = dayMonthStart - this.startOfWeek;
+        dayMonthStart = ( startIndex < 0) ? 7 + startIndex : startIndex;
         for(i; i < this.monthDaysArray[this.tempMonth - 1]; i++)
         {
             this.dayArray[i + dayMonthStart] = { day: i + 1, type: CanvDTP.DAY_THIS };
@@ -1224,6 +1254,7 @@ class CanvDTP
         let d = new Date(this.year, this.month - 1, this.day);
         this.dayOfWeek = d.getDay();
         this.dayOfYear = this.getDayOfYear();
+        this.weekOfYearCalc();
         let dateTimeString;
         let formatString;
 
@@ -1265,9 +1296,28 @@ class CanvDTP
                 minute:    this.minute,
                 ampm:      this.isAM ? "AM" : "PM",
                 dayOfWeek: this.dayOfWeek,
-                dayOfYear: this.dayOfYear
+                dayOfYear: this.dayOfYear,
+                weekOfYear: this.weekOfYear
             });
+
+            
         }
+    }
+
+    weekOfYearCalc()
+    {
+        //Calculate the day the month starts on.
+        let startDate = new Date(this.year, 0, 1, 12, 0, 0, 0);
+        let dayMonthStart = startDate.getDay();
+
+        //Calculate how many days into the first week the year starts at.
+        let startIndex = dayMonthStart - this.startOfWeek;
+        let offset = ( startIndex < 0) ? 7 + startIndex : startIndex;
+        
+        let totalDays = this.dayOfYear + offset;
+
+        this.weekOfYear = parseInt(totalDays / 7);
+        if(parseInt(totalDays) % 7) this.weekOfYear++;  
     }
 
     //Calculate if a year is a leap year.
@@ -1276,10 +1326,9 @@ class CanvDTP
         let isLeap = false;
         let div4   = parseInt(year % 4);
         let div100 = parseInt(year % 100);
-
-        if(!div4 && div100) isLeap = true;
-
-        this.isLeapYear = isLeap;
+        let div400 = parseInt(year % 400);
+        if((!div100 && !div400) || (!div4 && div100)) isLeap = true;
+         this.isLeapYear = isLeap;
         return this.isLeapYear;
     }
 
@@ -1336,6 +1385,20 @@ class CanvDTP
         this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_TIME});
     }
 
+    //Calculate the position of the text info overlay.
+    doInfoTextPos(hitBounds)
+    {
+        let x1 = hitBounds.x1;
+        let x2 = hitBounds.x2;
+        let y1 = hitBounds.y1;
+        
+        let xPos = (x1 + (x2 - x1) / 2) / this.bodyCanWidth * 100;
+        let yPos = y1 / this.bodyCanWidth * 100;
+
+        this.infoText.style.top = yPos + "%";
+        this.infoText.style.left = xPos + "%";
+    }
+
     /*********************************** Data Access Functions ***********************************/
 
     getDateTimeString()
@@ -1373,6 +1436,7 @@ class CanvDTP
         //Calculate the day of the week.
         let d = new Date(this.year, this.month - 1, this.day);
         this.dayOfWeek = d.getDay();
+        this.weekOfYearCalc();
 
         return {
             isPicked:  this.isFirstPicked,
@@ -1384,7 +1448,8 @@ class CanvDTP
             minute:    this.minute,
             ampm:      this.isAM ? "AM" : "PM",
             dayOfWeek: this.dayOfWeek,
-            dayOfYear: this.dayOfYear
+            dayOfYear: this.dayOfYear,
+            weekOfYear: this.weekOfYear
         };
     }
 
@@ -1900,6 +1965,7 @@ class CanvDTP
         //Each element has 4 points representing the upper left and lower right corners.
         this.hitBounds = [];
         let x1, x2, y1, y2;
+        let index;
 
         //Hit boundaries for the days.
         for(let i = 2; i < 8; i++)
@@ -2052,12 +2118,15 @@ class CanvDTP
         this.ctxDTP.beginPath();
         this.ctxDTP.fillStyle = this.headerColor;
         this.ctxDTP.font = (this.smallBoxHeight * this.headerScale) + "px " + this.headerFontStyle;
+        index = this.startOfWeek;
         for(let i = 0; i < 7; i++)
         {
+            //Adjust for user configured start day of week.
+            if(index >= this.days.length) index = 0
             this.ctxDTP.fillText
             (
-                this.days[i],
-                this.contentLeft + i * this.smallBoxWidth + this.smallBoxWidth * this.headerHorzAdj[i],
+                this.days[index],
+                this.contentLeft + i * this.smallBoxWidth + this.smallBoxWidth * this.headerHorzAdj[index++],
                 this.contentTop + 2 * this.smallBoxHeight - this.smallBoxHeight * this.headerVertAdj
             );
         }

@@ -1,8 +1,13 @@
 # canvas-date-time-picker
-A date/time picker that uses plain Javascript and the canvas API
+A date/time picker that uses plain Javascript and the canvas API.
+
+The goal is to make a date/time picker consisting of a single class needing no other files.
+No React, no Bootstrap, no CSS.
+
+Detailed documentation will be written after the coding is done.
 
 I've decided to go in and add tons of configurable functionality.  Working on that now! May take a few days.  
-Last updated: 4/5/2020.
+Last updated: 4/6/2020.
 
 ## __Things that will be added:__
 - Fully customizeable date/time format string. ***Done***
@@ -13,6 +18,9 @@ Last updated: 4/5/2020.
 - Change date/time event listener(return string). ***Done***
 - Change date/time event listener(return JSON object). ***Done***
 - Military time format. ***Done***
+- Military hour picker view. ***Done***
+- Standard hour picker view. ***Done***
+- minute picker view. ***Done***
 - Minimum and maximum date ranges.
 - Enble/disable open/close animation.
 - Maximum pixel width of date/time picker.
@@ -20,9 +28,6 @@ Last updated: 4/5/2020.
 - Spotlight dates with hover over info text.
 - Whitelist for blocked out/spotlight dates.
 - Enable/disable individual views.
-- Military hour picker view.
-- Standard hour picker view.
-- minute picker view.
 - Enable/disable calendar icon (bring up picker when text box clicked).
 - Enable/disable picker always open.
 - Date picker only.

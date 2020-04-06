@@ -113,7 +113,6 @@ class CanvDTP
             isDate = true,
             isTime = true,
 
-            
             startOfWeek = CanvDTP.SUNDAY, //Sets which day the week starts on.
             isMilitaryTime = false, //Select time format.
 
@@ -297,7 +296,26 @@ class CanvDTP
             incColorh  = "#8800ff",
             incXPad    = .25,
             incYPad    = .10,
-            incWeight  = .25
+            incWeight  = .25,
+
+            /****************************** Minute View Parameters *******************************/
+
+            minuteColorn  = "#000000",
+            minuteColorh  = "#8800ff",
+            minuteFont    = "Arial",
+            minuteWeight  = .80,
+            minuteVertAdj = .23,
+            minuteHorzAdj = .25,
+
+            /******************************* Hour View Parameters ********************************/
+
+            hourColorn     = "#000000",
+            hourColorh     = "#8800ff",
+            hourFont       = "Arial",
+            hourWeight     = .80,
+            hourVertAdj    = .20,
+            milHourHorzAdj = .30,
+            stdHourHorzAdj = [.33, .33, .33, .33, .33, .33, .33, .33, .33, .15, .17, .13]
         } = {}
     )
     {
@@ -431,6 +449,19 @@ class CanvDTP
         this.bLineWidth             = bLineWidth;
         this.bBorderColor           = bBorderColor;
         this.bFillColor             = bFillColor;
+        this.minuteColorn           = minuteColorn;
+        this.minuteColorh           = minuteColorh;
+        this.minuteFont             = minuteFont;
+        this.minuteWeight           = minuteWeight;
+        this.minuteVertAdj          = minuteVertAdj;
+        this.minuteHorzAdj          = minuteHorzAdj;
+        this.hourColorn             = hourColorn;
+        this.hourColorh             = hourColorh;
+        this.hourFont               = hourFont;
+        this.hourWeight             = hourWeight;
+        this.hourVertAdj            = hourVertAdj;
+        this.milHourHorzAdj         = milHourHorzAdj;
+        this.stdHourHorzAdj         = stdHourHorzAdj;
 
         /***************************** Rendering Dimension Variables *****************************/
 
@@ -534,6 +565,8 @@ class CanvDTP
         this.tempYear    = 2000;
         this.tempDecade  = 2000;
         this.tempCentury = 2000;
+        this.tempMinute;
+        this.tempHour;
 
         //Todays date.
         this.nowYear;
@@ -2688,68 +2721,68 @@ class CanvDTP
 
         //Hour increment hit boundaries.
         x1 = this.contentLeft;
-        x2 = this.contentLeft + this.timeBoxWidth;
+        x2 = this.contentLeft + this.timeBoxWidth - 1;
         y1 = this.contentTop + .5 * this.timeBoxHeight;
-        y2 = this.contentTop + this.timeBoxHeight;
+        y2 = this.contentTop + this.timeBoxHeight - 1;
         this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_HINC1});
 
         //Hour decrement hit boundaries.
         x1 = this.contentLeft;
-        x2 = this.contentLeft + this.timeBoxWidth;
+        x2 = this.contentLeft + this.timeBoxWidth - 1;
         y1 = this.contentTop + 2 * this.timeBoxHeight;
-        y2 = this.contentTop + 2.5 * this.timeBoxHeight;
+        y2 = this.contentTop + 2.5 * this.timeBoxHeight - 1;
         this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_HDEC1});
 
         //Minute increment 1 hit boundaries.
         x1 = this.contentLeft + 1.5 * this.timeBoxWidth;
-        x2 = this.contentLeft + 2.5 * this.timeBoxWidth;
+        x2 = this.contentLeft + 2.5 * this.timeBoxWidth - 1;
         y1 = this.contentTop + .5 * this.timeBoxHeight;
-        y2 = this.contentTop + this.timeBoxHeight;
+        y2 = this.contentTop + this.timeBoxHeight - 1;
         this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_MINC1});
 
         //Minute increment 10 hit boundaries.
         x1 = this.contentLeft + 1.5 * this.timeBoxWidth;
-        x2 = this.contentLeft + 2.5 * this.timeBoxWidth;
+        x2 = this.contentLeft + 2.5 * this.timeBoxWidth - 1;
         y1 = this.contentTop;
-        y2 = this.contentTop + .5 * this.timeBoxHeight;
+        y2 = this.contentTop + .5 * this.timeBoxHeight - 1;
         this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_MINC10});
 
         //Minute deccrement 1 hit boundaries.
         x1 = this.contentLeft + 1.5 * this.timeBoxWidth;
-        x2 = this.contentLeft + 2.5 * this.timeBoxWidth;
+        x2 = this.contentLeft + 2.5 * this.timeBoxWidth - 1;
         y1 = this.contentTop + 2 * this.timeBoxHeight;
-        y2 = this.contentTop + 2.5 * this.timeBoxHeight;
+        y2 = this.contentTop + 2.5 * this.timeBoxHeight - 1;
         this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_MDEC1});
 
         //Minute deccrement 10 hit boundaries.
         x1 = this.contentLeft + 1.5 * this.timeBoxWidth;
-        x2 = this.contentLeft + 2.5 * this.timeBoxWidth;
+        x2 = this.contentLeft + 2.5 * this.timeBoxWidth - 1;
         y1 = this.contentTop + 2.5 * this.timeBoxHeight;
-        y2 = this.contentTop + 3 * this.timeBoxHeight;
+        y2 = this.contentTop + 3 * this.timeBoxHeight - 1;
         this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_MDEC10});
 
         //AM/PM hit boundaries.
         if(!this.isMilitaryTime)
         {
             x1 = this.contentLeft + 2.5 * this.timeBoxWidth;
-            x2 = this.contentLeft + 3.5 * this.timeBoxWidth;
+            x2 = this.contentLeft + 3.5 * this.timeBoxWidth - 1;
             y1 = this.contentTop + this.timeBoxHeight;
-            y2 = this.contentTop + 2 * this.timeBoxHeight;
+            y2 = this.contentTop + 2 * this.timeBoxHeight - 1;
             this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_AMPM});
         }
 
         //Hour hit boundaries.
         x1 = this.contentLeft;
-        x2 = this.contentLeft + this.timeBoxWidth;
+        x2 = this.contentLeft + this.timeBoxWidth - 1;
         y1 = this.contentTop + this.timeBoxHeight;
-        y2 = this.contentTop + 2 * this.timeBoxHeight;
+        y2 = this.contentTop + 2 * this.timeBoxHeight - 1;
         this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_HOUR});
 
         //Minute hit boundaries.
         x1 = this.contentLeft + 1.5 * this.timeBoxWidth;
-        x2 = this.contentLeft + 2.5 * this.timeBoxWidth;
+        x2 = this.contentLeft + 2.5 * this.timeBoxWidth - 1;
         y1 = this.contentTop + this.timeBoxHeight;
-        y2 = this.contentTop + 2 * this.timeBoxHeight;
+        y2 = this.contentTop + 2 * this.timeBoxHeight - 1;
         this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_MINUTE});
         
         //Draw the calendar icon.
@@ -2920,25 +2953,36 @@ class CanvDTP
         this.hitBounds = [];
         let x1, x2, y1, y2;
 
-        //Hit boundaries for the days.
+        //Hit boundaries for the minutes.
         for(let i = 0; i < 10; i++)
         {
             for(let j = 0; j < 6; j++)
             {
                 x1 = this.contentLeft + j * (this.contentWidth / 6);
-                x2 = this.contentLeft + (j + 1) * (this.contentWidth / 6);
+                x2 = this.contentLeft + (j + 1) * (this.contentWidth / 6) - 1;
                 y1 = this.contentTop + i * (this.contentHeight / 10);
-                y2 = this.contentTop + (i + 1) * (this.contentHeight / 10);
+                y2 = this.contentTop + (i + 1) * (this.contentHeight / 10) - 1;
                 this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2});
             }
         }
 
+        //Draw the minutes.
+        for(let i = 0; i < this.hitBounds.length; i++)
+        {
+            //Highlight the current selected month.
+            if(this.minute === i) this.fillCurrent(i);
 
-
-
-
-
-
+            this.ctxDTP.beginPath();
+            this.ctxDTP.font = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.minuteWeight + "px " + this.minuteFont;
+            this.ctxDTP.fillStyle = this.minuteColorn;
+            this.ctxDTP.fillText
+            (
+                i < 10 ? "0" + i : i,
+                this.hitBounds[i].x1 + this.minuteHorzAdj * (this.hitBounds[i].x2 - this.hitBounds[i].x1),
+                this.hitBounds[i].y2 - this.minuteVertAdj * (this.hitBounds[i].y2 - this.hitBounds[i].y1)
+            );
+            this.ctxDTP.stroke();
+        }
 
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
@@ -2954,6 +2998,21 @@ class CanvDTP
             )
             {
                 this.highlightHovItem(i); //Highlight the hovered item.
+
+                //Keep track of the currently highlighted minute for click detection.
+                this.tempMinute = i;
+
+                //Highlight the number.
+                this.ctxDTP.beginPath();
+                this.ctxDTP.font = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.minuteWeight + "px " + this.minuteFont;
+                this.ctxDTP.fillStyle = this.minuteColorh;
+                this.ctxDTP.fillText
+                (
+                    i < 10 ? "0" + i : i,
+                    this.hitBounds[i].x1 + this.minuteHorzAdj * (this.hitBounds[i].x2 - this.hitBounds[i].x1),
+                    this.hitBounds[i].y2 - this.minuteVertAdj * (this.hitBounds[i].y2 - this.hitBounds[i].y1)
+                );
+                this.ctxDTP.stroke();
             }
         }
 
@@ -2979,19 +3038,30 @@ class CanvDTP
             for(let j = 0; j < 3; j++)
             {
                 x1 = this.contentLeft + j * (this.contentWidth / 3);
-                x2 = this.contentLeft + (j + 1) * (this.contentWidth / 3);
+                x2 = this.contentLeft + (j + 1) * (this.contentWidth / 3) - 1;
                 y1 = this.contentTop + i * (this.contentHeight / 4);
-                y2 = this.contentTop + (i + 1) * (this.contentHeight / 4);
+                y2 = this.contentTop + (i + 1) * (this.contentHeight / 4) - 1;
                 this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2});
             }
         }
 
+        //Draw the hours.
+        for(let i = 0; i < this.hitBounds.length; i++)
+        {
+            //Highlight the current selected month.
+            if(this.hour === i + 1) this.fillCurrent(i);
 
-
-
-
-
-        
+            this.ctxDTP.beginPath();
+            this.ctxDTP.font = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourWeight + "px " + this.hourFont;
+            this.ctxDTP.fillStyle = this.minuteColorn;
+            this.ctxDTP.fillText
+            (
+                i + 1,
+                this.hitBounds[i].x1 + this.stdHourHorzAdj[i] * (this.hitBounds[i].x2 - this.hitBounds[i].x1),
+                this.hitBounds[i].y2 - this.hourVertAdj * (this.hitBounds[i].y2 - this.hitBounds[i].y1)
+            );
+            this.ctxDTP.stroke();
+        }
 
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
@@ -3007,6 +3077,21 @@ class CanvDTP
             )
             {
                 this.highlightHovItem(i); //Highlight the hovered item.
+
+                //Keep track of the currently highlighted hour for click detection.
+                this.tempHour = i + 1;
+
+                //Highlight the number.
+                this.ctxDTP.beginPath();
+                this.ctxDTP.font = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourWeight + "px " + this.hourFont;
+                this.ctxDTP.fillStyle = this.minuteColorh;
+                this.ctxDTP.fillText
+                (
+                    i + 1,
+                    this.hitBounds[i].x1 + this.stdHourHorzAdj[i] * (this.hitBounds[i].x2 - this.hitBounds[i].x1),
+                    this.hitBounds[i].y2 - this.hourVertAdj * (this.hitBounds[i].y2 - this.hitBounds[i].y1)
+                );
+                this.ctxDTP.stroke();
             }
         }
 
@@ -3032,19 +3117,30 @@ class CanvDTP
             for(let j = 0; j < 4; j++)
             {
                 x1 = this.contentLeft + j * (this.contentWidth / 4);
-                x2 = this.contentLeft + (j + 1) * (this.contentWidth / 4);
+                x2 = this.contentLeft + (j + 1) * (this.contentWidth / 4) - 1;
                 y1 = this.contentTop + i * (this.contentHeight / 6);
-                y2 = this.contentTop + (i + 1) * (this.contentHeight / 6);
+                y2 = this.contentTop + (i + 1) * (this.contentHeight / 6) - 1;
                 this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2});
             }
         }
 
+        //Draw the hours.
+        for(let i = 0; i < this.hitBounds.length; i++)
+        {
+            //Highlight the current selected month.
+            if(this.milHour === i) this.fillCurrent(i);
 
-
-
-
-
-        
+            this.ctxDTP.beginPath();
+            this.ctxDTP.font = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourWeight + "px " + this.hourFont;
+            this.ctxDTP.fillStyle = this.minuteColorn;
+            this.ctxDTP.fillText
+            (
+                i < 10 ? "0" + i : i,
+                this.hitBounds[i].x1 + this.milHourHorzAdj * (this.hitBounds[i].y2 - this.hitBounds[i].y1),
+                this.hitBounds[i].y2 - this.hourVertAdj * (this.hitBounds[i].y2 - this.hitBounds[i].y1)
+            );
+            this.ctxDTP.stroke();
+        }
 
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
@@ -3060,6 +3156,20 @@ class CanvDTP
             )
             {
                 this.highlightHovItem(i); //Highlight the hovered item.
+
+                //Keep track of the currently highlighted hour for click detection.
+                this.tempHour = i;
+
+                this.ctxDTP.beginPath();
+                this.ctxDTP.font = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourWeight + "px " + this.hourFont;
+                this.ctxDTP.fillStyle = this.minuteColorh;
+                this.ctxDTP.fillText
+                (
+                    i < 10 ? "0" + i : i,
+                    this.hitBounds[i].x1 + this.milHourHorzAdj * (this.hitBounds[i].y2 - this.hitBounds[i].y1),
+                    this.hitBounds[i].y2 - this.hourVertAdj * (this.hitBounds[i].y2 - this.hitBounds[i].y1)
+                );
+                this.ctxDTP.stroke();
             }
         }
 
@@ -3142,28 +3252,31 @@ class CanvDTP
                         break;
 
                     case CanvDTP.CAL_MINUTE:
-                        
-
-
-
-
+                        this.minute = this.tempMinute;
+                        this.timeView = CanvDTP.CAL_MIN_HOUR;
+                        this.textBoxDateTime();
+                        this.bodyDraw();
                         break;
 
                     case CanvDTP.CAL_STD_HOUR:
-
-
-
-
-
+                        this.hour = this.tempHour;
+                        this.milHour = this.hour;
+                        if(!this.isAM) this.milHour += 12;
+                        if(this.milHour > 23) this.milHour = 0;
+                        this.timeView = CanvDTP.CAL_MIN_HOUR;
+                        this.textBoxDateTime();
+                        this.bodyDraw();
                         break;
 
                     case CanvDTP.CAL_MIL_HOUR:
-
-
-
-
-
-
+                        this.milHour = this.tempHour;
+                        this.hour = this.milHour;
+                        this.isAM = (this.milHour > 11) ? false : true; 
+                        if(!this.hour) this.hour = 12;
+                        if(this.hour > 12) this.hour -= 12;
+                        this.timeView = CanvDTP.CAL_MIN_HOUR;
+                        this.textBoxDateTime();
+                        this.bodyDraw();
                         break;
                 }
             }

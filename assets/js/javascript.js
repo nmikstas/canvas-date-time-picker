@@ -47,7 +47,7 @@ let canDTP = new CanvDTP
         //debug:            true,
         dateTimeStringCb: showDateTimeString,
         dateTimeJSONCb:   showDateTimeJSON,
-        //startOfWeek:      CanvDTP.MONDAY,
+        startOfWeek:      CanvDTP.MONDAY,
         //isDate:           false,
         //isTime:           false,
         isMilitaryTime:   true,

@@ -44,11 +44,13 @@ let canDTP = new CanvDTP
 (
     document.getElementById("dtp"),
     {
+        //debug:            true,
         dateTimeStringCb: showDateTimeString,
         dateTimeJSONCb:   showDateTimeJSON,
         //startOfWeek:      CanvDTP.MONDAY,
         //isDate:           false,
         //isTime:           false,
+        isMilitaryTime:   true,
         dateTimeFormat:   "dddd, MMMM Do YYYY h:mm a. DDDo [Day of the Year], Wo [Week of the Year]"
     }
 )

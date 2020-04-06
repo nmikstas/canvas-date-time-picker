@@ -12,7 +12,7 @@ Last updated: 4/5/2020.
 - Get date/time JSON object. ***Done***
 - Change date/time event listener(return string). ***Done***
 - Change date/time event listener(return JSON object). ***Done***
-- Military time format.
+- Military time format. ***Done***
 - Minimum and maximum date ranges.
 - Enble/disable open/close animation.
 - Maximum pixel width of date/time picker.

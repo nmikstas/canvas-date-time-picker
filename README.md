@@ -21,9 +21,9 @@ Last updated: 4/6/2020.
 - Military hour picker view. ***Done***
 - Standard hour picker view. ***Done***
 - minute picker view. ***Done***
+- Maximum pixel width of date/time picker. ***Done***
+- Enble/disable open/close animation. ***Done***
 - Minimum and maximum date ranges.
-- Enble/disable open/close animation.
-- Maximum pixel width of date/time picker.
 - Blocked out dates with hover over info text.
 - Spotlight dates with hover over info text.
 - Whitelist for blocked out/spotlight dates.

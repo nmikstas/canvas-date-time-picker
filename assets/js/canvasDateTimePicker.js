@@ -113,8 +113,10 @@ class CanvDTP
             isDate = true,
             isTime = true,
 
+            isAnimated = true,            //Enable/disable open/close animation.
+            maxPixelWidth = null,         //Maximum width in pixels of the body canvas.
             startOfWeek = CanvDTP.SUNDAY, //Sets which day the week starts on.
-            isMilitaryTime = false, //Select time format.
+            isMilitaryTime = false,       //Select time format.
 
             /********************************* Common Parameters *********************************/
 
@@ -325,6 +327,8 @@ class CanvDTP
         this.dateTimeFormat         = dateTimeFormat,
         this.isDate                 = isDate,
         this.isTime                 = isTime,
+        this.isAnimated             = isAnimated,
+        this.maxPixelWidth          = maxPixelWidth,
         this.startOfWeek            = startOfWeek,
         this.isMilitaryTime         = isMilitaryTime,
         this.iBorderRadius          = iBorderRadius;
@@ -681,6 +685,9 @@ class CanvDTP
         this.bodyCanvas.addEventListener('mousemove',  () => this.bodyCoords());
         this.bodyCanvas.addEventListener('mouseleave', () => this.bodyExit());
         this.bodyCanvas.addEventListener("click", () => this.bodyClick());
+
+        //Format the max pixel width variable.
+        if(this.maxPixelWidth) this.maxPixelWidth = parseInt(Math.abs(this.maxPixelWidth));
         
         this.resize();
     }
@@ -708,9 +715,19 @@ class CanvDTP
         this.canParent.style.top = rect.height + "px";
 
         //Maximize the canvas size if it is open.
-        if(this.bodyCanAnim === CanvDTP.BODY_OPEN) this.bodyCanWidth  = this.bodyCanMaxWidth;
+        if(this.bodyCanAnim === CanvDTP.BODY_OPEN)
+        {
+            //Never exceed textbox width.
+            this.bodyCanWidth = this.bodyCanMaxWidth;
 
-        //Make the date/time picker a square the width of the parent container.
+            //Don't exceed user set max pixel width.
+            if(this.maxPixelWidth && (this.bodyCanWidth > this.maxPixelWidth))
+            {
+                this.bodyCanWidth = this.maxPixelWidth;
+            }
+        }
+
+        //Make the date/time picker a square.
         this.bodyCanvas.width  = this.bodyCanWidth;
         this.bodyCanvas.height = this.bodyCanWidth;
         this.canParent.style.width   = "" + this.bodyCanWidth + "px";
@@ -736,7 +753,7 @@ class CanvDTP
         {
             if(this.bodyCanAnim === CanvDTP.BODY_OPEN || this.bodyCanAnim === CanvDTP.BODY_EXPANDING)
             {
-                this.bodyCanAnim = CanvDTP.BODY_COLLAPSING;
+                this.bodyCanAnim = !this.isAnimated ? CanvDTP.BODY_CLOSED : CanvDTP.BODY_COLLAPSING;
                 clearInterval(this.bodyAnimTimer);
                 this.bodyAnimTimer = setInterval(() => this.bodyAnimate(), this.animTime);
             }
@@ -767,9 +784,9 @@ class CanvDTP
     iconClick()
     {
         //Set the animation to expanding or collapsing.
-        this.bodyCanAnim = (this.bodyCanAnim === CanvDTP.BODY_CLOSED ||
-            this.bodyCanAnim === CanvDTP.BODY_COLLAPSING) ?
-            CanvDTP.BODY_EXPANDING : CanvDTP.BODY_COLLAPSING;
+        this.bodyCanAnim = (this.bodyCanAnim === CanvDTP.BODY_CLOSED || this.bodyCanAnim === CanvDTP.BODY_COLLAPSING) ?
+            (this.isAnimated ? CanvDTP.BODY_EXPANDING : CanvDTP.BODY_OPEN) :
+            (this.isAnimated ? CanvDTP.BODY_COLLAPSING : CanvDTP.BODY_CLOSED);
 
         //Check if date/time has been picked already.
         if(!this.isFirstPicked) this.firstPick();
@@ -1978,15 +1995,35 @@ class CanvDTP
                 break;
 
             case CanvDTP.BODY_OPEN:
-                this.bodyCanWidth = this.bodyCanMaxWidth;
+                //Never exceed textbox width.
+                if(this.bodyCanWidth > this.bodyCanMaxWidth)
+                {
+                    this.bodyCanWidth = this.bodyCanMaxWidth;
+                }
+
+                //Don't exceed user set max pixel width.
+                if(this.maxPixelWidth && (this.bodyCanWidth > this.maxPixelWidth))
+                {
+                    this.bodyCanWidth = this.maxPixelWidth;
+                }
+
                 clearInterval(this.bodyAnimTimer);
                 break;
 
             case CanvDTP.BODY_EXPANDING:
                 this.bodyCanWidth += this.bodyAnimStep;
+
+                //Never exceed textbox width.
                 if(this.bodyCanWidth > this.bodyCanMaxWidth)
                 {
                     this.bodyCanWidth = this.bodyCanMaxWidth;
+                    this.bodyCanAnim = CanvDTP.BODY_OPEN;
+                }
+
+                //Don't exceed user set max pixel width.
+                if(this.maxPixelWidth && (this.bodyCanWidth > this.maxPixelWidth))
+                {  
+                    this.bodyCanWidth = this.maxPixelWidth;
                     this.bodyCanAnim = CanvDTP.BODY_OPEN;
                 }
                 break;

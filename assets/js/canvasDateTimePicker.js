@@ -91,6 +91,12 @@ class CanvDTP
     static get INC_10() {return 0x02}
     static get DEC_10() {return 0x03}
 
+    //Whitelist types.
+    static get WHITE_BOTH()  {return 0x00}
+    static get WHITE_SPTLT() {return 0x01}
+    static get WHITE_BLOCK() {return 0x02}
+    static get WHITE_NONE()  {return 0x03}
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //                                        Constructor                                        //
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -118,9 +124,9 @@ class CanvDTP
             maxPixelWidth = null,         //Maximum width in pixels of the body canvas.
             startOfWeek = CanvDTP.SUNDAY, //Sets which day the week starts on.
             isMilitaryTime = false,       //Select time format.
-
-            //Array of excluded months, days, years.
-            excludeArray = [],
+            
+            dayExcludeArray = [], //Array of excluded months, days, years in the month view.
+            dayWhiteArray   = [], //Array of whitelist months, days, years in the month view.
 
             /********************************* Common Parameters *********************************/
 
@@ -343,7 +349,8 @@ class CanvDTP
         this.maxPixelWidth          = maxPixelWidth,
         this.startOfWeek            = startOfWeek,
         this.isMilitaryTime         = isMilitaryTime,
-        this.excludeArray           = [...excludeArray],
+        this.dayExcludeArray        = [...dayExcludeArray],
+        this.dayWhiteArray          = [...dayWhiteArray],
         this.iBorderRadius          = iBorderRadius;
         this.iBorderWeight          = iBorderWeight;
         this.iXPadding              = iXPadding;
@@ -653,18 +660,17 @@ class CanvDTP
         this.infoPoint  = document.createElement("span");
 
         //Setup initial styling of the info text.
-        this.infoParent.style.position   = "absolute";
-        this.infoParent.style.textAlign  = "center";
-        this.infoText.style.transform    = "translate(-50%, 0%)";
-        this.infoText.style.visibility   = "hidden";
-        this.infoText.style.textAlign    = "center";
-        this.infoText.style.position     = "absolute";
-        this.infoText.style.overflow     = "hidden";
-        this.infoPoint.style.transform   = "translate(0%, -100%)";
-        this.infoPoint.style.visibility  = "hidden";
-        this.infoPoint.style.position    = "absolute";
-        this.infoPoint.style.borderStyle = "solid";
-
+        this.infoParent.style.position      = "absolute";
+        this.infoParent.style.textAlign     = "center";
+        this.infoText.style.transform       = "translate(-50%, 0%)";
+        this.infoText.style.visibility      = "hidden";
+        this.infoText.style.textAlign       = "center";
+        this.infoText.style.position        = "absolute";
+        this.infoText.style.overflow        = "hidden";
+        this.infoPoint.style.transform      = "translate(0%, -100%)";
+        this.infoPoint.style.visibility     = "hidden";
+        this.infoPoint.style.position       = "absolute";
+        this.infoPoint.style.borderStyle    = "solid";
         this.infoText.style.backgroundColor = this.infoBackColor;
         this.infoText.style.color           = this.infoTextColor;
         this.infoText.style.borderRadius    = this.infoBorderRadius;
@@ -1640,7 +1646,7 @@ class CanvDTP
 
     monthExclude()
     {
-        //Loop through every day of the dayArray to find exclusions.
+        //Loop through every day of the dayArray to insert whitelist markers.
         for(let i = 0; i < this.dayArray.length; i++)
         {
             //Create a placeholder object.
@@ -1648,39 +1654,65 @@ class CanvDTP
             {
                 isSpecial: false,
                 excluded:  false,
-                color:     "#000000",
-                info:      []
+                color:     "transparent",
+                info:      [],
+                whitelist: CanvDTP.WHITE_NONE
             }
 
             let hit = false;
 
             //Loop through the exclusion array looking for days that align with the current month view.
-            for(let j = 0; j < this.excludeArray.length; j++)
+            for(let j = 0; j < this.dayWhiteArray.length; j++)
             {
-                hit = this.monthExcludeDay(this.dayArray[i], this.excludeArray[j]);
+                hit = this.monthExcludeDay(this.dayArray[i], this.dayWhiteArray[j]);
+
+                //Update the element in the monthSpecial array.
+                if(hit)
+                {
+                    this.monthSpecial[i].whitelist = this.dayWhiteArray[j].type;
+                }
+            }
+        }
+
+        console.log(this.monthSpecial);
+
+        //Loop through every day of the dayArray to find exclusions.
+        for(let i = 0; i < this.dayArray.length; i++)
+        {
+            let hit = false;
+
+            //Loop through the exclusion array looking for days that align with the current month view.
+            for(let j = 0; j < this.dayExcludeArray.length; j++)
+            {
+                hit = this.monthExcludeDay(this.dayArray[i], this.dayExcludeArray[j]);
                
                 //Update the element in the monthSpecial array.
                 if(hit)
                 {
+                    //Exit if this element is whitelisted.
+                    if(this.monthSpecial[i].whitelist === CanvDTP.WHITE_BOTH) continue;
+                    else if(this.monthSpecial[i].whitelist === CanvDTP.WHITE_BLOCK && this.dayExcludeArray[j].excluded) continue;
+                    else if(this.monthSpecial[i].whitelist === CanvDTP.WHITE_SPTLT && !this.dayExcludeArray[j].excluded) continue;
+
                     this.monthSpecial[i].isSpecial = true;
 
                     //Only update exclusion status and color if this element is not already excluded.
                     if(!this.monthSpecial[i].excluded)
                     {
-                        if(this.excludeArray[j].excluded)
+                        if(this.dayExcludeArray[j].excluded)
                         {
-                            this.monthSpecial[i].excluded = this.excludeArray[j].excluded;
+                            this.monthSpecial[i].excluded = this.dayExcludeArray[j].excluded;
                         }
                         
-                        if(this.excludeArray[j].color)
+                        if(this.dayExcludeArray[j].color)
                         {
-                            this.monthSpecial[i].color = this.excludeArray[j].color;
+                            this.monthSpecial[i].color = this.dayExcludeArray[j].color;
                         }
                     }
 
-                    if(this.excludeArray[j].info)
+                    if(this.dayExcludeArray[j].info)
                     {
-                        this.monthSpecial[i].info.push(this.excludeArray[j].info);
+                        this.monthSpecial[i].info.push(this.dayExcludeArray[j].info);
                     }
                 }
             }

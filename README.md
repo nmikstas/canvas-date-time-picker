@@ -24,10 +24,12 @@ Last updated: 4/8/2020.
 - Maximum pixel width of date/time picker. ***Done***
 - Enble/disable open/close animation. ***Done***
 - Blocked/spotlight days in the month view. ***Done***
-- Minimum and maximum date ranges.
+- Whitelist for blocked/spotlight days in the month view. ***Done***
 - Blocked/spotlight months in the year view.
 - Blocked/spotlight years in the decade view.
-- Whitelist for blocked out/spotlight dates.
+- Whitelist for blocked/spotlight months in the year view.
+- Whitelist for blocked/spotlight years in the decade view.
+- Minimum and maximum date ranges.
 - Enable/disable individual views.
 - Enable/disable calendar icon (bring up picker when text box clicked).
 - Enable/disable picker always open.
@@ -41,6 +43,7 @@ Last updated: 4/8/2020.
 - Picker relative position to textbox (left, right, top, bottom).
 - Set default date (other than current date) on picker first time open.
 - Seperate format strings for user input and event listener/get functions output.
+- Color gradient options to all background colored objects.
 
 # __These are some quick notes on the functionality of the date/time fomat string:__  
 M    = No zero pad month.       ***Can append ordinal***  

@@ -51,26 +51,34 @@ let canDTP = new CanvDTP
         infoPointerSize:  "15px",
         infoBackColor:    "#555555D0",
         infoBorderRadius: "5px",
-        excludeArray:
+        dayExcludeArray:
         [
             {   //Highlight, but don't exclude all weekend days.
                 daysOfWeek: [CanvDTP.SATURDAY, CanvDTP.SUNDAY],
                 color:     "#9900ff50",
                 info:      "Weekend"
             },
-            {   //Exclude April 2nd and 21st in every year.
+            {   //Highlight April 2nd, 2020.
                 days:      [2],
                 months:    [CanvDTP.APRIL],
-                years:     [],
+                years:     [2020],
                 color:     "#0000ff10",
                 info:      "Deez Nutz Day"
             },
-            {   //Exclude the whole month of May.
+            {   //Exclude the whole month of May in every year.
                 months:    [CanvDTP.MAY],
                 excluded:  true,
                 color:     "#ff000050",
                 info:      "Blocked Out"
             },
+        ],
+        dayWhiteArray:
+        [
+            {   //Whitelist the weekends in May from exclusion.
+                daysOfWeek: [CanvDTP.SATURDAY, CanvDTP.SUNDAY], 
+                months:     [CanvDTP.MAY],
+                type:       CanvDTP.WHITE_BLOCK
+            }  
         ]
     }
 )

@@ -321,7 +321,15 @@ class CanvDTP
             hourWeight     = .80,
             hourVertAdj    = .20,
             milHourHorzAdj = .30,
-            stdHourHorzAdj = [.33, .33, .33, .33, .33, .33, .33, .33, .33, .15, .17, .13]
+            stdHourHorzAdj = [.33, .33, .33, .33, .33, .33, .33, .33, .33, .15, .17, .13],
+
+            /******************************* Info Text Parameters ********************************/
+            infoPointerSize  = "10px",
+            infoBackColor    = "#555555",
+            infoTextColor    = "#ffffff",
+            infoPadding      = "2px, 5px",
+            infoWidth        = "150px",
+            infoBorderRadius = "10px"
         } = {}
     )
     {
@@ -471,6 +479,12 @@ class CanvDTP
         this.hourVertAdj            = hourVertAdj;
         this.milHourHorzAdj         = milHourHorzAdj;
         this.stdHourHorzAdj         = stdHourHorzAdj;
+        this.infoPointerSize        = infoPointerSize;
+        this.infoBackColor          = infoBackColor;
+        this.infoTextColor          = infoTextColor;
+        this.infoPadding            = infoPadding;
+        this.infoWidth              = infoWidth;
+        this.infoBorderRadius       = infoBorderRadius;
 
         /***************************** Rendering Dimension Variables *****************************/
 
@@ -630,31 +644,42 @@ class CanvDTP
     {
         //Create the components necessary for the date/time picker.
         this.paddingDiv = document.createElement("div");
-        this.dtpText = document.createElement("input");
+        this.dtpText    = document.createElement("input");
         this.bodyCanvas = document.createElement("canvas");
         this.iconCanvas = document.createElement("canvas");
-        this.canParent = document.createElement("div");
-        this.infoText = document.createElement("span");
+        this.canParent  = document.createElement("div");
+        this.infoParent = document.createElement("div");
+        this.infoText   = document.createElement("span");
+        this.infoPoint  = document.createElement("span");
 
         //Setup initial styling of the info text.
-        this.infoText.style.transform = "translate(-50%, -110%)";
-        this.infoText.style.top  = "50%";
-        this.infoText.style.left = "50%";
-        this.infoText.style.visibility = "hidden";
-        this.infoText.style.textAlign = "center";
-        this.infoText.style.position = "absolute";
+        this.infoParent.style.position   = "absolute";
+        this.infoParent.style.textAlign  = "center";
+        this.infoText.style.transform    = "translate(-50%, 0%)";
+        this.infoText.style.visibility   = "hidden";
+        this.infoText.style.textAlign    = "center";
+        this.infoText.style.position     = "absolute";
+        this.infoText.style.overflow     = "hidden";
+        this.infoPoint.style.transform   = "translate(0%, -100%)";
+        this.infoPoint.style.visibility  = "hidden";
+        this.infoPoint.style.position    = "absolute";
+        this.infoPoint.style.borderStyle = "solid";
 
-        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        //this.infoText.classList.add("infotext");
-        //this.canParent.classList.add("tooltips");
-        //this.infoText.innerHTML = "Tool Tip This is a real long string in the tool tip!!!";
-        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        this.infoText.style.backgroundColor = this.infoBackColor;
+        this.infoText.style.color           = this.infoTextColor;
+        this.infoText.style.borderRadius    = this.infoBorderRadius;
+        this.infoText.style.width           = this.infoWidth;
+        this.infoText.style.padding         = this.infoPadding;
+        this.infoText.style.bottom          = this.infoPointerSize;      
+        this.infoPoint.style.marginLeft     = "-" + this.infoPointerSize;
+        this.infoPoint.style.borderWidth    = this.infoPointerSize + " " + this.infoPointerSize + " 0px " + this.infoPointerSize;
+        this.infoPoint.style.borderColor    = this.infoBackColor + " transparent transparent transparent";
 
         //Add an id to the text box.
         this.dtpText.setAttribute("id", this.parentDiv.id + "-tb");
 
         //Get 2D contexts of the canvases.
-        this.ctxDTP = this.bodyCanvas.getContext("2d");
+        this.ctxDTP  = this.bodyCanvas.getContext("2d");
         this.ctxIcon = this.iconCanvas.getContext("2d");
 
         //Clear anything out of the parent div.
@@ -666,7 +691,9 @@ class CanvDTP
         this.paddingDiv.appendChild(this.canParent);
         this.canParent.appendChild(this.bodyCanvas);
         this.parentDiv.appendChild(this.paddingDiv);
-        this.canParent.appendChild(this.infoText);        
+        this.canParent.appendChild(this.infoParent);  
+        this.infoParent.appendChild(this.infoText);
+        this.infoParent.appendChild(this.infoPoint);      
 
         //Add placeholder text to the textbox and make it read only.
         this.dtpText.placeholder = "Click Icon for Date/Time";
@@ -1528,7 +1555,7 @@ class CanvDTP
     }
 
     //Calculate the position of the text info overlay.
-    doInfoTextPos(hitBounds)
+    calcInfoTextPos(hitBounds)
     {
         let x1 = hitBounds.x1;
         let x2 = hitBounds.x2;
@@ -1537,8 +1564,8 @@ class CanvDTP
         let xPos = (x1 + (x2 - x1) / 2) / this.bodyCanWidth * 100;
         let yPos = y1 / this.bodyCanWidth * 100;
 
-        this.infoText.style.top = yPos + "%";
-        this.infoText.style.left = xPos + "%";
+        this.infoParent.style.top = yPos + "%";
+        this.infoParent.style.left = xPos + "%";
     }
 
     /********************************* Month exclusion Functions *********************************/
@@ -1546,7 +1573,7 @@ class CanvDTP
     monthExcludeYear(dayObj, excludeObj)
     {
         let hit = false;
-        if(!excludeObj.years || !excludeObj.years.length)
+        if(!excludeObj.hasOwnProperty("years") || !excludeObj.years.length)
         {
             return true;
         }
@@ -1563,7 +1590,7 @@ class CanvDTP
     monthExcludeMonth(dayObj, excludeObj)
     {
         let hit = false;
-        if(!excludeObj.months || !excludeObj.months.length)
+        if(!excludeObj.hasOwnProperty("months") || !excludeObj.months.length)
         {
             hit = this.monthExcludeYear(dayObj, excludeObj);
         }
@@ -1580,7 +1607,7 @@ class CanvDTP
     monthExcludeDayOfWeek(dayObj, excludeObj)
     {
         let hit = false;
-        if(!excludeObj.daysOfWeek || !excludeObj.daysOfWeek.length)
+        if(!excludeObj.hasOwnProperty("daysOfWeek") || !excludeObj.daysOfWeek.length)
         {
             hit = this.monthExcludeMonth(dayObj, excludeObj);
         }
@@ -1597,7 +1624,7 @@ class CanvDTP
     monthExcludeDay(dayObj, excludeObj)
     {
         let hit = false;
-        if(!excludeObj.days || !excludeObj.days.length)
+        if(!excludeObj.hasOwnProperty("days") || !excludeObj.days.length)
         {
             hit = this.monthExcludeDayOfWeek(dayObj, excludeObj);
         }
@@ -2334,7 +2361,6 @@ class CanvDTP
                     this.ctxDTP.fill();
                     this.ctxDTP.stroke();
                 }
-
                 hitIndex++;
             }
         }
@@ -2510,6 +2536,9 @@ class CanvDTP
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
 
+        //Indicate if any info text was found.
+        let infoFound = false;
+
         for(let i = 0; i < this.hitBounds.length; i++)
         {
             if
@@ -2521,9 +2550,32 @@ class CanvDTP
             )
             {
                 //Do special stuff for special days.
-                if(this.hitBounds[i].index && this.monthSpecial[this.hitBounds[i].index].excluded)
+                if(this.hitBounds[i].hasOwnProperty("index") && this.monthSpecial[this.hitBounds[i].index].isSpecial) 
                 {
-                    continue;
+                    
+                    if(this.monthSpecial[this.hitBounds[i].index].hasOwnProperty("info"))
+                    {
+                        let text = "";
+                        this.calcInfoTextPos(this.hitBounds[i])
+                        this.infoText.style.visibility = "visible";
+                        this.infoPoint.style.visibility = "visible";
+
+                        //Print all the info text with comma separations.
+                        for(let j = 0; j < this.monthSpecial[this.hitBounds[i].index].info.length; j++)
+                        {
+                            text += this.monthSpecial[this.hitBounds[i].index].info[j];
+                            if(j < this.monthSpecial[this.hitBounds[i].index].info.length - 1)
+                            {
+                                text += ", ";
+                            }
+                        }
+
+                        this.infoText.innerHTML = text;
+                        infoFound = true;
+                    }
+
+                    //If the day is excluded, stop here to prevent highlighting.
+                    if(this.monthSpecial[this.hitBounds[i].index].excluded) continue;
                 }
 
                 this.highlightHovItem(i); //Highlight the hovered item.
@@ -2587,6 +2639,13 @@ class CanvDTP
                         break;
                 }
             }
+        }
+
+        //Make sure the info text box is not visible when nothing selected.
+        if(!infoFound)
+        {
+            this.infoText.style.visibility = "hidden"
+            this.infoPoint.style.visibility = "hidden"
         }
 
         //Change pointer if hovering over selectable item.

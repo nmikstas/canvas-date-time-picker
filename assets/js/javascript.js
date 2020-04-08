@@ -47,27 +47,29 @@ let canDTP = new CanvDTP
         //debug:            true,
         dateTimeStringCb: showDateTimeString,
         dateTimeJSONCb:   showDateTimeJSON,
-        //startOfWeek:      CanvDTP.MONDAY,
-        //isDate:           false,
-        //isTime:           false,
-        //isMilitaryTime:   true,
-        //isAnimated:       false,
-        //maxPixelWidth:    200,
         dateTimeFormat:   "dddd, MMMM Do YYYY h:mm a. DDDo [Day of the Year], Wo [Week of the Year]",
+        infoPointerSize:  "15px",
+        infoBackColor:    "#555555D0",
+        infoBorderRadius: "5px",
         excludeArray:
         [
             {   //Highlight, but don't exclude all weekend days.
                 daysOfWeek: [CanvDTP.SATURDAY, CanvDTP.SUNDAY],
-                color:     "#d6d7ff80",
+                color:     "#9900ff50",
                 info:      "Weekend"
             },
             {   //Exclude April 2nd and 21st in every year.
-                days:      [2, 21],
+                days:      [2],
                 months:    [CanvDTP.APRIL],
                 years:     [],
+                color:     "#0000ff10",
+                info:      "Deez Nutz Day"
+            },
+            {   //Exclude the whole month of May.
+                months:    [CanvDTP.MAY],
                 excluded:  true,
-                color:     "#ffb6b660",
-                info:      "Single day"
+                color:     "#ff000050",
+                info:      "Blocked Out"
             },
         ]
     }

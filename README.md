@@ -7,7 +7,7 @@ No React, no Bootstrap, no CSS.
 Detailed documentation will be written after the coding is done.
 
 I've decided to go in and add tons of configurable functionality. Working on that now! May take a few days.  
-Last updated: 4/6/2020.
+Last updated: 4/8/2020.
 
 ## __Things that will be added:__
 - Fully customizeable date/time format string. ***Done***
@@ -23,9 +23,10 @@ Last updated: 4/6/2020.
 - Minute picker view. ***Done***
 - Maximum pixel width of date/time picker. ***Done***
 - Enble/disable open/close animation. ***Done***
+- Blocked/spotlight days in the month view. ***Done***
 - Minimum and maximum date ranges.
-- Blocked out dates with hover over info text.
-- Spotlight dates with hover over info text.
+- Blocked/spotlight months in the year view.
+- Blocked/spotlight years in the decade view.
 - Whitelist for blocked out/spotlight dates.
 - Enable/disable individual views.
 - Enable/disable calendar icon (bring up picker when text box clicked).

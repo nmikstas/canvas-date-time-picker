@@ -110,6 +110,7 @@ class CanvDTP
 
             //Enable date and/or time and set the string format.
             dateTimeFormat = null,
+
             isDate = true,
             isTime = true,
 
@@ -117,6 +118,9 @@ class CanvDTP
             maxPixelWidth = null,         //Maximum width in pixels of the body canvas.
             startOfWeek = CanvDTP.SUNDAY, //Sets which day the week starts on.
             isMilitaryTime = false,       //Select time format.
+
+            //Array of excluded months, days, years.
+            excludeArray = [],
 
             /********************************* Common Parameters *********************************/
 
@@ -331,6 +335,7 @@ class CanvDTP
         this.maxPixelWidth          = maxPixelWidth,
         this.startOfWeek            = startOfWeek,
         this.isMilitaryTime         = isMilitaryTime,
+        this.excludeArray           = [...excludeArray],
         this.iBorderRadius          = iBorderRadius;
         this.iBorderWeight          = iBorderWeight;
         this.iXPadding              = iXPadding;
@@ -586,6 +591,10 @@ class CanvDTP
         this.pickedMonth  = 0;
         this.pickedYear   = 0;
         this.pickedDecade = 0;
+
+        //Array of excluded/highlighted days for the currently selected month.
+        this.monthSpecial = new Array(42);
+        this.updateMonth  = false;
 
         //Calendar drawing and hit detection variables.
         this.dayArray       = new Array(42);
@@ -930,6 +939,9 @@ class CanvDTP
         this.nowMonth    = this.month;
         this.nowDay      = this.day;
 
+        //Indicate the month exclusions need to be calculated.
+        this.updateMonth = true;
+
         this.textBoxDateTime();
         this.updateDayArray();
     }
@@ -999,20 +1011,41 @@ class CanvDTP
         dayMonthStart = ( startIndex < 0) ? 7 + startIndex : startIndex;
         for(i; i < this.monthDaysArray[this.tempMonth - 1]; i++)
         {
-            this.dayArray[i + dayMonthStart] = { day: i + 1, type: CanvDTP.DAY_THIS };
+            this.dayArray[i + dayMonthStart] =
+            {
+                day:       i + 1,
+                dayOfWeek: 0,
+                type:      CanvDTP.DAY_THIS,
+                month:     this.tempMonth,
+                year:      this.tempYear
+            };
         }
 
         //Special case for February on leap years.
         if(this.tempMonth === CanvDTP.FEBRUARY && this.leapCalc(this.tempYear))
         {
-            this.dayArray[i++ + dayMonthStart] = { day: 29, type: CanvDTP.DAY_THIS };
+            this.dayArray[i++ + dayMonthStart] =
+            {
+                day:       29,
+                dayOfWeek: 0,
+                type:      CanvDTP.DAY_THIS,
+                month:     2,
+                year:      this.tempYear
+            };
         }
 
         //Update the array with post month days.
         let postDays = 1;
         while(i + dayMonthStart < 42)
         {
-            this.dayArray[i++ + dayMonthStart] = { day: postDays++, type: CanvDTP.DAY_POST };
+            this.dayArray[i++ + dayMonthStart] =
+            {
+                day:       postDays++,
+                dayOfWeek: 0,
+                type:      CanvDTP.DAY_POST,
+                month:     (this.tempMonth === 12) ? 1 : this.tempMonth + 1,
+                year:      (this.tempMonth === 12) ? this.tempYear + 1 : this.tempYear
+            };
         }
 
         //Only add pre days if month does not start on a Sunday.
@@ -1023,7 +1056,14 @@ class CanvDTP
             //Special case for March on leap years.
             if(this.tempMonth === CanvDTP.MARCH && this.leapCalc(this.tempYear))
             {
-                this.dayArray[i--] = { day: 29, type: CanvDTP.DAY_PRE };
+                this.dayArray[i--] =
+                {
+                    day:       29,
+                    dayOfWeek: 0,
+                    type:      CanvDTP.DAY_PRE,
+                    month:     2,
+                    year:      this.tempYear
+                };
             }
             
             //Update the array with pre month days.
@@ -1039,8 +1079,23 @@ class CanvDTP
             
             while(i >= 0)
             {
-                this.dayArray[i--] = { day: preDays--, type: CanvDTP.DAY_PRE };
+                this.dayArray[i--] =
+                {
+                    day:       preDays--,
+                    dayOfWeek: 0,
+                    type:      CanvDTP.DAY_PRE,
+                    month:     (this.tempMonth === 1) ? 12 : this.tempMonth - 1,
+                    year:      (this.tempMonth === 1) ? this.tempYear - 1 : this.tempYear
+                };
             }
+        }
+
+        //Backfill the day of week.
+        let startDay = this.startOfWeek;
+        for(let i = 0; i < this.dayArray.length; i++)
+        {
+            this.dayArray[i].dayOfWeek = startDay++;
+            if(startDay > 6) startDay = 0;
         }
     }
 
@@ -1052,9 +1107,9 @@ class CanvDTP
         if(value > 20) value %= 10;
         switch(value)
         {
-            case 1: return "st";
-            case 2: return "nd";
-            case 3: return "rd";
+            case 1:  return "st";
+            case 2:  return "nd";
+            case 3:  return "rd";
             default: return "th";                        
         }
     }
@@ -1388,8 +1443,6 @@ class CanvDTP
                 dayOfYear: this.dayOfYear,
                 weekOfYear: this.weekOfYear
             });
-
-            
         }
     }
 
@@ -1486,6 +1539,125 @@ class CanvDTP
 
         this.infoText.style.top = yPos + "%";
         this.infoText.style.left = xPos + "%";
+    }
+
+    /********************************* Month exclusion Functions *********************************/
+
+    monthExcludeYear(dayObj, excludeObj)
+    {
+        let hit = false;
+        if(!excludeObj.years || !excludeObj.years.length)
+        {
+            return true;
+        }
+        else
+        {
+            for(let i = 0; i < excludeObj.years.length; i++)
+            {
+                if(dayObj.year === excludeObj.years[i]) return true;
+            }
+        }
+        return hit;
+    }
+
+    monthExcludeMonth(dayObj, excludeObj)
+    {
+        let hit = false;
+        if(!excludeObj.months || !excludeObj.months.length)
+        {
+            hit = this.monthExcludeYear(dayObj, excludeObj);
+        }
+        else
+        {
+            for(let i = 0; i < excludeObj.months.length; i++)
+            {
+                if(dayObj.month === excludeObj.months[i]) hit = this.monthExcludeYear(dayObj, excludeObj);
+            }
+        }
+        return hit;
+    }
+
+    monthExcludeDayOfWeek(dayObj, excludeObj)
+    {
+        let hit = false;
+        if(!excludeObj.daysOfWeek || !excludeObj.daysOfWeek.length)
+        {
+            hit = this.monthExcludeMonth(dayObj, excludeObj);
+        }
+        else
+        {
+            for(let i = 0; i < excludeObj.daysOfWeek.length; i++)
+            {
+                if(dayObj.dayOfWeek === excludeObj.daysOfWeek[i]) hit = this.monthExcludeMonth(dayObj, excludeObj);
+            }
+        }
+        return hit;
+    }
+
+    monthExcludeDay(dayObj, excludeObj)
+    {
+        let hit = false;
+        if(!excludeObj.days || !excludeObj.days.length)
+        {
+            hit = this.monthExcludeDayOfWeek(dayObj, excludeObj);
+        }
+        else
+        {
+            for(let i = 0; i < excludeObj.days.length; i++)
+            {
+                if(dayObj.day === excludeObj.days[i]) hit = this.monthExcludeDayOfWeek(dayObj, excludeObj);
+            }
+        }
+        return hit;
+    }
+
+    monthExclude()
+    {
+        //Loop through every day of the dayArray to find exclusions.
+        for(let i = 0; i < this.dayArray.length; i++)
+        {
+            //Create a placeholder object.
+            this.monthSpecial[i] =
+            {
+                isSpecial: false,
+                excluded:  false,
+                color:     "#000000",
+                info:      []
+            }
+
+            let hit = false;
+
+            //Loop through the exclusion array looking for days that align with the current month view.
+            for(let j = 0; j < this.excludeArray.length; j++)
+            {
+                hit = this.monthExcludeDay(this.dayArray[i], this.excludeArray[j]);
+               
+                //Update the element in the monthSpecial array.
+                if(hit)
+                {
+                    this.monthSpecial[i].isSpecial = true;
+
+                    //Only update exclusion status and color if this element is not already excluded.
+                    if(!this.monthSpecial[i].excluded)
+                    {
+                        if(this.excludeArray[j].excluded)
+                        {
+                            this.monthSpecial[i].excluded = this.excludeArray[j].excluded;
+                        }
+                        
+                        if(this.excludeArray[j].color)
+                        {
+                            this.monthSpecial[i].color = this.excludeArray[j].color;
+                        }
+                    }
+
+                    if(this.excludeArray[j].info)
+                    {
+                        this.monthSpecial[i].info.push(this.excludeArray[j].info);
+                    }
+                }
+            }
+        }
     }
 
     /*********************************** Data Access Functions ***********************************/
@@ -2126,10 +2298,18 @@ class CanvDTP
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_MONTH);
 
+        //Update the month exclusions, if necessary.
+        if(this.updateMonth)
+        {
+            this.updateMonth = false;
+            this.monthExclude();
+        }
+
         //Create an array of hit boundaries for the various buttons.
         //Each element has 4 points representing the upper left and lower right corners.
         this.hitBounds = [];
         let x1, x2, y1, y2;
+        let hitIndex = 0;
         let index;
 
         //Hit boundaries for the days.
@@ -2141,7 +2321,21 @@ class CanvDTP
                 x2 = this.contentLeft + (j + 1) * this.smallBoxWidth - 1;
                 y1 = this.contentTop + i * this.smallBoxHeight;
                 y2 = this.contentTop + (i + 1) * this.smallBoxHeight - 1;
-                this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_DAY});
+                this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_DAY, index: hitIndex});
+
+                //Highlight the background of special days.
+                if(this.monthSpecial[hitIndex].isSpecial)
+                {
+                    this.ctxDTP.beginPath();
+                    this.ctxDTP.strokeStyle = this.monthSpecial[hitIndex].color;           
+                    this.ctxDTP.fillStyle   = this.monthSpecial[hitIndex].color;
+                    this.ctxDTP.lineWidth   = 1;
+                    this.ctxDTP.rect(x1, y1, x2 - x1, y2 - y1);
+                    this.ctxDTP.fill();
+                    this.ctxDTP.stroke();
+                }
+
+                hitIndex++;
             }
         }
 
@@ -2326,6 +2520,12 @@ class CanvDTP
                 this.bodyY <= this.hitBounds[i].y2
             )
             {
+                //Do special stuff for special days.
+                if(this.hitBounds[i].index && this.monthSpecial[this.hitBounds[i].index].excluded)
+                {
+                    continue;
+                }
+
                 this.highlightHovItem(i); //Highlight the hovered item.
                 
                 //Draw the highlighted text.
@@ -3334,6 +3534,7 @@ class CanvDTP
                                         this.tempMonth = 12;
                                         this.tempYear--;
                                     }
+                                    this.updateMonth = true;
                                 }
                                 //Adjust the date if a day after the month is chosen.
                                 else if(this.dayType === CanvDTP.DAY_POST)
@@ -3344,6 +3545,7 @@ class CanvDTP
                                         this.tempMonth = 1;
                                         this.tempYear++;
                                     }
+                                    this.updateMonth = true;
                                 }
 
                                 this.month = this.tempMonth;
@@ -3361,6 +3563,7 @@ class CanvDTP
                                     this.tempMonth = 12;
                                     this.tempYear--;
                                 }
+                                this.updateMonth = true;
                                 this.bodyDraw();
                                 break;
 
@@ -3372,6 +3575,7 @@ class CanvDTP
                                     this.tempMonth = 1;
                                     this.tempYear++;
                                 }
+                                this.updateMonth = true;
                                 this.bodyDraw();
                                 break;
 
@@ -3397,6 +3601,7 @@ class CanvDTP
                                 this.calView = CanvDTP.CAL_MONTH;
                                 this.tempMonth = this.pickedMonth;
                                 document.body.style.cursor = "default";
+                                this.updateMonth = true;
                                 this.bodyDraw();
                                 break;
 

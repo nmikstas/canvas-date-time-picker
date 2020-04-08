@@ -6,7 +6,7 @@ No React, no Bootstrap, no CSS.
 
 Detailed documentation will be written after the coding is done.
 
-I've decided to go in and add tons of configurable functionality.  Working on that now! May take a few days.  
+I've decided to go in and add tons of configurable functionality. Working on that now! May take a few days.  
 Last updated: 4/6/2020.
 
 ## __Things that will be added:__
@@ -20,7 +20,7 @@ Last updated: 4/6/2020.
 - Military time format. ***Done***
 - Military hour picker view. ***Done***
 - Standard hour picker view. ***Done***
-- minute picker view. ***Done***
+- Minute picker view. ***Done***
 - Maximum pixel width of date/time picker. ***Done***
 - Enble/disable open/close animation. ***Done***
 - Minimum and maximum date ranges.
@@ -33,7 +33,7 @@ Last updated: 4/6/2020.
 - Date picker only.
 - Time picker only.
 - API configuration calls.
-- open, close, event listeners.
+- Open, close, event listeners.
 
 ## __Things that might be added:__
 - Enable/disable text input.
@@ -70,7 +70,7 @@ HH   = Zero padded military hour.
 h    = No zero pad standard hour.  
 hh   = Zero padded standard hour.  
 
-m    = No zero padd minute.  
+m    = No zero pad minute.  
 mm   = Zero padded minute.   
 
 a    = am/pm.  

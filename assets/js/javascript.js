@@ -69,7 +69,7 @@ let canDTP = new CanvDTP
                 months:    [CanvDTP.MAY],
                 excluded:  true,
                 color:     "#ff000050",
-                info:      "Blocked Out"
+                info:      "Whole month of May blocked out, weekends whitelisted"
             },
         ],
         dayWhiteArray:

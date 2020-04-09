@@ -1674,8 +1674,6 @@ class CanvDTP
             }
         }
 
-        console.log(this.monthSpecial);
-
         //Loop through every day of the dayArray to find exclusions.
         for(let i = 0; i < this.dayArray.length; i++)
         {

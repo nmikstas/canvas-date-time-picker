@@ -219,8 +219,8 @@ class CanvDTP
             monthYearHorzAdj   = [.60, .50, .90, 1.15, 1.15, 1.05, 1.15, .75, .20, .60, .30, .30],
 
             //Currently Selected Day.
-            currentBorderColor = "#00f7ffA0",
-            currentFillColor   = "#aefcffA0",
+            currentBorderColor = "#00f7ff",
+            currentFillColor   = "#aefcff",
             currentRadius      = .25,
             currentWeight      = .07,
 

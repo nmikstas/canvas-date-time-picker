@@ -48,8 +48,16 @@ let canDTP = new CanvDTP
         dateTimeStringCb: showDateTimeString,
         dateTimeJSONCb:   showDateTimeJSON,
         dateTimeFormat:   "dddd, MMMM Do YYYY h:mm a. DDDo [Day of the Year], Wo [Week of the Year]",
+
         infoBackColor:    "#555555D0",
         infoBorderRadius: "5px",
+
+        //Currently Selected Day.
+        currentBorderColor: "#000000",
+        currentFillColor:   "#00000010",
+        currentRadius:      .5,
+        currentWeight:      .02,
+
         dayExcludeArray:
         [
             {   //Highlight, but don't exclude all weekend days.
@@ -89,7 +97,7 @@ let canDTP = new CanvDTP
                     2080, 2084, 2088, 2092, 2096, 2100, 2104, 2108, 2112, 2116,
                 ],
                 months: [CanvDTP.FEBRUARY],
-                color: "#00000050",
+                color: "#0000ff50",
                 info:  "Extra day due to the leap year"
             },
         ],

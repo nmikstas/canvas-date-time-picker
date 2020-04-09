@@ -78,6 +78,27 @@ let canDTP = new CanvDTP
                 months:     [CanvDTP.MAY],
                 type:       CanvDTP.WHITE_BLOCK
             }  
+        ],
+        monthSpotlightArray:
+        [
+            {   //Spotlight the February months in leap years between 2000 - 2116.
+                years:
+                [
+                    2000, 2004, 2008, 2012, 2016, 2020, 2024, 2028, 2032, 2036,
+                    2040, 2044, 2048, 2052, 2056, 2060, 2064, 2068, 2072, 2076,
+                    2080, 2084, 2088, 2092, 2096, 2100, 2104, 2108, 2112, 2116,
+                ],
+                months: [CanvDTP.FEBRUARY],
+                color: "#00000050",
+                info:  "Extra day due to the leap year"
+            },
+        ],
+        monthWhiteArray:
+        [
+            {   //Whitelist February 2100.
+                years:  [2100],
+                months: [CanvDTP.FEBRUARY]
+            }
         ]
     }
 )

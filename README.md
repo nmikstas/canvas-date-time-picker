@@ -7,7 +7,7 @@ No React, no Bootstrap, no CSS.
 Detailed documentation will be written after the coding is done.
 
 I've decided to go in and add tons of configurable functionality. Working on that now! May take a few days.  
-Last updated: 4/8/2020.
+Last updated: 4/9/2020.
 
 ## __Things that will be added:__
 - Fully customizeable date/time format string. ***Done***
@@ -25,10 +25,10 @@ Last updated: 4/8/2020.
 - Enble/disable open/close animation. ***Done***
 - Blocked/spotlight days in the month view. ***Done***
 - Whitelist for blocked/spotlight days in the month view. ***Done***
-- Blocked/spotlight months in the year view.
-- Blocked/spotlight years in the decade view.
-- Whitelist for blocked/spotlight months in the year view.
-- Whitelist for blocked/spotlight years in the decade view.
+- spotlight months in the year view. ***Done***
+- Whitelist for spotlight months in the year view. ***Done***
+- spotlight years in the decade view.
+- Whitelist for spotlight years in the decade view.
 - Minimum and maximum date ranges.
 - Enable/disable individual views.
 - Enable/disable calendar icon (bring up picker when text box clicked).

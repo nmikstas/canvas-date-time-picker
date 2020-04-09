@@ -2211,6 +2211,7 @@ class CanvDTP
                 this.dateTime     = CanvDTP.CAL_DATE;
                 this.tempYear     = this.year;
                 this.tempMonth    = this.month;
+                this.updateMonth  = true;
                 clearInterval(this.bodyAnimTimer);
                 break;
 

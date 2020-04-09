@@ -48,7 +48,6 @@ let canDTP = new CanvDTP
         dateTimeStringCb: showDateTimeString,
         dateTimeJSONCb:   showDateTimeJSON,
         dateTimeFormat:   "dddd, MMMM Do YYYY h:mm a. DDDo [Day of the Year], Wo [Week of the Year]",
-        infoPointerSize:  "15px",
         infoBackColor:    "#555555D0",
         infoBorderRadius: "5px",
         dayExcludeArray:

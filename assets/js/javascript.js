@@ -48,7 +48,6 @@ let canDTP = new CanvDTP
         dateTimeStringCb: showDateTimeString,
         dateTimeJSONCb:   showDateTimeJSON,
         dateTimeFormat:   "dddd, MMMM Do YYYY h:mm a. DDDo [Day of the Year], Wo [Week of the Year]",
-        isMilitaryTime: true,
         dayExcludeArray:
         [
             {   //Highlight, but don't exclude all weekend days.

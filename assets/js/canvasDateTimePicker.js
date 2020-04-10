@@ -186,7 +186,7 @@ class CanvDTP
             
             //Previous/Next Parameters.
             prevNextXPad   = .20,
-            prevNextYPad   = .35,
+            prevNextYPad   = .25,
         
             //Clock Graphic Parameters.
             clockPad    = .10,
@@ -213,6 +213,11 @@ class CanvDTP
             nowColor  = "#000000",
             nowWeight = .25,
 
+            //Increment/Decrement Parameters.
+            incXPad   = .25,
+            incYPad   = .10,
+            incWeight = .25,
+
             dayScale      = .60, //Days of Month.
             monthScale    = .60, //Month Text.
             yearScale     = .60, //Year Text.
@@ -220,12 +225,7 @@ class CanvDTP
             timeScale     = .80, //Time view text.
             timeAmPmScale = .60, //AM/PM text.
             minuteScale   = .80, //Minute view text.
-            hourScale     = .80, //Hour view text.
-
-            //Increment/Decrement Parameters.
-            incXPad    = .25,
-            incYPad    = .10,
-            incWeight  = .25,
+            hourScale     = .80  //Hour view text.
         } = {}
     )
     {
@@ -1863,9 +1863,9 @@ class CanvDTP
         this.ctxDTP.moveTo(this.contentLeft + this.prevNextXPad * this.smallBoxWidth,
             this.contentTop + .5 * this.smallBoxHeight);
         this.ctxDTP.lineTo(this.contentLeft + this.smallBoxWidth - this.prevNextXPad * this.smallBoxWidth,
-            this.contentTop + this.prevNextYPad * this.contentTop);
+            this.contentTop + this.prevNextYPad * this.smallBoxHeight);
         this.ctxDTP.lineTo(this.contentLeft + this.smallBoxWidth - this.prevNextXPad * this.smallBoxWidth,
-            this.contentTop + this.smallBoxHeight - this.prevNextYPad * this.contentTop);
+            this.contentTop + this.smallBoxHeight - this.prevNextYPad * this.smallBoxHeight);
         this.ctxDTP.fill();
         this.ctxDTP.stroke();
     }
@@ -1880,9 +1880,9 @@ class CanvDTP
         this.ctxDTP.moveTo(this.contentRight - this.prevNextXPad * this.smallBoxWidth,
             this.contentTop + .5 * this.smallBoxHeight);
         this.ctxDTP.lineTo(this.contentRight - this.smallBoxWidth + this.prevNextXPad * this.smallBoxWidth,
-            this.contentTop + this.prevNextYPad * this.contentTop);
+            this.contentTop + this.prevNextYPad * this.smallBoxHeight);
         this.ctxDTP.lineTo(this.contentRight - this.smallBoxWidth + this.prevNextXPad * this.smallBoxWidth,
-            this.contentTop + this.smallBoxHeight - this.prevNextYPad * this.contentTop);
+            this.contentTop + this.smallBoxHeight - this.prevNextYPad * this.smallBoxHeight);
         this.ctxDTP.fill();
         this.ctxDTP.stroke();
     }
@@ -2443,17 +2443,27 @@ class CanvDTP
             //Draw selector for todays date.
             if(isToday)
             {
+                let angle1 = Math.atan((this.hitBounds[i].y2 - this.hitBounds[i].y1) / (this.hitBounds[i].x2 - this.hitBounds[i].x1));
+                let h = Math.hypot(this.hitBounds[i].x2 - this.hitBounds[i].x1, this.hitBounds[i].y2 - this.hitBounds[i].y1);
+                let triLength = h * this.nowWeight;
+                
                 //Draw the border and fill the space.   
                 this.ctxDTP.beginPath();
                 this.ctxDTP.strokeStyle = this.nowColor;
                 this.ctxDTP.fillStyle   = this.nowColor;
                 this.ctxDTP.lineWidth   = 1;
-                this.ctxDTP.moveTo(this.hitBounds[i].x1, this.hitBounds[i].y1);
+                this.ctxDTP.moveTo(this.hitBounds[i].x1 + triLength * Math.cos(angle1), this.hitBounds[i].y1 + triLength * Math.sin(angle1));
+                this.ctxDTP.lineTo(this.hitBounds[i].x1 + 1, this.hitBounds[i].y1 + this.nowWeight * this.smallBoxHeight);
                 this.ctxDTP.lineTo(this.hitBounds[i].x1 + this.nowWeight * this.smallBoxWidth, this.hitBounds[i].y1);
-                this.ctxDTP.lineTo(this.hitBounds[i].x1, this.hitBounds[i].y1 + this.nowWeight * this.smallBoxWidth);
-                this.ctxDTP.moveTo(this.hitBounds[i].x2, this.hitBounds[i].y2);
+                this.ctxDTP.moveTo(this.hitBounds[i].x2 - triLength * Math.cos(angle1), this.hitBounds[i].y2 - triLength * Math.sin(angle1));
+                this.ctxDTP.lineTo(this.hitBounds[i].x2 - 1, this.hitBounds[i].y2 - this.nowWeight * this.smallBoxHeight);
                 this.ctxDTP.lineTo(this.hitBounds[i].x2 - this.nowWeight * this.smallBoxWidth, this.hitBounds[i].y2);
-                this.ctxDTP.lineTo(this.hitBounds[i].x2, this.hitBounds[i].y2 - this.nowWeight * this.smallBoxWidth);
+                this.ctxDTP.moveTo(this.hitBounds[i].x2 - triLength * Math.cos(angle1), this.hitBounds[i].y1 + triLength * Math.sin(angle1));
+                this.ctxDTP.lineTo(this.hitBounds[i].x2 - 1, this.hitBounds[i].y1 + this.nowWeight * this.smallBoxHeight);
+                this.ctxDTP.lineTo(this.hitBounds[i].x2 - this.nowWeight * this.smallBoxWidth, this.hitBounds[i].y1);
+                this.ctxDTP.moveTo(this.hitBounds[i].x1 + triLength * Math.cos(angle1), this.hitBounds[i].y2 - triLength * Math.sin(angle1));
+                this.ctxDTP.lineTo(this.hitBounds[i].x1 + 1, this.hitBounds[i].y2 - this.nowWeight * this.smallBoxHeight);
+                this.ctxDTP.lineTo(this.hitBounds[i].x1 + this.nowWeight * this.smallBoxWidth, this.hitBounds[i].y2);
                 this.ctxDTP.fill();
                 this.ctxDTP.stroke();
             }

@@ -97,6 +97,11 @@ class CanvDTP
     static get WHITE_BLOCK() {return 0x02}
     static get WHITE_NONE()  {return 0x03}
 
+    //Picker format types.
+    static get PICK_BOTH() {return 0x00}
+    static get PICK_DATE() {return 0x01}
+    static get PICK_TIME() {return 0x02}
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //                                        Constructor                                        //
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -107,59 +112,37 @@ class CanvDTP
         {
             /***************************** Configuration Parameters ******************************/
 
-            //Enable/disable debug.
-            debug = false,
+            debug = false,                //Enable/disable debug.
 
-            //Callback functions for data collection.
-            dateTimeStringCb = null,
-            dateTimeJSONCb   = null,
+            dateTimeStringCb = null,      //Callback function - returns selected time string.
+            dateTimeJSONCb   = null,      //Callback function - returns selected time JSON object.
 
-            //Enable date and/or time and set the string format.
-            dateTimeFormat = null,
+            dateTimeFormat = null,        //Enable date and/or time and set the string format.
 
-            isDate = true,
-            isTime = true,
+            isDate = true,                //Enable date picker.
+            isTime = true,                //Enable time picker.
 
             isAnimated = true,            //Enable/disable open/close animation.
             maxPixelWidth = null,         //Maximum width in pixels of the body canvas.
             startOfWeek = CanvDTP.SUNDAY, //Sets which day the week starts on.
             isMilitaryTime = false,       //Select time format.
             
-            dayExcludeArray = [], //Array of excluded months, days, years in the month view.
-            dayWhiteArray   = [], //Array of whitelist months, days, years in the month view.
+            dayExcludeArray = [],         //Array of excluded months, days, years in the month view.
+            dayWhiteArray   = [],         //Array of whitelist months, days, years in the month view.
 
-            monthSpotlightArray = [], //Array of spotlighted months in the year view.
-            monthWhiteArray     = [], //Array of whitelist months, in the year view.
+            monthSpotlightArray = [],     //Array of spotlighted months in the year view.
+            monthWhiteArray     = [],     //Array of whitelist months, in the year view.
 
-            yearSpotlightArray = [], //Array of spotlighted years in the decade view.
-            yearWhiteArray     = [], //Array of whitelist years, in the decade view.
+            yearSpotlightArray = [],      //Array of spotlighted years in the decade view.
+            yearWhiteArray     = [],      //Array of whitelist years, in the decade view.
 
-            /********************************* Common Parameters *********************************/
+            fontStyle      = "Arial",     //The font to use for all the text.
+            textMainColorn = "#000000",   //The primary color for non-hovered items.
+            textMainColorh = "#ffffff",   //The primary color for hovered items.
+            textAltColorn  = "#888888",   //The alternate for non-hovered items.
+            textAltColorh  = "#ff8888",   //The alternate for hovered items.
 
-            //Selectable Items.
-            selectBorderColor = "#0087b680",
-            selectFillColor   = "#a4e3f780",
-            selectRadius      = .25,
-            selectWeight      = .07,
-            
-            //Previous/Next Parameters.
-            prevNextColorn = "#000000",
-            prevNextColorh = "#8800ff",
-            prevNextXPad   = .20,
-            prevNextYPad   = .35,
-        
-            //Clock Graphic Parameters.
-            clockColorn = "#000000",
-            clockColorh = "#8800ff",
-            clockPad    = .10,
-            clockWeight = .07,
-
-            //Calendar Graphic Parameters.
-            calCalColorn = "#000000",
-            calCalColorh = "#8800ff",
-            calXPadding  = .20,
-            calYPadding  = .10,
-            calLineWidth = .05,
+            bannerScale = .80,            //Font scaler for banners between the prev. and next buttons.
 
             /****************************** Icon Canvas Parameters *******************************/
 
@@ -184,116 +167,61 @@ class CanvDTP
             bXPadding     = .10,
             bYPadding     = .10,
             bLineWidth    = .02,
-            
-            /******************************* Month View Parameters *******************************/
 
-            //Days of Week.
-            headerColor     = "#0087b6",
-            headerFontStyle = "Arial",
-            headerHorzAdj   = [.12, .08, .15, .05, .15, .20, .12],
-            headerVertAdj   = .20,
-            headerScale     = .80,
-            
-            //Days of Month.
-            nonDayColorn = "#888888",
-            dayColorn    = "#000000",
-            nonDayColorh = "#ff8888",
-            dayColorh    = "#8800ff",
-            dayFontStyle = "Arial",
-            dayScale     = .80,
-            dayVertAdj   = .20,
-            dayHorzAdj   = 
-            [
-                .30, .30, .30, .30, .30, .30, .30, .30, .30, .10,
-                .15, .10, .10, .10, .10, .10, .12, .12, .10, .15,
-                .15, .15, .15, .15, .15, .15, .15, .15, .15, .15,
-                .18
-            ],
+            /******************************* Info Text Parameters ********************************/
+            infoPointerSize  = "10px",
+            infoBackColor    = "#000000a0",
+            infoTextColor    = "#ffffff",
+            infoPadding      = "2px, 5px",
+            infoWidth        = "150px",
+            infoBorderRadius = "10px",
 
-            //Month and Year.
-            monthYearn         = "#000000",
-            monthYearh         = "#8800ff",
-            monthYearFontStyle = "Arial",
-            monthYearScale     = .80,
-            monthYearVertAdj   = .20,
-            monthYearHorzAdj   = [.60, .50, .90, 1.15, 1.15, 1.05, 1.15, .75, .20, .60, .30, .30],
+            /********************************* Common Parameters *********************************/
+
+            //Selectable Items.
+            selectBorderColor = "#202020a0",
+            selectFillColor   = "#808080a0",
+            selectRadius      = .25,
+            selectWeight      = .07,
+            
+            //Previous/Next Parameters.
+            prevNextXPad   = .20,
+            prevNextYPad   = .35,
+        
+            //Clock Graphic Parameters.
+            clockPad    = .10,
+            clockWeight = .07,
+
+            //Calendar Graphic Parameters.
+            calXPadding  = .20,
+            calYPadding  = .10,
+            calLineWidth = .05,
+            
+            /********************************** View Parameters **********************************/
+
+            //Days of Week header.
+            headerColor = "#0087b6",
+            headerScale = .80,
 
             //Currently Selected Day.
-            currentBorderColor = "#00f7ff",
-            currentFillColor   = "#aefcff",
+            currentBorderColor = "#000000",
+            currentFillColor   = "#ffffff80",
             currentRadius      = .25,
-            currentWeight      = .07,
+            currentWeight      = .02,
 
             //Today's Date.
             nowColor  = "#000000",
             nowWeight = .25,
 
-            /******************************* Year View Parameters ********************************/
-
-            //Month Text.
-            monthn         = "#000000",
-            monthh         = "#8800ff",
-            monthFontStyle = "Arial",
-            monthScale     = .60,
-            monthVertAdj   = .25,
-            monthHorzAdj   = [.20, .20, .20, .20, .15, .20, .22, .18, .17, .20, .17, .17],
-
-            //Year.
-            bannerYearn         = "#000000",
-            bannerYearh         = "#8800ff",
-            bannerYearFontStyle = "Arial",
-            bannerYearScale     = .80,
-            bannerYearVertAdj   = .20,
-            bannerYearHorzAdj   = 1.80,
-
-            /****************************** Decade View Parameters *******************************/
-
-            //Year Text.
-            nonYearn      = "#888888",
-            yearn         = "#000000",
-            nonYearh      = "#ff8888",
-            yearh         = "#8800ff",
-            yearFontStyle = "Arial",
-            yearScale     = .60,
-            yearVertAdj   = .25,
-            yearHorzAdj   = .10,
-
-            //Decade.
-            bannerDecaden         = "#000000",
-            bannerDecadeh         = "#8800ff",
-            bannerDecadeFontStyle = "Arial",
-            bannerDecadeScale     = .80,
-            bannerDecadeVertAdj   = .20,
-            bannerDecadeHorzAdj   = 1.0,
-
-            /****************************** Century View Parameters ******************************/
-
-            //Decade Text.
-            nonDecaden      = "#888888",
-            decaden         = "#000000",
-            nonDecadeh      = "#ff8888",
-            decadeh         = "#8800ff",
-            decadeFontStyle = "Arial",
-            decadeScale     = .50,
-            decadeVertAdj1  = .55,
-            decadeVertAdj2  = .08,
-            decadeHorzAdj   = .20,
-
-            //Century.
-            bannerCenturyn         = "#000000",
-            bannerCenturyh         = "#8800ff",
-            bannerCenturyFontStyle = "Arial",
-            bannerCenturyScale     = .80,
-            bannerCenturyVertAdj   = .20,
-            bannerCenturyHorzAdj   = 1.0,
-
+            dayScale    = .60, //Days of Month.
+            monthScale  = .60, //Month Text.
+            yearScale   = .60, //Year Text.
+            decadeScale = .50, //Decade Text.
+            
             /******************************* Time View Parameters ********************************/
 
             //Time Parameters.
-            timeColorn      = "#000000",
-            timeColorh      = "#8800ff",
-            timeFont        = "Arial",
-            timeWeight      = .80,
+            timeScale       = .80,
             timeVertAdj     = .20,
             timeDivVertAdj  = .25,
             timeDivHorzAdj  = .15,
@@ -302,50 +230,37 @@ class CanvDTP
             timehourHorzAdj = [.30, .30, .30, .30, .30, .30, .30, .30, .30, .07, .10, .07],
             
             //AM/PM Parameters.
-            timeAmPmColorn  = "#000000",
-            timeAmPmColorh  = "#8800ff",
-            timeAmPmFont    = "Arial",
-            timeAmPmWeight  = .60,
+            timeAmPmScale  = .60,
             timeAmPmVertAdj = .27,
             timeAmPmHorzAdj = .10,
 
             //Increment/Decrement Parameters.
-            incColorn  = "#000000",
-            incColorh  = "#8800ff",
             incXPad    = .25,
             incYPad    = .10,
             incWeight  = .25,
 
             /****************************** Minute View Parameters *******************************/
 
-            minuteColorn  = "#000000",
-            minuteColorh  = "#8800ff",
-            minuteFont    = "Arial",
-            minuteWeight  = .80,
+            minuteScale  = .80,
             minuteVertAdj = .23,
             minuteHorzAdj = .25,
 
             /******************************* Hour View Parameters ********************************/
 
-            hourColorn     = "#000000",
-            hourColorh     = "#8800ff",
-            hourFont       = "Arial",
-            hourWeight     = .80,
+            hourScale     = .80,
             hourVertAdj    = .20,
             milHourHorzAdj = .30,
-            stdHourHorzAdj = [.33, .33, .33, .33, .33, .33, .33, .33, .33, .15, .17, .13],
-
-            /******************************* Info Text Parameters ********************************/
-            infoPointerSize  = "10px",
-            infoBackColor    = "#555555",
-            infoTextColor    = "#ffffff",
-            infoPadding      = "2px, 5px",
-            infoWidth        = "150px",
-            infoBorderRadius = "10px"
+            stdHourHorzAdj = [.33, .33, .33, .33, .33, .33, .33, .33, .33, .15, .17, .13]
         } = {}
     )
     {
         this.debug                  = debug;
+        this.fontStyle              = fontStyle;
+        this.textMainColorn         = textMainColorn;
+        this.textMainColorh         = textMainColorh;
+        this.textAltColorn          = textAltColorn;
+        this.textAltColorh          = textAltColorh;
+        this.bannerScale            = bannerScale;
         this.dateTimeStringCb       = dateTimeStringCb;
         this.dateTimeJSONCb         = dateTimeJSONCb;
         this.dateTimeFormat         = dateTimeFormat,
@@ -376,31 +291,11 @@ class CanvDTP
         this.selectWeight           = selectWeight;
         this.selectBorderColor      = selectBorderColor;
         this.selectFillColor        = selectFillColor;
-        this.headerHorzAdj          = headerHorzAdj;
-        this.headerVertAdj          = headerVertAdj;
         this.headerScale            = headerScale;
         this.headerColor            = headerColor;
-        this.headerFontStyle        = headerFontStyle;
-        this.nonDayColorn           = nonDayColorn;
-        this.dayColorn              = dayColorn;
-        this.nonDayColorh           = nonDayColorh;
-        this.dayColorh              = dayColorh;
-        this.dayScale               = dayScale;
-        this.dayFontStyle           = dayFontStyle;
-        this.dayVertAdj             = dayVertAdj;
-        this.dayHorzAdj             = dayHorzAdj;
-        this.monthYearn             = monthYearn;
-        this.monthYearh             = monthYearh;
-        this.monthYearScale         = monthYearScale;
-        this.monthYearFontStyle     = monthYearFontStyle;
-        this.monthYearVertAdj       = monthYearVertAdj;
-        this.monthYearHorzAdj       = monthYearHorzAdj;
-        this.prevNextColorn         = prevNextColorn;
-        this.prevNextColorh         = prevNextColorh;
+        this.dayScale               = dayScale;     
         this.prevNextXPad           = prevNextXPad;
         this.prevNextYPad           = prevNextYPad;
-        this.clockColorn            = clockColorn;
-        this.clockColorh            = clockColorh;
         this.clockPad               = clockPad;
         this.clockWeight            = clockWeight;
         this.currentRadius          = currentRadius;
@@ -409,73 +304,27 @@ class CanvDTP
         this.currentFillColor       = currentFillColor;
         this.nowWeight              = nowWeight;
         this.nowColor               = nowColor;
-        this.monthn                 = monthn;
-        this.monthh                 = monthh;
         this.monthScale             = monthScale;
-        this.monthFontStyle         = monthFontStyle;
-        this.monthVertAdj           = monthVertAdj;
-        this.monthHorzAdj           = monthHorzAdj;
-        this.bannerYearn            = bannerYearn;
-        this.bannerYearh            = bannerYearh;
-        this.bannerYearScale        = bannerYearScale;
-        this.bannerYearFontStyle    = bannerYearFontStyle;
-        this.bannerYearVertAdj      = bannerYearVertAdj;
-        this.bannerYearHorzAdj      = bannerYearHorzAdj;
-        this.nonYearn               = nonYearn;
-        this.yearn                  = yearn;
-        this.nonYearh               = nonYearh;
-        this.yearh                  = yearh;
         this.yearScale              = yearScale;
-        this.yearFontStyle          = yearFontStyle;
-        this.yearVertAdj            = yearVertAdj;
-        this.yearHorzAdj            = yearHorzAdj;
-        this.bannerDecaden          = bannerDecaden;
-        this.bannerDecadeh          = bannerDecadeh;
-        this.bannerDecadeScale      = bannerDecadeScale;
-        this.bannerDecadeFontStyle  = bannerDecadeFontStyle;
-        this.bannerDecadeVertAdj    = bannerDecadeVertAdj;
-        this.bannerDecadeHorzAdj    = bannerDecadeHorzAdj;
-        this.nonDecaden             = nonDecaden;
-        this.decaden                = decaden;
-        this.nonDecadeh             = nonDecadeh;
-        this.decadeh                = decadeh;
         this.decadeScale            = decadeScale;
-        this.decadeFontStyle        = decadeFontStyle;
-        this.decadeVertAdj1         = decadeVertAdj1;
-        this.decadeVertAdj2         = decadeVertAdj2;
-        this.decadeHorzAdj          = decadeHorzAdj;
-        this.bannerCenturyn         = bannerCenturyn;
-        this.bannerCenturyh         = bannerCenturyh;
-        this.bannerCenturyScale     = bannerCenturyScale;
-        this.bannerCenturyFontStyle = bannerCenturyFontStyle;
-        this.bannerCenturyVertAdj   = bannerCenturyVertAdj;
-        this.bannerCenturyHorzAdj   = bannerCenturyHorzAdj;
         this.calXPadding            = calXPadding;
         this.calYPadding            = calYPadding;
         this.calLineWidth           = calLineWidth;
-        this.calCalColorn           = calCalColorn;
-        this.calCalColorh           = calCalColorh;
+
         this.timeVertAdj            = timeVertAdj;
         this.timeDivVertAdj         = timeDivVertAdj;
         this.timeDivHorzAdj         = timeDivHorzAdj;
         this.timehourHorzAdj        = timehourHorzAdj;
         this.timeMilHorzAdj         = timeMilHorzAdj;
         this.timeMinHorzAdj         = timeMinHorzAdj;
-        this.timeFont               = timeFont;
-        this.timeColorn             = timeColorn;
-        this.timeColorh             = timeColorh;
-        this.timeWeight             = timeWeight;
-        this.timeAmPmFont           = timeAmPmFont;
-        this.timeAmPmColorn         = timeAmPmColorn;
-        this.timeAmPmColorh         = timeAmPmColorh;
-        this.timeAmPmWeight         = timeAmPmWeight;
+        this.timeScale              = timeScale;
+
+        this.timeAmPmScale         = timeAmPmScale;
         this.timeAmPmVertAdj        = timeAmPmVertAdj;
         this.timeAmPmHorzAdj        = timeAmPmHorzAdj;
         this.incXPad                = incXPad;
         this.incYPad                = incYPad;
         this.incWeight              = incWeight;
-        this.incColorn              = incColorn;
-        this.incColorh              = incColorh;
         this.bBorderRadius          = bBorderRadius;
         this.bBorderWeight          = bBorderWeight;
         this.bXPadding              = bXPadding;
@@ -483,16 +332,10 @@ class CanvDTP
         this.bLineWidth             = bLineWidth;
         this.bBorderColor           = bBorderColor;
         this.bFillColor             = bFillColor;
-        this.minuteColorn           = minuteColorn;
-        this.minuteColorh           = minuteColorh;
-        this.minuteFont             = minuteFont;
-        this.minuteWeight           = minuteWeight;
+        this.minuteScale            = minuteScale;
         this.minuteVertAdj          = minuteVertAdj;
         this.minuteHorzAdj          = minuteHorzAdj;
-        this.hourColorn             = hourColorn;
-        this.hourColorh             = hourColorh;
-        this.hourFont               = hourFont;
-        this.hourWeight             = hourWeight;
+        this.hourScale              = hourScale;
         this.hourVertAdj            = hourVertAdj;
         this.milHourHorzAdj         = milHourHorzAdj;
         this.stdHourHorzAdj         = stdHourHorzAdj;
@@ -2488,7 +2331,9 @@ class CanvDTP
     /**************************************** Draw Month *****************************************/
 
     drawMonth()
-    {        
+    {
+        let text, textHeight, textWidth, textLeft, textBottom;
+
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_MONTH);
 
@@ -2537,7 +2382,7 @@ class CanvDTP
 
         //Draw the day numbers.
         this.ctxDTP.beginPath();
-        this.ctxDTP.font = (this.smallBoxHeight * this.dayScale) + "px " + this.dayFontStyle;
+        this.ctxDTP.font = (this.smallBoxHeight * this.dayScale) + "px " + this.fontStyle;
         for(let i = 0; i < CanvDTP.NUM_DAYS; i++)
         {
             let isSelected = false;
@@ -2654,14 +2499,22 @@ class CanvDTP
             }
 
             this.dayArray[i].type === CanvDTP.DAY_THIS ? 
-                this.ctxDTP.fillStyle = this.dayColorn :
-                this.ctxDTP.fillStyle = this.nonDayColorn;
+                this.ctxDTP.fillStyle = this.textMainColorn :
+                this.ctxDTP.fillStyle = this.textAltColorn;
+
+            //Get the text metrics.
+            text       = this.dayArray[i].day;
+            textHeight = this.smallBoxHeight * this.dayScale
+            textWidth  = this.ctxDTP.measureText(text).width;
+            textLeft   = Math.abs(this.smallBoxWidth - textWidth) / 2;
+            textBottom = Math.abs(this.smallBoxHeight - textHeight) / 2;
             
+            this.ctxDTP.textBaseline = "top";
             this.ctxDTP.fillText
             (
-                this.dayArray[i].day,
-                this.hitBounds[i].x1 + this.smallBoxWidth * this.dayHorzAdj[this.dayArray[i].day - 1],
-                this.hitBounds[i].y2 - this.smallBoxHeight * this.dayVertAdj
+                text,
+                this.hitBounds[i].x1 + textLeft,
+                this.hitBounds[i].y2 + textBottom - this.smallBoxHeight
             );
         }
         this.ctxDTP.stroke();
@@ -2669,36 +2522,54 @@ class CanvDTP
         //Draw the days of the week header.
         this.ctxDTP.beginPath();
         this.ctxDTP.fillStyle = this.headerColor;
-        this.ctxDTP.font = (this.smallBoxHeight * this.headerScale) + "px " + this.headerFontStyle;
+        this.ctxDTP.font = (this.smallBoxHeight * this.headerScale) + "px " + this.fontStyle;
         index = this.startOfWeek;
         for(let i = 0; i < 7; i++)
         {
             //Adjust for user configured start day of week.
             if(index >= this.days.length) index = 0
+
+            //Get the text metrics.
+            text       = this.days[index];
+            textHeight = this.smallBoxHeight * this.headerScale
+            textWidth  = this.ctxDTP.measureText(text).width;
+            textLeft   = Math.abs(this.smallBoxWidth - textWidth) / 2;
+            textBottom = Math.abs(this.smallBoxHeight - textHeight) / 2;
+
+            this.ctxDTP.textBaseline = "top";
             this.ctxDTP.fillText
             (
-                this.days[index],
-                this.contentLeft + i * this.smallBoxWidth + this.smallBoxWidth * this.headerHorzAdj[index++],
-                this.contentTop + 2 * this.smallBoxHeight - this.smallBoxHeight * this.headerVertAdj
+                this.days[index++],
+                this.contentLeft + i * this.smallBoxWidth + textLeft,
+                this.contentTop + this.smallBoxHeight + textBottom
             );
         }
         this.ctxDTP.stroke();
 
         //Draw the date and year.
         this.ctxDTP.beginPath();
-        this.ctxDTP.fillStyle = this.monthYearn;
-        this.ctxDTP.font = (this.smallBoxHeight * this.monthYearScale) + "px " + this.monthYearFontStyle;
+        this.ctxDTP.fillStyle = this.textMainColorn;
+        this.ctxDTP.font = (this.smallBoxHeight * this.bannerScale) + "px " + this.fontStyle;
+
+        //Get the text metrics.
+        text       = this.MonthsArray[this.tempMonth - 1] + " " + this.tempYear;
+        textHeight = this.smallBoxHeight * this.bannerScale;
+        textWidth  = this.ctxDTP.measureText(text).width;
+        textLeft   = Math.abs(5 * this.smallBoxWidth - textWidth) / 2;
+        textBottom = Math.abs(this.smallBoxHeight - textHeight) / 2;
+
+        this.ctxDTP.textBaseline = "top";
         this.ctxDTP.fillText
         (
-            this.MonthsArray[this.tempMonth - 1] + " " + this.tempYear, 
-            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.monthYearHorzAdj[this.tempMonth - 1],
-            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.monthYearVertAdj
+            text, 
+            this.contentLeft + this.smallBoxWidth + textLeft,
+            this.contentTop + textBottom
         );
         this.ctxDTP.stroke();
         
-        this.drawPrevious(this.prevNextColorn); //Draw the previous button.
-        this.drawNext(this.prevNextColorn);     //Draw the next button.
-        this.drawClock(this.clockColorn);       //Draw the clock button.
+        this.drawPrevious(this.textMainColorn); //Draw the previous button.
+        this.drawNext(this.textMainColorn);     //Draw the next button.
+        this.drawClock(this.textMainColorn);    //Draw the clock button.
 
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
@@ -2746,30 +2617,40 @@ class CanvDTP
                 }
 
                 this.highlightHovItem(i); //Highlight the hovered item.
-                
+
+                let text, textHeight, textWidth, textLeft, textBottom
+
                 //Draw the highlighted text.
                 switch(this.hitBounds[i].type)
                 {
                     //Draw the day numbers.
                     case CanvDTP.SEL_DAY:
                         this.ctxDTP.beginPath();
-                        this.ctxDTP.font = (this.smallBoxHeight * this.dayScale) + "px " + this.dayFontStyle;
-                        this.ctxDTP.fillStyle = this.nonDayColorh;
+                        this.ctxDTP.font = (this.smallBoxHeight * this.dayScale) + "px " + this.fontStyle;
+                        this.ctxDTP.fillStyle = this.textAltColorh;
                         
                         if(this.dayArray[i].type === CanvDTP.DAY_THIS)
                         {
-                            this.ctxDTP.fillStyle = this.dayColorh;
+                            this.ctxDTP.fillStyle = this.textMainColorh;
                         }
                         else
                         {
-                            this.ctxDTP.fillStyle = this.nonDayColorh;
+                            this.ctxDTP.fillStyle = this.textAltColorh;
                         }
             
+                        //Get the text metrics.
+                        text       = this.dayArray[i].day;
+                        textHeight = this.smallBoxHeight * this.dayScale;
+                        textWidth  = this.ctxDTP.measureText(text).width;
+                        textLeft   = Math.abs(this.smallBoxWidth - textWidth) / 2;
+                        textBottom = Math.abs(this.smallBoxHeight - textHeight) / 2;
+            
+                        this.ctxDTP.textBaseline = "top";
                         this.ctxDTP.fillText
                         (
-                            this.dayArray[i].day,
-                            this.hitBounds[i].x1 + this.smallBoxWidth * this.dayHorzAdj[this.dayArray[i].day - 1],
-                            this.hitBounds[i].y2 - this.smallBoxHeight * this.dayVertAdj
+                            text,
+                            this.hitBounds[i].x1 + textLeft,
+                            this.hitBounds[i].y2 + textBottom - this.smallBoxHeight
                         );
                         
                         this.ctxDTP.stroke();
@@ -2778,31 +2659,40 @@ class CanvDTP
                     //Highlight the month and year.
                     case CanvDTP.SEL_VIEW:
                         this.ctxDTP.beginPath();
-                        this.ctxDTP.fillStyle = this.monthYearh;
-                        this.ctxDTP.font = (this.smallBoxHeight * this.monthYearScale) + "px " + this.monthYearFontStyle;
+                        this.ctxDTP.fillStyle = this.textMainColorh;
+                        this.ctxDTP.font = (this.smallBoxHeight * this.bannerScale) + "px " + this.fontStyle;
+
+                        //Get the text metrics.
+                        text       = this.MonthsArray[this.tempMonth - 1] + " " + this.tempYear;
+                        textHeight = this.smallBoxHeight * this.bannerScale;
+                        textWidth  = this.ctxDTP.measureText(text).width;
+                        textLeft   = Math.abs(5 * this.smallBoxWidth - textWidth) / 2;
+                        textBottom = Math.abs(this.smallBoxHeight - textHeight) / 2;
+
+                        this.ctxDTP.textBaseline = "top";
                         this.ctxDTP.fillText
                         (
-                            this.MonthsArray[this.tempMonth - 1] + " " + this.tempYear, 
-                            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.monthYearHorzAdj[this.tempMonth - 1],
-                            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.monthYearVertAdj
+                            text, 
+                            this.contentLeft + this.smallBoxWidth + textLeft,
+                            this.contentTop + textBottom
                         );
                         this.ctxDTP.stroke();
                         break;
 
                     //Highlight the previous button.
                     case CanvDTP.SEL_PREVIOUS:
-                        this.drawPrevious(this.prevNextColorh);
+                        this.drawPrevious(this.textMainColorh);
                         break;
 
                     //Highlight the next button.
                     case CanvDTP.SEL_NEXT:
-                        this.drawNext(this.prevNextColorh);
+                        this.drawNext(this.textMainColorh);
                         break;
 
                     //Highlight the clock graphic.
                     case CanvDTP.SEL_TIME:
                     default:
-                        this.drawClock(this.clockColorh);
+                        this.drawClock(this.textMainColorh);
                         break;
                 }
             }
@@ -2823,6 +2713,8 @@ class CanvDTP
     
     drawYear()
     {
+        let text, textHeight, textWidth, textLeft, textBottom;
+
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_GENERAL);
 
@@ -2864,32 +2756,50 @@ class CanvDTP
             if(this.tempYear === this.year && this.month === i + 1) this.fillCurrent(i);
 
             this.ctxDTP.beginPath();
-            this.ctxDTP.font = (this.bigBoxHeight * this.monthScale) + "px " + this.monthFontStyle;
-            this.ctxDTP.fillStyle = this.monthn;
+            this.ctxDTP.font = (this.bigBoxHeight * this.monthScale) + "px " + this.fontStyle;
+            this.ctxDTP.fillStyle = this.textMainColorn;
+
+            //Get the text metrics.
+            text       = this.shortMonthsArray[i];
+            textHeight = this.bigBoxHeight * this.monthScale;
+            textWidth  = this.ctxDTP.measureText(text).width;
+            textLeft   = Math.abs(this.bigBoxWidth - textWidth) / 2;
+            textBottom = Math.abs(this.bigBoxHeight - textHeight) / 2;
+
+            this.ctxDTP.textBaseline = "top";
             this.ctxDTP.fillText
             (
                 this.shortMonthsArray[i], 
-                this.hitBounds[i].x1 + this.monthHorzAdj[i] * this.bigBoxWidth,
-                this.hitBounds[i].y2 - this.monthVertAdj * this.bigBoxHeight
+                this.hitBounds[i].x1 + textLeft,
+                this.hitBounds[i].y2 + textBottom - this.bigBoxHeight
             );
             this.ctxDTP.stroke();
         }
         
         //Draw the year
         this.ctxDTP.beginPath();
-        this.ctxDTP.fillStyle = this.bannerYearn;
-        this.ctxDTP.font = (this.smallBoxHeight * this.bannerYearScale) + "px " + this.bannerYearFontStyle;
+        this.ctxDTP.fillStyle = this.textMainColorn;
+        this.ctxDTP.font = (this.smallBoxHeight * this.bannerScale) + "px " + this.fontStyle;
+
+        //Get the text metrics.
+        text       = this.tempYear;
+        textHeight = this.smallBoxHeight * this.bannerScale;
+        textWidth  = this.ctxDTP.measureText(text).width;
+        textLeft   = Math.abs(5 * this.smallBoxWidth - textWidth) / 2;
+        textBottom = Math.abs(this.smallBoxHeight - textHeight) / 2;
+
+        this.ctxDTP.textBaseline = "top";
         this.ctxDTP.fillText
         (
-            this.tempYear, 
-            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.bannerYearHorzAdj,
-            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.bannerYearVertAdj
+            text, 
+            this.contentLeft + this.smallBoxWidth + textLeft,
+            this.contentTop + textBottom
         );
         this.ctxDTP.stroke();
        
-        this.drawPrevious(this.prevNextColorn); //Draw the previous button.
-        this.drawNext(this.prevNextColorn);     //Draw the next button.
-        this.drawClock(this.clockColorn);       //Draw the clock button.
+        this.drawPrevious(this.textMainColorn); //Draw the previous button.
+        this.drawNext(this.textMainColorn);     //Draw the next button.
+        this.drawClock(this.textMainColorn);    //Draw the clock button.
 
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
@@ -2933,23 +2843,6 @@ class CanvDTP
                     }
                 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 this.highlightHovItem(i); //Highlight the hovered item.
                 
                 //Get additional info for days of month.
@@ -2960,42 +2853,60 @@ class CanvDTP
                 {
                     case CanvDTP.SEL_MONTH:
                         this.ctxDTP.beginPath();
-                        this.ctxDTP.font = (this.bigBoxHeight * this.monthScale) + "px " + this.monthFontStyle;
-                        this.ctxDTP.fillStyle = this.monthh;
+                        this.ctxDTP.font = (this.bigBoxHeight * this.monthScale) + "px " + this.fontStyle;
+                        this.ctxDTP.fillStyle = this.textMainColorh;
+
+                        //Get the text metrics.
+                        text       = this.shortMonthsArray[i];
+                        textHeight = this.bigBoxHeight * this.monthScale;
+                        textWidth  = this.ctxDTP.measureText(text).width;
+                        textLeft   = Math.abs(this.bigBoxWidth - textWidth) / 2;
+                        textBottom = Math.abs(this.bigBoxHeight - textHeight) / 2;
+
+                        this.ctxDTP.textBaseline = "top";
                         this.ctxDTP.fillText
                         (
                             this.shortMonthsArray[i], 
-                            this.hitBounds[i].x1 + this.monthHorzAdj[i] * this.bigBoxWidth,
-                            this.hitBounds[i].y2 - this.monthVertAdj * this.bigBoxHeight
+                            this.hitBounds[i].x1 + textLeft,
+                            this.hitBounds[i].y2 + textBottom - this.bigBoxHeight
                         );
                         this.ctxDTP.stroke();
                         break;
 
                     case CanvDTP.SEL_VIEW:
                         this.ctxDTP.beginPath();
-                        this.ctxDTP.fillStyle = this.bannerYearh;
-                        this.ctxDTP.font = (this.smallBoxHeight * this.monthYearScale) + "px " + this.monthYearFontStyle;
+                        this.ctxDTP.fillStyle = this.textMainColorh;
+                        this.ctxDTP.font = (this.smallBoxHeight * this.bannerScale) + "px " + this.fontStyle;
+
+                        //Get the text metrics.
+                        text       = this.tempYear;
+                        textHeight = this.smallBoxHeight * this.bannerScale;
+                        textWidth  = this.ctxDTP.measureText(text).width;
+                        textLeft   = Math.abs(5 * this.smallBoxWidth - textWidth) / 2;
+                        textBottom = Math.abs(this.smallBoxHeight - textHeight) / 2;
+
+                        this.ctxDTP.textBaseline = "top";
                         this.ctxDTP.fillText
                         (
-                            this.tempYear, 
-                            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.bannerYearHorzAdj,
-                            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.bannerYearVertAdj
+                            text, 
+                            this.contentLeft + this.smallBoxWidth + textLeft,
+                            this.contentTop + textBottom
                         );
                         this.ctxDTP.stroke();
                         break;
 
                     case CanvDTP.SEL_PREVIOUS:
-                        this.drawPrevious(this.prevNextColorh);
+                        this.drawPrevious(this.textMainColorh);
                         break;
 
                     case CanvDTP.SEL_NEXT:
-                        this.drawNext(this.prevNextColorh);
+                        this.drawNext(this.textMainColorh);
                         break;
 
                     //Highlight the clock graphic.
                     case CanvDTP.SEL_TIME:
                     default:
-                        this.drawClock(this.clockColorh);
+                        this.drawClock(this.textMainColorh);
                         break;
                 }
             }
@@ -3016,6 +2927,8 @@ class CanvDTP
 
     drawDecade()
     {
+        let text, textHeight, textWidth, textLeft, textBottom;
+
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_GENERAL);
 
@@ -3039,33 +2952,50 @@ class CanvDTP
             if(yearBase + i === this.year) this.fillCurrent(i);
             
             this.ctxDTP.beginPath();
-            this.ctxDTP.font = (this.bigBoxHeight * this.yearScale) + "px " + this.yearFontStyle;
-            this.ctxDTP.fillStyle = (!i || i === 11) ? this.nonYearn : this.ctxDTP.fillStyle = this.yearn;
+            this.ctxDTP.font = (this.bigBoxHeight * this.yearScale) + "px " + this.fontStyle;
+            this.ctxDTP.fillStyle = (!i || i === 11) ? this.textAltColorn : this.ctxDTP.fillStyle = this.textMainColorn;
+
+            //Get the text metrics.
+            text       = yearBase + i;
+            textHeight = this.bigBoxHeight * this.yearScale;
+            textWidth  = this.ctxDTP.measureText(text).width;
+            textLeft   = Math.abs(this.bigBoxWidth - textWidth) / 2;
+            textBottom = Math.abs(this.bigBoxHeight - textHeight) / 2;
+
+            this.ctxDTP.textBaseline = "top";
             this.ctxDTP.fillText
             (
-                yearBase + i, 
-                this.hitBounds[i].x1 + this.yearHorzAdj * this.bigBoxWidth,
-                this.hitBounds[i].y2 - this.yearVertAdj * this.bigBoxHeight
-                
+                text, 
+                this.hitBounds[i].x1 + textLeft,
+                this.hitBounds[i].y2 + textBottom - this.bigBoxHeight
             );
             this.ctxDTP.stroke();          
         }
         
         //Draw the decade.
         this.ctxDTP.beginPath();
-        this.ctxDTP.fillStyle = this.bannerDecaden;
-        this.ctxDTP.font = (this.smallBoxHeight * this.bannerDecadeScale) + "px " + this.bannerDecadeFontStyle;
+        this.ctxDTP.fillStyle = this.textMainColorn;
+        this.ctxDTP.font = (this.smallBoxHeight * this.bannerScale) + "px " + this.fontStyle;
+
+        //Get the text metrics.
+        text       = (yearBase + 1) + "-" + (yearBase + 10);
+        textHeight = this.smallBoxHeight * this.bannerScale;
+        textWidth  = this.ctxDTP.measureText(text).width;
+        textLeft   = Math.abs(5 * this.smallBoxWidth - textWidth) / 2;
+        textBottom = Math.abs(this.smallBoxHeight - textHeight) / 2;
+
+        this.ctxDTP.textBaseline = "top";
         this.ctxDTP.fillText
         (
-            (yearBase + 1) + "-" + (yearBase + 10),
-            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.bannerDecadeHorzAdj,
-            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.bannerDecadeVertAdj
+            text,
+            this.contentLeft + this.smallBoxWidth + textLeft,
+            this.contentTop + textBottom
         );
         this.ctxDTP.stroke();
 
-        this.drawPrevious(this.prevNextColorn); //Draw the previous button.
-        this.drawNext(this.prevNextColorn);     //Draw the next button.
-        this.drawClock(this.clockColorn);       //Draw the clock button.
+        this.drawPrevious(this.textMainColorn); //Draw the previous button.
+        this.drawNext(this.textMainColorn);     //Draw the next button.
+        this.drawClock(this.textMainColorn);    //Draw the clock button.
 
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
@@ -3090,41 +3020,59 @@ class CanvDTP
                 {
                     case CanvDTP.SEL_YEAR:
                         this.ctxDTP.beginPath();
-                        this.ctxDTP.font = (this.bigBoxHeight * this.monthScale) + "px " + this.yearFontStyle;
-                        this.ctxDTP.fillStyle = (!i || i === 11) ? this.nonYearh : this.ctxDTP.fillStyle = this.yearh;
+                        this.ctxDTP.font = (this.bigBoxHeight * this.monthScale) + "px " + this.fontStyle;
+                        this.ctxDTP.fillStyle = (!i || i === 11) ? this.textAltColorh : this.ctxDTP.fillStyle = this.textMainColorh;
+
+                        //Get the text metrics.
+                        text       = yearBase + i;
+                        textHeight = this.bigBoxHeight * this.yearScale;
+                        textWidth  = this.ctxDTP.measureText(text).width;
+                        textLeft   = Math.abs(this.bigBoxWidth - textWidth) / 2;
+                        textBottom = Math.abs(this.bigBoxHeight - textHeight) / 2;
+
+                        this.ctxDTP.textBaseline = "top";
                         this.ctxDTP.fillText
                         (
-                            yearBase + i, 
-                            this.hitBounds[i].x1 + this.yearHorzAdj * this.bigBoxWidth,
-                            this.hitBounds[i].y2 - this.yearVertAdj * this.bigBoxHeight
+                            text, 
+                            this.hitBounds[i].x1 + textLeft,
+                            this.hitBounds[i].y2 + textBottom - this.bigBoxHeight
                         );
-                        this.ctxDTP.stroke();
+                        this.ctxDTP.stroke(); 
                         break;
 
                     case CanvDTP.SEL_VIEW:
                         this.ctxDTP.beginPath();
-                        this.ctxDTP.fillStyle = this.bannerDecadeh;
-                        this.ctxDTP.font = (this.smallBoxHeight * this.bannerDecadeScale) + "px " + this.bannerDecadeFontStyle;
+                        this.ctxDTP.fillStyle = this.textMainColorh;
+                        this.ctxDTP.font = (this.smallBoxHeight * this.bannerScale) + "px " + this.fontStyle;
+
+                        //Get the text metrics.
+                        text       = (yearBase + 1) + "-" + (yearBase + 10);
+                        textHeight = this.smallBoxHeight * this.bannerScale;
+                        textWidth  = this.ctxDTP.measureText(text).width;
+                        textLeft   = Math.abs(5 * this.smallBoxWidth - textWidth) / 2;
+                        textBottom = Math.abs(this.smallBoxHeight - textHeight) / 2;
+
+                        this.ctxDTP.textBaseline = "top";
                         this.ctxDTP.fillText
                         (
-                            (yearBase + 1) + "-" + (yearBase + 10),
-                            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.bannerDecadeHorzAdj,
-                            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.bannerDecadeVertAdj
+                            text,
+                            this.contentLeft + this.smallBoxWidth + textLeft,
+                            this.contentTop + textBottom
                         );
                         this.ctxDTP.stroke();
                         break;
 
                     case CanvDTP.SEL_PREVIOUS:
-                        this.drawPrevious(this.prevNextColorh);
+                        this.drawPrevious(this.textMainColorh);
                         break;
 
                     case CanvDTP.SEL_NEXT:
-                        this.drawNext(this.prevNextColorh);
+                        this.drawNext(this.textMainColorh);
                         break;
 
                     case CanvDTP.SEL_TIME:
                     default:
-                        this.drawClock(this.clockColorh);
+                        this.drawClock(this.textMainColorh);
                         break;
                 }
             }
@@ -3138,6 +3086,8 @@ class CanvDTP
 
     drawCentury()
     {
+        let text, textHeight, textWidth, textLeft, textBottom;
+
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_GENERAL);
         
@@ -3158,38 +3108,65 @@ class CanvDTP
             }
             
             this.ctxDTP.beginPath();
-            this.ctxDTP.font = (this.bigBoxHeight * this.decadeScale) + "px " + this.bannerDecadeFontStyle;
-            this.ctxDTP.fillStyle = (!i || i === 11) ? this.nonDecaden : this.ctxDTP.fillStyle = this.decaden;
+            this.ctxDTP.font = (this.bigBoxHeight * this.decadeScale) + "px " + this.fontStyle;
+            this.ctxDTP.fillStyle = (!i || i === 11) ? this.textAltColorn : this.ctxDTP.fillStyle = this.textMainColorn;
+
+            //Get the text metrics.
+            text       = (centuryBase + i * 10 - 9);
+            textHeight = this.bigBoxHeight * this.decadeScale;
+            textWidth  = this.ctxDTP.measureText(text).width;
+            textLeft   = Math.abs(this.bigBoxWidth - textWidth) / 2;
+            textBottom = Math.abs(this.bigBoxHeight - textHeight) / 2;
+
+            this.ctxDTP.textBaseline = "top";
             this.ctxDTP.fillText
             (
-                (centuryBase + i * 10 - 9) + "-", 
-                this.hitBounds[i].x1 + this.decadeHorzAdj * this.bigBoxWidth,
-                this.hitBounds[i].y2 - this.decadeVertAdj1 * this.bigBoxHeight
+                text + "-", 
+                this.hitBounds[i].x1 + textLeft,
+                this.hitBounds[i].y2 + textBottom - 1.20 * this.bigBoxHeight
             );
+
+            //Get the text metrics.
+            text       = centuryBase + i * 10;
+            textHeight = this.bigBoxHeight * this.decadeScale;
+            textWidth  = this.ctxDTP.measureText(text).width;
+            textLeft   = Math.abs(this.bigBoxWidth - textWidth) / 2;
+            textBottom = Math.abs(this.bigBoxHeight - textHeight) / 2;
+
+            this.ctxDTP.textBaseline = "top";
             this.ctxDTP.fillText
             (
-                centuryBase + i * 10, 
-                this.hitBounds[i].x1 + this.decadeHorzAdj * this.bigBoxWidth,
-                this.hitBounds[i].y2 - this.decadeVertAdj2 * this.bigBoxHeight
+                text, 
+                this.hitBounds[i].x1 + textLeft,
+                this.hitBounds[i].y2 + textBottom - .80 * this.bigBoxHeight
             );
             this.ctxDTP.stroke();          
         }
 
         //Draw the century.
         this.ctxDTP.beginPath();
-        this.ctxDTP.fillStyle = this.bannerCenturyn;
-        this.ctxDTP.font = (this.smallBoxHeight * this.bannerCenturyScale) + "px " + this.bannerCenturyFontStyle;
+        this.ctxDTP.fillStyle = this.textMainColorn;
+        this.ctxDTP.font = (this.smallBoxHeight * this.bannerScale) + "px " + this.fontStyle;
+
+        //Get the text metrics.
+        text       = (centuryBase + 1) + "-" + (centuryBase + 100);
+        textHeight = this.smallBoxHeight * this.bannerScale;
+        textWidth  = this.ctxDTP.measureText(text).width;
+        textLeft   = Math.abs(5 * this.smallBoxWidth - textWidth) / 2;
+        textBottom = Math.abs(this.smallBoxHeight - textHeight) / 2;
+
+        this.ctxDTP.textBaseline = "top";
         this.ctxDTP.fillText
         (
-            (centuryBase + 1) + "-" + (centuryBase + 100),
-            this.contentLeft + this.smallBoxWidth + this.smallBoxWidth * this.bannerCenturyHorzAdj,
-            this.contentTop + this.smallBoxHeight - this.smallBoxHeight * this.bannerCenturyVertAdj
+            text,
+            this.contentLeft + this.smallBoxWidth + textLeft,
+            this.contentTop + textBottom
         );
         this.ctxDTP.stroke();
 
-        this.drawPrevious(this.prevNextColorn); //Draw the previous button.
-        this.drawNext(this.prevNextColorn);     //Draw the next button.
-        this.drawClock(this.clockColorn);       //Draw the clock button.
+        this.drawPrevious(this.textMainColorn); //Draw the previous button.
+        this.drawNext(this.textMainColorn);     //Draw the next button.
+        this.drawClock(this.textMainColorn);    //Draw the clock button.
 
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
@@ -3214,34 +3191,52 @@ class CanvDTP
                 {
                     case CanvDTP.SEL_DECADE:
                         this.ctxDTP.beginPath();
-                        this.ctxDTP.font = (this.bigBoxHeight * this.decadeScale) + "px " + this.bannerDecadeFontStyle;
-                        this.ctxDTP.fillStyle = (!i || i === 11) ? this.nonDecadeh : this.ctxDTP.fillStyle = this.decadeh;
+                        this.ctxDTP.font = (this.bigBoxHeight * this.decadeScale) + "px " + this.fontStyle;
+                        this.ctxDTP.fillStyle = (!i || i === 11) ? this.textAltColorh : this.ctxDTP.fillStyle = this.textMainColorh;
+
+                        //Get the text metrics.
+                        text       = (centuryBase + i * 10 - 9);
+                        textHeight = this.bigBoxHeight * this.decadeScale;
+                        textWidth  = this.ctxDTP.measureText(text).width;
+                        textLeft   = Math.abs(this.bigBoxWidth - textWidth) / 2;
+                        textBottom = Math.abs(this.bigBoxHeight - textHeight) / 2;
+
+                        this.ctxDTP.textBaseline = "top";
                         this.ctxDTP.fillText
                         (
-                            (centuryBase + i * 10 - 9) + "-", 
-                            this.hitBounds[i].x1 + this.decadeHorzAdj * this.bigBoxWidth,
-                            this.hitBounds[i].y2 - this.decadeVertAdj1 * this.bigBoxHeight
+                            text + "-", 
+                            this.hitBounds[i].x1 + textLeft,
+                            this.hitBounds[i].y2 + textBottom - 1.20 * this.bigBoxHeight
                         );
+
+                        //Get the text metrics.
+                        text       = centuryBase + i * 10;
+                        textHeight = this.bigBoxHeight * this.decadeScale;
+                        textWidth  = this.ctxDTP.measureText(text).width;
+                        textLeft   = Math.abs(this.bigBoxWidth - textWidth) / 2;
+                        textBottom = Math.abs(this.bigBoxHeight - textHeight) / 2;
+
+                        this.ctxDTP.textBaseline = "top";
                         this.ctxDTP.fillText
                         (
-                            centuryBase + i * 10, 
-                            this.hitBounds[i].x1 + this.decadeHorzAdj * this.bigBoxWidth,
-                            this.hitBounds[i].y2 - this.decadeVertAdj2 * this.bigBoxHeight
+                            text, 
+                            this.hitBounds[i].x1 + textLeft,
+                            this.hitBounds[i].y2 + textBottom - .80 * this.bigBoxHeight
                         );
-                        this.ctxDTP.stroke(); 
+                        this.ctxDTP.stroke();  
                         break;
 
                     case CanvDTP.SEL_PREVIOUS:
-                        this.drawPrevious(this.prevNextColorh);
+                        this.drawPrevious(this.textMainColorh);
                         break;
 
                     case CanvDTP.SEL_NEXT:
-                        this.drawNext(this.prevNextColorh);
+                        this.drawNext(this.textMainColorh);
                         break;
 
                     case CanvDTP.SEL_TIME:
                     default:
-                        this.drawClock(this.clockColorh);
+                        this.drawClock(this.textMainColorh);
                         break;
                 }
             }
@@ -3255,6 +3250,8 @@ class CanvDTP
     
     drawTime()
     {
+        let text, textHeight, textWidth, textLeft, textBottom;
+
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_TIME);
 
@@ -3336,66 +3333,97 @@ class CanvDTP
         this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_MINUTE});
         
         //Draw the calendar icon.
-        this.calDraw(this.calCalColorn);
+        this.calDraw(this.textMainColorn);
 
         this.ctxDTP.beginPath();
-        this.ctxDTP.font = (this.timeBoxHeight * this.timeWeight) + "px " + this.timeFont;
-        this.ctxDTP.fillStyle = this.timeColorn;
+        this.ctxDTP.font = (this.timeBoxHeight * this.timeScale) + "px " + this.fontStyle;
+        this.ctxDTP.fillStyle = this.textMainColorn;
+        this.ctxDTP.textBaseline = "top";
+
+        //Get the text metrics.
+        text       = this.isMilitaryTime ? (this.milHour < 10 ? "0" + this.milHour : this.milHour) : this.hour;
+        textHeight = this.timeBoxHeight * this.timeScale;
+        textWidth  = this.ctxDTP.measureText(text).width;
+        textLeft   = Math.abs(this.timeBoxWidth - textWidth) / 2;
+        textBottom = Math.abs(this.timeBoxHeight - textHeight) / 2;
 
         this.ctxDTP.fillText //Draw the hours.
         (
-            this.isMilitaryTime ? (this.milHour < 10 ? "0" + this.milHour : this.milHour) : this.hour, 
-            this.contentLeft + this.timeBoxWidth * (this.isMilitaryTime ? this.timeMilHorzAdj :
-                this.timehourHorzAdj[this.hour - 1]),
-            this.contentTop + 2 * this.timeBoxHeight - this.timeBoxHeight * this.timeVertAdj
-        );                
+            text, 
+            this.contentLeft + textLeft,
+            this.contentTop + this.timeBoxHeight + textBottom
+        );
+
+        //Get the text metrics.
+        text       = ":";
+        textHeight = this.timeBoxHeight * this.timeScale;
+        textWidth  = this.ctxDTP.measureText(text).width;
+        textLeft   = Math.abs(this.timeBoxWidth - textWidth) / 2;
+        textBottom = Math.abs(this.timeBoxHeight - textHeight) / 2;
+
         this.ctxDTP.fillText //Draw the hour minute separator.
         (
-            ":", 
-            this.contentLeft + this.timeBoxWidth + this.timeBoxWidth * this.timeDivHorzAdj,
-            this.contentTop + 2 * this.timeBoxHeight - this.timeBoxHeight * this.timeDivVertAdj
-        );            
+            text, 
+            this.contentLeft + 0.75 * this.timeBoxWidth + textLeft,
+            this.contentTop + this.timeBoxHeight + textBottom
+        );
+
+        //Get the text metrics.
+        text       = this.minute < 10 ? "0" + this.minute : this.minute;
+        textHeight = this.timeBoxHeight * this.timeScale;
+        textWidth  = this.ctxDTP.measureText(text).width;
+        textLeft   = Math.abs(this.timeBoxWidth - textWidth) / 2;
+        textBottom = Math.abs(this.timeBoxHeight - textHeight) / 2;
+
         this.ctxDTP.fillText //Draw the minutes.
         (
-            this.minute < 10 ? "0" + this.minute : this.minute, 
-            this.contentLeft + 1.5 * this.timeBoxWidth + this.timeBoxWidth * this.timeMinHorzAdj,
-            this.contentTop + 2 * this.timeBoxHeight - this.timeBoxHeight * this.timeVertAdj
+            text, 
+            this.contentLeft + 1.5 * this.timeBoxWidth + textLeft,
+            this.contentTop + this.timeBoxHeight + textBottom
         );
         
         //Draw the hour inc1 icon.
         this.incDraw(this.hitBounds[1].x1, this.hitBounds[1].x2, this.hitBounds[1].y1,
-            this.hitBounds[1].y2, this.incColorn, CanvDTP.INC_1);
+            this.hitBounds[1].y2, this.textMainColorn, CanvDTP.INC_1);
 
         //Draw the minute inc1 icon.
         this.incDraw(this.hitBounds[3].x1, this.hitBounds[3].x2, this.hitBounds[3].y1,
-            this.hitBounds[3].y2, this.incColorn, CanvDTP.INC_1);
+            this.hitBounds[3].y2, this.textMainColorn, CanvDTP.INC_1);
 
         //Draw the minute inc10 icon.
         this.incDraw(this.hitBounds[4].x1, this.hitBounds[4].x2, this.hitBounds[4].y1,
-            this.hitBounds[4].y2, this.incColorn, CanvDTP.INC_10);
+            this.hitBounds[4].y2, this.textMainColorn, CanvDTP.INC_10);
 
         //Draw the hour dec1 icon.
         this.incDraw(this.hitBounds[2].x1, this.hitBounds[2].x2, this.hitBounds[2].y1,
-            this.hitBounds[2].y2, this.incColorn, CanvDTP.DEC_1);
+            this.hitBounds[2].y2, this.textMainColorn, CanvDTP.DEC_1);
 
         //Draw the minute dec1 icon.
         this.incDraw(this.hitBounds[5].x1, this.hitBounds[5].x2, this.hitBounds[5].y1,
-            this.hitBounds[5].y2, this.incColorn, CanvDTP.DEC_1);
+            this.hitBounds[5].y2, this.textMainColorn, CanvDTP.DEC_1);
 
         //Draw the minute dec10 icon.
         this.incDraw(this.hitBounds[6].x1, this.hitBounds[6].x2, this.hitBounds[6].y1,
-            this.hitBounds[6].y2, this.incColorn, CanvDTP.DEC_10);
+            this.hitBounds[6].y2, this.textMainColorn, CanvDTP.DEC_10);
         this.ctxDTP.stroke();
 
         //Draw AM/PM/MT.
         this.ctxDTP.beginPath();
-        this.ctxDTP.font = (this.timeBoxHeight * this.timeAmPmWeight) + "px " + this.timeAmPmFont;
-        this.ctxDTP.fillStyle = this.timeAmPmColorn;
+        this.ctxDTP.font = (this.timeBoxHeight * this.timeAmPmScale) + "px " + this.fontStyle;
+        this.ctxDTP.fillStyle = this.textMainColorn;
+
+        //Get the text metrics.
+        text       = this.isMilitaryTime ? "MT" : (this.isAM ? "AM" : "PM");
+        textHeight = this.timeBoxHeight * this.timeAmPmScale;
+        textWidth  = this.ctxDTP.measureText(text).width;
+        textLeft   = Math.abs(this.timeBoxWidth - textWidth) / 2;
+        textBottom = Math.abs(this.timeBoxHeight - textHeight) / 2;
+        
         this.ctxDTP.fillText
         (
-            this.isMilitaryTime ? "MT" : (this.isAM ? "AM" : "PM"), 
-            this.contentLeft + 2.5 * this.timeBoxWidth + this.timeBoxWidth * this.timeAmPmHorzAdj,
-            this.contentTop + 2 * this.timeBoxHeight - this.timeBoxHeight * this.timeAmPmVertAdj
+            text, 
+            this.contentLeft + 2.5 * this.timeBoxWidth + textLeft,
+            this.contentTop + this.timeBoxHeight + textBottom
         );
         this.ctxDTP.stroke();
 
@@ -3419,67 +3447,89 @@ class CanvDTP
                 {
                     //Highlight the calendar icon.
                     case CanvDTP.SEL_DATE:
-                        this.calDraw(this.calCalColorh);
+                        this.calDraw(this.textMainColorh);
                         break;
 
                     case CanvDTP.SEL_HINC1:
                     case CanvDTP.SEL_MINC1:
                         this.incDraw(this.hitBounds[i].x1, this.hitBounds[i].x2, this.hitBounds[i].y1, 
-                            this.hitBounds[i].y2, this.incColorh, CanvDTP.INC_1);
+                            this.hitBounds[i].y2, this.textMainColorh, CanvDTP.INC_1);
                         break;
 
                     case CanvDTP.SEL_MINC10:
                         this.incDraw(this.hitBounds[i].x1, this.hitBounds[i].x2, this.hitBounds[i].y1,
-                            this.hitBounds[i].y2, this.incColorh, CanvDTP.INC_10);
+                            this.hitBounds[i].y2, this.textMainColorh, CanvDTP.INC_10);
                         break;
 
                     case CanvDTP.SEL_HDEC1:
                     case CanvDTP.SEL_MDEC1:
                         this.incDraw(this.hitBounds[i].x1, this.hitBounds[i].x2, this.hitBounds[i].y1,
-                            this.hitBounds[i].y2, this.incColorh, CanvDTP.DEC_1);
+                            this.hitBounds[i].y2, this.textMainColorh, CanvDTP.DEC_1);
                         break;
 
                     case CanvDTP.SEL_MDEC10:
                         this.incDraw(this.hitBounds[i].x1, this.hitBounds[i].x2, this.hitBounds[i].y1,
-                            this.hitBounds[i].y2, this.incColorh, CanvDTP.DEC_10);
+                            this.hitBounds[i].y2, this.textMainColorh, CanvDTP.DEC_10);
                         break;
 
                     case CanvDTP.SEL_AMPM:
                         this.ctxDTP.beginPath();
-                        this.ctxDTP.font = (this.timeBoxHeight * this.timeAmPmWeight) + "px " + this.timeAmPmFont;
-                        this.ctxDTP.fillStyle = this.timeAmPmColorh;
-                        this.ctxDTP.fillText //Draw AM/PM.
+                        this.ctxDTP.font = (this.timeBoxHeight * this.timeAmPmScale) + "px " + this.fontStyle;
+                        this.ctxDTP.fillStyle = this.textMainColorh;
+
+                        //Get the text metrics.
+                        text       = this.isMilitaryTime ? "MT" : (this.isAM ? "AM" : "PM");
+                        textHeight = this.timeBoxHeight * this.timeAmPmScale;
+                        textWidth  = this.ctxDTP.measureText(text).width;
+                        textLeft   = Math.abs(this.timeBoxWidth - textWidth) / 2;
+                        textBottom = Math.abs(this.timeBoxHeight - textHeight) / 2;
+        
+                        this.ctxDTP.fillText
                         (
-                            this.isAM ? "AM" : "PM", 
-                            this.contentLeft + 2.5 * this.timeBoxWidth + this.timeBoxWidth * this.timeAmPmHorzAdj,
-                            this.contentTop + 2 * this.timeBoxHeight - this.timeBoxHeight * this.timeAmPmVertAdj
+                            text, 
+                            this.contentLeft + 2.5 * this.timeBoxWidth + textLeft,
+                            this.contentTop + this.timeBoxHeight + textBottom
                         );
                         this.ctxDTP.stroke();
                         break;
 
                     case CanvDTP.SEL_MINUTE:
                         this.ctxDTP.beginPath();
-                        this.ctxDTP.font = (this.timeBoxHeight * this.timeWeight) + "px " + this.timeFont;
-                        this.ctxDTP.fillStyle = this.timeColorh;
+                        this.ctxDTP.font = (this.timeBoxHeight * this.timeScale) + "px " + this.fontStyle;
+                        this.ctxDTP.fillStyle = this.textMainColorh;
+
+                        //Get the text metrics.
+                        text       = this.minute < 10 ? "0" + this.minute : this.minute;
+                        textHeight = this.timeBoxHeight * this.timeScale;
+                        textWidth  = this.ctxDTP.measureText(text).width;
+                        textLeft   = Math.abs(this.timeBoxWidth - textWidth) / 2;
+                        textBottom = Math.abs(this.timeBoxHeight - textHeight) / 2;
+
                         this.ctxDTP.fillText //Draw the minutes.
                         (
-                            this.minute < 10 ? "0" + this.minute : this.minute, 
-                            this.contentLeft + 1.5 * this.timeBoxWidth + this.timeBoxWidth * this.timeMinHorzAdj,
-                            this.contentTop + 2 * this.timeBoxHeight - this.timeBoxHeight * this.timeVertAdj
+                            text, 
+                            this.contentLeft + 1.5 * this.timeBoxWidth + textLeft,
+                            this.contentTop + this.timeBoxHeight + textBottom
                         );
-                        this.ctxDTP.stroke();
                         break;
 
                     case CanvDTP.SEL_HOUR:
                         this.ctxDTP.beginPath();
-                        this.ctxDTP.font = (this.timeBoxHeight * this.timeWeight) + "px " + this.timeFont;
-                        this.ctxDTP.fillStyle = this.timeColorh;
+                        this.ctxDTP.font = (this.timeBoxHeight * this.timeScale) + "px " + this.fontStyle;
+                        this.ctxDTP.fillStyle = this.textMainColorh;
+                        
+                        //Get the text metrics.
+                        text       = this.isMilitaryTime ? (this.milHour < 10 ? "0" + this.milHour : this.milHour) : this.hour;
+                        textHeight = this.timeBoxHeight * this.timeScale;
+                        textWidth  = this.ctxDTP.measureText(text).width;
+                        textLeft   = Math.abs(this.timeBoxWidth - textWidth) / 2;
+                        textBottom = Math.abs(this.timeBoxHeight - textHeight) / 2;
+
                         this.ctxDTP.fillText //Draw the hours.
                         (
-                            this.isMilitaryTime ? (this.milHour < 10 ? "0" + this.milHour : this.milHour) : this.hour, 
-                            this.contentLeft + this.timeBoxWidth * (this.isMilitaryTime ? this.timeMilHorzAdj :
-                                this.timehourHorzAdj[this.hour - 1]),
-                            this.contentTop + 2 * this.timeBoxHeight - this.timeBoxHeight * this.timeVertAdj
+                            text, 
+                            this.contentLeft + textLeft,
+                            this.contentTop + this.timeBoxHeight + textBottom
                         );
                         this.ctxDTP.stroke();
                         break;
@@ -3495,6 +3545,8 @@ class CanvDTP
 
     drawMinute()
     {
+        let text, textHeight, textWidth, textLeft, textBottom;
+
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_MINUTE);
 
@@ -3523,13 +3575,22 @@ class CanvDTP
             if(this.minute === i) this.fillCurrent(i);
 
             this.ctxDTP.beginPath();
-            this.ctxDTP.font = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.minuteWeight + "px " + this.minuteFont;
-            this.ctxDTP.fillStyle = this.minuteColorn;
+            this.ctxDTP.font = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.minuteScale + "px " + this.fontStyle;
+            this.ctxDTP.fillStyle = this.textMainColorn;
+
+            //Get the text metrics.
+            text       = i < 10 ? "0" + i : i;
+            textHeight = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.minuteScale;
+            textWidth  = this.ctxDTP.measureText(text).width;
+            textLeft   = Math.abs(this.hitBounds[i].x2 - this.hitBounds[i].x1 - textWidth) / 2;
+            textBottom = Math.abs(this.hitBounds[i].y2 - this.hitBounds[i].y1 - textHeight) / 2;
+
+            this.ctxDTP.textBaseline = "top";
             this.ctxDTP.fillText
             (
-                i < 10 ? "0" + i : i,
-                this.hitBounds[i].x1 + this.minuteHorzAdj * (this.hitBounds[i].x2 - this.hitBounds[i].x1),
-                this.hitBounds[i].y2 - this.minuteVertAdj * (this.hitBounds[i].y2 - this.hitBounds[i].y1)
+                text,
+                this.hitBounds[i].x1 + textLeft,
+                this.hitBounds[i].y2 + textBottom - (this.hitBounds[i].y2 - this.hitBounds[i].y1)
             );
             this.ctxDTP.stroke();
         }
@@ -3554,13 +3615,22 @@ class CanvDTP
 
                 //Highlight the number.
                 this.ctxDTP.beginPath();
-                this.ctxDTP.font = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.minuteWeight + "px " + this.minuteFont;
-                this.ctxDTP.fillStyle = this.minuteColorh;
+                this.ctxDTP.font = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.minuteScale + "px " + this.fontStyle;
+                this.ctxDTP.fillStyle = this.textMainColorh;
+
+                //Get the text metrics.
+                text       = i < 10 ? "0" + i : i;
+                textHeight = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.minuteScale;
+                textWidth  = this.ctxDTP.measureText(text).width;
+                textLeft   = Math.abs(this.hitBounds[i].x2 - this.hitBounds[i].x1 - textWidth) / 2;
+                textBottom = Math.abs(this.hitBounds[i].y2 - this.hitBounds[i].y1 - textHeight) / 2;
+
+                this.ctxDTP.textBaseline = "top";
                 this.ctxDTP.fillText
                 (
-                    i < 10 ? "0" + i : i,
-                    this.hitBounds[i].x1 + this.minuteHorzAdj * (this.hitBounds[i].x2 - this.hitBounds[i].x1),
-                    this.hitBounds[i].y2 - this.minuteVertAdj * (this.hitBounds[i].y2 - this.hitBounds[i].y1)
+                    text,
+                    this.hitBounds[i].x1 + textLeft,
+                    this.hitBounds[i].y2 + textBottom - (this.hitBounds[i].y2 - this.hitBounds[i].y1)
                 );
                 this.ctxDTP.stroke();
             }
@@ -3574,6 +3644,8 @@ class CanvDTP
 
     drawStdHour()
     {
+        let text, textHeight, textWidth, textLeft, textBottom;
+
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_STD_HOUR);
 
@@ -3602,13 +3674,21 @@ class CanvDTP
             if(this.hour === i + 1) this.fillCurrent(i);
 
             this.ctxDTP.beginPath();
-            this.ctxDTP.font = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourWeight + "px " + this.hourFont;
-            this.ctxDTP.fillStyle = this.minuteColorn;
+            this.ctxDTP.font = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourScale + "px " + this.fontStyle;
+            this.ctxDTP.fillStyle = this.textMainColorn;
+
+            //Get the text metrics.
+            text       = i + 1;
+            textHeight = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourScale;
+            textWidth  = this.ctxDTP.measureText(text).width;
+            textLeft   = Math.abs(this.hitBounds[i].x2 - this.hitBounds[i].x1 - textWidth) / 2;
+            textBottom = Math.abs(this.hitBounds[i].y2 - this.hitBounds[i].y1 - textHeight) / 2;
+
             this.ctxDTP.fillText
             (
-                i + 1,
-                this.hitBounds[i].x1 + this.stdHourHorzAdj[i] * (this.hitBounds[i].x2 - this.hitBounds[i].x1),
-                this.hitBounds[i].y2 - this.hourVertAdj * (this.hitBounds[i].y2 - this.hitBounds[i].y1)
+                text,
+                this.hitBounds[i].x1 + textLeft,
+                this.hitBounds[i].y2 + textBottom - (this.hitBounds[i].y2 - this.hitBounds[i].y1)
             );
             this.ctxDTP.stroke();
         }
@@ -3633,13 +3713,21 @@ class CanvDTP
 
                 //Highlight the number.
                 this.ctxDTP.beginPath();
-                this.ctxDTP.font = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourWeight + "px " + this.hourFont;
-                this.ctxDTP.fillStyle = this.minuteColorh;
+                this.ctxDTP.font = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourScale + "px " + this.fontStyle;
+                this.ctxDTP.fillStyle = this.textMainColorh;
+
+                //Get the text metrics.
+                text       = i + 1;
+                textHeight = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourScale;
+                textWidth  = this.ctxDTP.measureText(text).width;
+                textLeft   = Math.abs(this.hitBounds[i].x2 - this.hitBounds[i].x1 - textWidth) / 2;
+                textBottom = Math.abs(this.hitBounds[i].y2 - this.hitBounds[i].y1 - textHeight) / 2;
+
                 this.ctxDTP.fillText
                 (
-                    i + 1,
-                    this.hitBounds[i].x1 + this.stdHourHorzAdj[i] * (this.hitBounds[i].x2 - this.hitBounds[i].x1),
-                    this.hitBounds[i].y2 - this.hourVertAdj * (this.hitBounds[i].y2 - this.hitBounds[i].y1)
+                    text,
+                    this.hitBounds[i].x1 + textLeft,
+                    this.hitBounds[i].y2 + textBottom - (this.hitBounds[i].y2 - this.hitBounds[i].y1)
                 );
                 this.ctxDTP.stroke();
             }
@@ -3653,6 +3741,8 @@ class CanvDTP
 
     drawMilHour()
     {
+        let text, textHeight, textWidth, textLeft, textBottom;
+
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_MIL_HOUR);
 
@@ -3681,13 +3771,21 @@ class CanvDTP
             if(this.milHour === i) this.fillCurrent(i);
 
             this.ctxDTP.beginPath();
-            this.ctxDTP.font = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourWeight + "px " + this.hourFont;
-            this.ctxDTP.fillStyle = this.minuteColorn;
+            this.ctxDTP.font = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourScale + "px " + this.fontStyle;
+            this.ctxDTP.fillStyle = this.textMainColorn;
+
+            //Get the text metrics.
+            text       = i < 10 ? "0" + i : i;
+            textHeight = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourScale;
+            textWidth  = this.ctxDTP.measureText(text).width;
+            textLeft   = Math.abs(this.hitBounds[i].x2 - this.hitBounds[i].x1 - textWidth) / 2;
+            textBottom = Math.abs(this.hitBounds[i].y2 - this.hitBounds[i].y1 - textHeight) / 2;
+
             this.ctxDTP.fillText
             (
-                i < 10 ? "0" + i : i,
-                this.hitBounds[i].x1 + this.milHourHorzAdj * (this.hitBounds[i].y2 - this.hitBounds[i].y1),
-                this.hitBounds[i].y2 - this.hourVertAdj * (this.hitBounds[i].y2 - this.hitBounds[i].y1)
+                text,
+                this.hitBounds[i].x1 + textLeft,
+                this.hitBounds[i].y2 + textBottom - (this.hitBounds[i].y2 - this.hitBounds[i].y1)
             );
             this.ctxDTP.stroke();
         }
@@ -3711,13 +3809,21 @@ class CanvDTP
                 this.tempHour = i;
 
                 this.ctxDTP.beginPath();
-                this.ctxDTP.font = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourWeight + "px " + this.hourFont;
-                this.ctxDTP.fillStyle = this.minuteColorh;
+                this.ctxDTP.font = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourScale + "px " + this.fontStyle;
+                this.ctxDTP.fillStyle = this.textMainColorh;
+
+                //Get the text metrics.
+                text       = i < 10 ? "0" + i : i;
+                textHeight = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourScale;
+                textWidth  = this.ctxDTP.measureText(text).width;
+                textLeft   = Math.abs(this.hitBounds[i].x2 - this.hitBounds[i].x1 - textWidth) / 2;
+                textBottom = Math.abs(this.hitBounds[i].y2 - this.hitBounds[i].y1 - textHeight) / 2;
+
                 this.ctxDTP.fillText
                 (
-                    i < 10 ? "0" + i : i,
-                    this.hitBounds[i].x1 + this.milHourHorzAdj * (this.hitBounds[i].y2 - this.hitBounds[i].y1),
-                    this.hitBounds[i].y2 - this.hourVertAdj * (this.hitBounds[i].y2 - this.hitBounds[i].y1)
+                    text,
+                    this.hitBounds[i].x1 + textLeft,
+                    this.hitBounds[i].y2 + textBottom - (this.hitBounds[i].y2 - this.hitBounds[i].y1)
                 );
                 this.ctxDTP.stroke();
             }

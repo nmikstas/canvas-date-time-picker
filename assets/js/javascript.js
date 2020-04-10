@@ -48,34 +48,25 @@ let canDTP = new CanvDTP
         dateTimeStringCb: showDateTimeString,
         dateTimeJSONCb:   showDateTimeJSON,
         dateTimeFormat:   "dddd, MMMM Do YYYY h:mm a. DDDo [Day of the Year], Wo [Week of the Year]",
-
-        infoBackColor:    "#555555D0",
-        infoBorderRadius: "5px",
-
-        //Currently Selected Day.
-        currentBorderColor: "#000000",
-        currentFillColor:   "#00000010",
-        currentRadius:      .5,
-        currentWeight:      .02,
-
+        isMilitaryTime: true,
         dayExcludeArray:
         [
             {   //Highlight, but don't exclude all weekend days.
                 daysOfWeek: [CanvDTP.SATURDAY, CanvDTP.SUNDAY],
-                color:     "#9900ff50",
+                color:     "#0000ff30",
                 info:      "Weekend"
             },
             {   //Highlight April 2nd, 2020.
                 days:      [2],
                 months:    [CanvDTP.APRIL],
                 years:     [2020],
-                color:     "#0000ff10",
+                color:     "#00ffff30",
                 info:      "Deez Nutz Day"
             },
             {   //Exclude the whole month of May in every year.
                 months:    [CanvDTP.MAY],
                 excluded:  true,
-                color:     "#ff000050",
+                color:     "#ff000030",
                 info:      "Whole month of May blocked out, weekends whitelisted"
             },
         ],

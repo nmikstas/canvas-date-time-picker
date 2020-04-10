@@ -88,7 +88,7 @@ let canDTP = new CanvDTP
                 ],
                 months: [CanvDTP.FEBRUARY],
                 color: "#0000ff50",
-                info:  "Extra day due to the leap year"
+                info:  "Extra day"
             },
         ],
         monthWhiteArray:

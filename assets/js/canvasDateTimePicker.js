@@ -160,8 +160,8 @@ class CanvDTP
 
             /****************************** Body Canvas Parameters *******************************/
 
-            bBorderColor  = "#a4e3f7",
-            bFillColor    = "#e5f5fa",
+            bBorderColor  = "#707070",
+            bFillColor    = "#e0e0e0",
             bBorderRadius = .05,
             bBorderWeight = .01,
             bXPadding     = .10,

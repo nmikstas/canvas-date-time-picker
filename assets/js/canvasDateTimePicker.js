@@ -213,44 +213,19 @@ class CanvDTP
             nowColor  = "#000000",
             nowWeight = .25,
 
-            dayScale    = .60, //Days of Month.
-            monthScale  = .60, //Month Text.
-            yearScale   = .60, //Year Text.
-            decadeScale = .50, //Decade Text.
-            
-            /******************************* Time View Parameters ********************************/
-
-            //Time Parameters.
-            timeScale       = .80,
-            timeVertAdj     = .20,
-            timeDivVertAdj  = .25,
-            timeDivHorzAdj  = .15,
-            timeMinHorzAdj  = .10,
-            timeMilHorzAdj  = .10,
-            timehourHorzAdj = [.30, .30, .30, .30, .30, .30, .30, .30, .30, .07, .10, .07],
-            
-            //AM/PM Parameters.
-            timeAmPmScale  = .60,
-            timeAmPmVertAdj = .27,
-            timeAmPmHorzAdj = .10,
+            dayScale      = .60, //Days of Month.
+            monthScale    = .60, //Month Text.
+            yearScale     = .60, //Year Text.
+            decadeScale   = .50, //Decade Text.
+            timeScale     = .80, //Time view text.
+            timeAmPmScale = .60, //AM/PM text.
+            minuteScale   = .80, //Minute view text.
+            hourScale     = .80, //Hour view text.
 
             //Increment/Decrement Parameters.
             incXPad    = .25,
             incYPad    = .10,
             incWeight  = .25,
-
-            /****************************** Minute View Parameters *******************************/
-
-            minuteScale  = .80,
-            minuteVertAdj = .23,
-            minuteHorzAdj = .25,
-
-            /******************************* Hour View Parameters ********************************/
-
-            hourScale     = .80,
-            hourVertAdj    = .20,
-            milHourHorzAdj = .30,
-            stdHourHorzAdj = [.33, .33, .33, .33, .33, .33, .33, .33, .33, .15, .17, .13]
         } = {}
     )
     {
@@ -310,18 +285,8 @@ class CanvDTP
         this.calXPadding            = calXPadding;
         this.calYPadding            = calYPadding;
         this.calLineWidth           = calLineWidth;
-
-        this.timeVertAdj            = timeVertAdj;
-        this.timeDivVertAdj         = timeDivVertAdj;
-        this.timeDivHorzAdj         = timeDivHorzAdj;
-        this.timehourHorzAdj        = timehourHorzAdj;
-        this.timeMilHorzAdj         = timeMilHorzAdj;
-        this.timeMinHorzAdj         = timeMinHorzAdj;
         this.timeScale              = timeScale;
-
-        this.timeAmPmScale         = timeAmPmScale;
-        this.timeAmPmVertAdj        = timeAmPmVertAdj;
-        this.timeAmPmHorzAdj        = timeAmPmHorzAdj;
+        this.timeAmPmScale          = timeAmPmScale;
         this.incXPad                = incXPad;
         this.incYPad                = incYPad;
         this.incWeight              = incWeight;
@@ -333,12 +298,7 @@ class CanvDTP
         this.bBorderColor           = bBorderColor;
         this.bFillColor             = bFillColor;
         this.minuteScale            = minuteScale;
-        this.minuteVertAdj          = minuteVertAdj;
-        this.minuteHorzAdj          = minuteHorzAdj;
         this.hourScale              = hourScale;
-        this.hourVertAdj            = hourVertAdj;
-        this.milHourHorzAdj         = milHourHorzAdj;
-        this.stdHourHorzAdj         = stdHourHorzAdj;
         this.infoPointerSize        = infoPointerSize;
         this.infoBackColor          = infoBackColor;
         this.infoTextColor          = infoTextColor;

@@ -102,6 +102,11 @@ class CanvDTP
     static get PICK_DATE() {return 0x01}
     static get PICK_TIME() {return 0x02}
 
+    //Date compare return types.
+    static get DATE_EQUAL()   {return 0x00}
+    static get DATE_GREATER() {return 0x01}
+    static get DATE_LESS()    {return 0x02}
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //                                        Constructor                                        //
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -854,6 +859,26 @@ class CanvDTP
 
         if(this.autoPick) this.isFirstPicked = true;        
         this.textBoxDateTime();        
+    }
+
+    //Determines if a date object is valid. date object has keys day, month and year.
+    checkValidDate(date)
+    {
+        let isValid = true;
+
+
+
+        return isValid;
+    }
+
+    //Determines if date1 is greater than less than or equal to date2.
+    compareDates(date1, date2)
+    {
+        let dateStatus = CanvDTP.DATE_EQUAL;
+
+
+
+        return dateStatus;
     }
 
     //Calculate the day of the year.

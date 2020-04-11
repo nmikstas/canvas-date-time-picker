@@ -105,18 +105,18 @@ let canDTP = new CanvDTP
         ],
         monthImages:
         [
-            {image: document.getElementById("january"), opacity: 0.4},
-            {image: document.getElementById("february"), opacity: 0.4},
-            {image: document.getElementById("march"), opacity: 0.4},
-            {image: document.getElementById("april"), opacity: 0.4},
-            {image: document.getElementById("may"), opacity: 0.4},
-            {image: document.getElementById("june"), opacity: 0.4},
-            {image: document.getElementById("july"), opacity: 0.4},
-            {image: document.getElementById("august"), opacity: 0.4},
-            {image: document.getElementById("september"), opacity: 0.4},
-            {image: document.getElementById("october"), opacity: 0.4},
-            {image: document.getElementById("november"), opacity: 0.4},
-            {image: document.getElementById("december"), opacity: 0.4},
+            {image: document.getElementById("january"), opacity: 0.2},
+            {image: document.getElementById("february"), opacity: 0.2},
+            {image: document.getElementById("march"), opacity: 0.2},
+            {image: document.getElementById("april"), opacity: 0.2},
+            {image: document.getElementById("may"), opacity: 0.2},
+            {image: document.getElementById("june"), opacity: 0.2},
+            {image: document.getElementById("july"), opacity: 0.2},
+            {image: document.getElementById("august"), opacity: 0.2},
+            {image: document.getElementById("september"), opacity: 0.2},
+            {image: document.getElementById("october"), opacity: 0.2},
+            {image: document.getElementById("november"), opacity: 0.2},
+            {image: document.getElementById("december"), opacity: 0.2},
         ]
     }
 )

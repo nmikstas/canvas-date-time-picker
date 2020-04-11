@@ -34,6 +34,7 @@ Last updated: 4/9/2020.
 - spotlight years in the decade view.
 - Whitelist for spotlight years in the decade view.
 - Enable/disable individual views.
+- Enable/disable today's date indicator.
 - Enable/disable calendar icon (bring up picker when text box clicked).
 - Enable/disable picker always open.
 - Date picker only.

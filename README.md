@@ -28,7 +28,7 @@ Last updated: 4/9/2020.
 - Whitelist for blocked/spotlight days in the month view. ***Done***
 - spotlight months in the year view. ***Done***
 - Whitelist for spotlight months in the year view. ***Done***
-- Enable/disable auto pick on picker first time open.
+- Enable/disable auto pick on picker first time open. ***Done***
 - Set initial date (other than current date) on picker first time open.
 - Minimum and maximum date ranges.
 - spotlight years in the decade view.

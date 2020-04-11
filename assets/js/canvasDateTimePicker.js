@@ -142,9 +142,12 @@ class CanvDTP
             textAltColorn  = "#888888",   //The alternate for non-hovered items.
             textAltColorh  = "#ff8888",   //The alternate for hovered items.
 
-            bannerScale = .80,            //Font scaler for banners between the prev. and next buttons.
-
             monthImages = [],             //Optional images to display in the month view.
+
+            initDate  = null,             //Date to use on first pick when picker opened.
+            firstDate = null,             //Earliest date available to user.
+            lastDate  = null,             //Latest date available to user.
+            autoPick  = true,             //Enable automatic date pick when picker opened.
 
             /****************************** Icon Canvas Parameters *******************************/
 
@@ -198,6 +201,9 @@ class CanvDTP
             calXPadding  = .20,
             calYPadding  = .10,
             calLineWidth = .05,
+
+            //Font scaler for banners between the prev. and next buttons.
+            bannerScale = .80,            
             
             /********************************** View Parameters **********************************/
 
@@ -257,6 +263,10 @@ class CanvDTP
         this.yearSpotlightArray  = [...yearSpotlightArray],
         this.yearWhiteArray      = [...yearWhiteArray],
         this.monthImages         = [...monthImages],
+        this.initDate            = initDate,
+        this.firstDate           = firstDate,
+        this.lastDate            = lastDate,
+        this.autoPick            = autoPick,
         this.iBorderRadius       = iBorderRadius;
         this.iBorderWeight       = iBorderWeight;
         this.iXPadding           = iXPadding;
@@ -405,17 +415,17 @@ class CanvDTP
         this.dayType       = CanvDTP.DAY_THIS;
 
         //Currently selected date and time.
-        this.month         = 1;
-        this.day           = 1;
-        this.year          = 2000;
-        this.hour          = 12;
-        this.milHour       = 12;
-        this.minute        = 0;
-        this.isAM          = true;
-        this.dayOfWeek     = 6;
-        this.dayOfYear     = 1;
-        this.weekOfYear    = 1;
-        this.dayMonthStart = 6;
+        this.month         = undefined;
+        this.day           = undefined;
+        this.year          = undefined;
+        this.hour          = undefined;
+        this.milHour       = undefined;
+        this.minute        = undefined;
+        this.isAM          = undefined;
+        this.dayOfWeek     = undefined;
+        this.dayOfYear     = undefined;
+        this.weekOfYear    = undefined;
+        this.dayMonthStart = undefined;
 
         //Date used for drawing current canvas values.
         this.tempMonth   = 1;
@@ -769,19 +779,19 @@ class CanvDTP
     //This function is called only once on the first pick after a page load.
     firstPick()
     {
-        this.isFirstPicked = true;
-
         //Get the current date and break it down.
-        let date        = new Date();
-        this.month      = date.getMonth() + 1;
-        this.day        = date.getDate();
-        this.year       = date.getFullYear();
-        this.dayOfWeek  = date.getDay();
-        this.dayOfYear  = this.getDayOfYear();
-        this.isLeapYear = this.leapCalc(this.year);
-        this.minute     = date.getMinutes();
-        this.hour       = date.getHours();
-        this.milHour    = this.hour;
+        let todaysIndex   = -1;
+        let todayExcluded = false;
+        let date          = new Date();
+        this.month        = date.getMonth() + 1;
+        this.day          = date.getDate();
+        this.year         = date.getFullYear();
+        this.dayOfWeek    = date.getDay();
+        this.dayOfYear    = this.getDayOfYear();
+        this.isLeapYear   = this.leapCalc(this.year);
+        this.minute       = date.getMinutes();
+        this.hour         = date.getHours();
+        this.milHour      = this.hour;
 
         //Convert military time to AM/PM.
         if(this.hour === 0)
@@ -811,8 +821,39 @@ class CanvDTP
         this.updateYear   = true;
         this.updateDecade = true;
 
-        this.textBoxDateTime();
         this.updateDayArray();
+        this.monthExclude();
+        
+        //Try to find the current day in the day array.
+        for(let i = 0; i < this.dayArray.length; i++)
+        {
+            if
+            (
+                this.tempYear === this.nowYear &&
+                this.tempMonth === this.nowMonth &&
+                this.nowDay === this.dayArray[i].day
+            )
+            {
+                todaysIndex = i;
+            }
+        }
+
+        //Check if current date is blocked.
+        if(todaysIndex >= 0 && this.monthSpecial[todaysIndex].excluded) todayExcluded = true;
+        
+        //Delete the current date if no auto pick or date is blocked.
+        if(!this.autoPick || todayExcluded)
+        {
+            this.month      = undefined;
+            this.day        = undefined;
+            this.year       = undefined;
+            this.dayOfWeek  = undefined;
+            this.dayOfYear  = undefined;
+            this.isLeapYear = undefined;
+        }
+
+        if(this.autoPick) this.isFirstPicked = true;        
+        this.textBoxDateTime();        
     }
 
     //Calculate the day of the year.
@@ -1263,6 +1304,8 @@ class CanvDTP
     //Update the date and time in the textbox.
     textBoxDateTime()
     {
+        if(!this.isFirstPicked) return;
+        
         //Calculate the day of the week.
         let d = new Date(this.year, this.month - 1, this.day);
         this.dayOfWeek = d.getDay();
@@ -3939,6 +3982,8 @@ class CanvDTP
                         switch(this.pickedType)
                         {
                             case CanvDTP.SEL_DAY:
+                                this.isFirstPicked = true;
+                                
                                 //Adjust the date if a day before the month is chosen.
                                 if(this.dayType === CanvDTP.DAY_PRE)
                                 {

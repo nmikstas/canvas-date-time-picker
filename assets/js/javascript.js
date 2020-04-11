@@ -50,6 +50,7 @@ let canDTP = new CanvDTP
         dateTimeFormat:   "dddd, MMMM Do YYYY h:mm a. DDDo [Day of the Year], Wo [Week of the Year]",
         fontStyle: "Arial Black",
         textAltColorn: "#555555",
+        autoPick: false,
         bannerScale: .70,
         yearScale: .55,
         dayExcludeArray:
@@ -71,7 +72,7 @@ let canDTP = new CanvDTP
                 excluded:  true,
                 color:     "#ff000030",
                 info:      "Whole month of May blocked out, weekends whitelisted"
-            },
+            }
         ],
         dayWhiteArray:
         [
@@ -79,7 +80,7 @@ let canDTP = new CanvDTP
                 daysOfWeek: [CanvDTP.SATURDAY, CanvDTP.SUNDAY], 
                 months:     [CanvDTP.MAY],
                 type:       CanvDTP.WHITE_BLOCK
-            }  
+            }
         ],
         monthSpotlightArray:
         [

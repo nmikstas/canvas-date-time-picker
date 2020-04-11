@@ -48,6 +48,10 @@ let canDTP = new CanvDTP
         dateTimeStringCb: showDateTimeString,
         dateTimeJSONCb:   showDateTimeJSON,
         dateTimeFormat:   "dddd, MMMM Do YYYY h:mm a. DDDo [Day of the Year], Wo [Week of the Year]",
+        fontStyle: "Arial Black",
+        textAltColorn: "#555555",
+        bannerScale: .70,
+        yearScale: .55,
         dayExcludeArray:
         [
             {   //Highlight, but don't exclude all weekend days.
@@ -97,6 +101,21 @@ let canDTP = new CanvDTP
                 years:  [2100],
                 months: [CanvDTP.FEBRUARY]
             }
+        ],
+        monthImages:
+        [
+            {image: document.getElementById("january"), opacity: 0.4},
+            {image: document.getElementById("february"), opacity: 0.4},
+            {image: document.getElementById("march"), opacity: 0.4},
+            {image: document.getElementById("april"), opacity: 0.4},
+            {image: document.getElementById("may"), opacity: 0.4},
+            {image: document.getElementById("june"), opacity: 0.4},
+            {image: document.getElementById("july"), opacity: 0.4},
+            {image: document.getElementById("august"), opacity: 0.4},
+            {image: document.getElementById("september"), opacity: 0.4},
+            {image: document.getElementById("october"), opacity: 0.4},
+            {image: document.getElementById("november"), opacity: 0.4},
+            {image: document.getElementById("december"), opacity: 0.4},
         ]
     }
 )

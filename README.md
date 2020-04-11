@@ -23,13 +23,16 @@ Last updated: 4/9/2020.
 - Minute picker view. ***Done***
 - Maximum pixel width of date/time picker. ***Done***
 - Enble/disable open/close animation. ***Done***
+- Add optional background images to the month view. ***Done***
 - Blocked/spotlight days in the month view. ***Done***
 - Whitelist for blocked/spotlight days in the month view. ***Done***
 - spotlight months in the year view. ***Done***
 - Whitelist for spotlight months in the year view. ***Done***
+- Enable/disable auto pick on picker first time open.
+- Set initial date (other than current date) on picker first time open.
+- Minimum and maximum date ranges.
 - spotlight years in the decade view.
 - Whitelist for spotlight years in the decade view.
-- Minimum and maximum date ranges.
 - Enable/disable individual views.
 - Enable/disable calendar icon (bring up picker when text box clicked).
 - Enable/disable picker always open.
@@ -41,7 +44,6 @@ Last updated: 4/9/2020.
 ## __Things that might be added:__
 - Enable/disable text input.
 - Picker relative position to textbox (left, right, top, bottom).
-- Set default date (other than current date) on picker first time open.
 - Seperate format strings for user input and event listener/get functions output.
 - Color gradient options to all background colored objects.
 

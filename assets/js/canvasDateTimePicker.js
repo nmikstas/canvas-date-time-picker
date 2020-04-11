@@ -144,6 +144,8 @@ class CanvDTP
 
             bannerScale = .80,            //Font scaler for banners between the prev. and next buttons.
 
+            monthImages = [],             //Optional images to display in the month view.
+
             /****************************** Icon Canvas Parameters *******************************/
 
             iBorderColorn = "#a0a0a0",
@@ -251,6 +253,7 @@ class CanvDTP
         this.monthWhiteArray        = [...monthWhiteArray],
         this.yearSpotlightArray     = [...yearSpotlightArray],
         this.yearWhiteArray         = [...yearWhiteArray],
+        this.monthImages            = [...monthImages],
         this.iBorderRadius          = iBorderRadius;
         this.iBorderWeight          = iBorderWeight;
         this.iXPadding              = iXPadding;
@@ -340,6 +343,13 @@ class CanvDTP
         
         //Clock graphic radius.
         this.clockRadius;
+
+        //Text centering variables.
+        this.text;
+        this.textHeight;
+        this.textWidth;
+        this.textLeft;
+        this.textBottom;
 
         /************************************ Misc Variables *************************************/
 
@@ -551,7 +561,6 @@ class CanvDTP
 
         //Format the max pixel width variable.
         if(this.maxPixelWidth) this.maxPixelWidth = parseInt(Math.abs(this.maxPixelWidth));
-        
         this.resize();
     }
 
@@ -2201,7 +2210,6 @@ class CanvDTP
                 clearInterval(this.bodyAnimTimer);
                 break;
         }
-       
         this.resize();
     }
 
@@ -2210,30 +2218,55 @@ class CanvDTP
         //Exit if the canvas does not meet minimum size dimensions.
         if(this.bodyCanWidth <= 5) return;
 
+        //Reset the canvas dimensions. For some reason the canvas performance degrades
+        //over time. This prevents that from happening. A bug in the Canvas API?
+        this.bodyCanvas.width  = this.bodyCanWidth;
+        this.bodyCanvas.height = this.bodyCanWidth;
+        
         //Calculate the body canvas item dimensions.
         this.bodyDimCalc();
-
         this.updateDayArray();
         this.ctxDTP.clearRect(0, 0, this.bodyCanWidth, this.bodyCanWidth);
-
+        
         //Calculate the padding pixels and line width.
-        let borderPx    = this.bodyCanWidth * this.bBorderWeight;
-        let borderRad   = this.bodyCanWidth * this.bBorderRadius;
-        let borderWidth = Math.ceil(this.bodyCanWidth * this.bBorderWeight);
+        var borderPx    = this.bodyCanWidth * this.bBorderWeight;
+        var borderRad   = this.bodyCanWidth * this.bBorderRadius;
+        var borderWidth = Math.ceil(this.bodyCanWidth * this.bBorderWeight);
 
         //Draw the border and background fill.
         this.ctxDTP.beginPath();
         this.ctxDTP.lineWidth = borderWidth;
         this.ctxDTP.strokeStyle = this.bBorderColor;
 
+        //Draw a clipping rectangle.
+        this.ctxDTP.arc(borderRad, borderRad, borderRad, -Math.PI, -Math.PI / 2);
+        this.ctxDTP.arc(this.bodyCanWidth - borderRad, borderRad, borderRad, -Math.PI / 2, 0);
+        this.ctxDTP.arc(this.bodyCanWidth - borderRad, this.bodyCanWidth - borderRad, borderRad, 0, Math.PI / 2);
+        this.ctxDTP.arc(borderRad, this.bodyCanWidth - borderRad, borderRad, Math.PI / 2, Math.PI);
+        this.ctxDTP.lineTo(0, borderRad);
+        this.ctxDTP.clip();
+
         this.ctxDTP.arc(borderRad + borderPx / 2, borderRad + borderPx / 2, borderRad, -Math.PI, -Math.PI / 2);
         this.ctxDTP.arc(this.bodyCanWidth - borderRad - borderPx / 2, borderRad + borderPx / 2, borderRad, -Math.PI / 2, 0);
         this.ctxDTP.arc(this.bodyCanWidth - borderRad - borderPx / 2, this.bodyCanWidth - borderRad - borderPx / 2, borderRad, 0, Math.PI / 2);
         this.ctxDTP.arc(borderRad + borderPx / 2, this.bodyCanWidth - borderRad - borderPx / 2, borderRad, Math.PI / 2, Math.PI);
         this.ctxDTP.lineTo(borderPx / 2, borderRad + borderPx / 2);
-
+        
         this.ctxDTP.fillStyle = this.bFillColor;
         this.ctxDTP.fill();
+        
+        //Try to add a background image to the month view.
+        if(this.calView === CanvDTP.CAL_MONTH && this.dateTime === CanvDTP.CAL_DATE)
+        {
+            try
+            {
+                this.ctxDTP.globalAlpha = this.monthImages[this.tempMonth - 1].opacity;
+                let img = this.monthImages[this.tempMonth - 1].image;
+                this.ctxDTP.drawImage(img, 0, 0, this.bodyCanWidth, this.bodyCanWidth);
+            }
+            catch{} //Just skip if image not found.
+            finally{ this.ctxDTP.globalAlpha = 1; }
+        }
         this.ctxDTP.stroke();
 
         //If in debug mode, draw a pointer on the body canvas.
@@ -2292,8 +2325,6 @@ class CanvDTP
 
     drawMonth()
     {
-        let text, textHeight, textWidth, textLeft, textBottom;
-
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_MONTH);
 
@@ -2453,38 +2484,36 @@ class CanvDTP
                 this.ctxDTP.fillStyle   = this.nowColor;
                 this.ctxDTP.lineWidth   = 1;
                 this.ctxDTP.moveTo(this.hitBounds[i].x1 + triLength * Math.cos(angle1), this.hitBounds[i].y1 + triLength * Math.sin(angle1));
-                this.ctxDTP.lineTo(this.hitBounds[i].x1 + 1, this.hitBounds[i].y1 + this.nowWeight * this.smallBoxHeight);
-                this.ctxDTP.lineTo(this.hitBounds[i].x1 + this.nowWeight * this.smallBoxWidth, this.hitBounds[i].y1);
+                this.ctxDTP.lineTo(this.hitBounds[i].x1 + 1, this.hitBounds[i].y1 + .50 * this.nowWeight * this.smallBoxHeight);
+                this.ctxDTP.lineTo(this.hitBounds[i].x1 + .50 * this.nowWeight * this.smallBoxWidth, this.hitBounds[i].y1);
                 this.ctxDTP.moveTo(this.hitBounds[i].x2 - triLength * Math.cos(angle1), this.hitBounds[i].y2 - triLength * Math.sin(angle1));
-                this.ctxDTP.lineTo(this.hitBounds[i].x2 - 1, this.hitBounds[i].y2 - this.nowWeight * this.smallBoxHeight);
-                this.ctxDTP.lineTo(this.hitBounds[i].x2 - this.nowWeight * this.smallBoxWidth, this.hitBounds[i].y2);
+                this.ctxDTP.lineTo(this.hitBounds[i].x2 - 1, this.hitBounds[i].y2 - .50 * this.nowWeight * this.smallBoxHeight);
+                this.ctxDTP.lineTo(this.hitBounds[i].x2 - .50 * this.nowWeight * this.smallBoxWidth, this.hitBounds[i].y2);
                 this.ctxDTP.moveTo(this.hitBounds[i].x2 - triLength * Math.cos(angle1), this.hitBounds[i].y1 + triLength * Math.sin(angle1));
-                this.ctxDTP.lineTo(this.hitBounds[i].x2 - 1, this.hitBounds[i].y1 + this.nowWeight * this.smallBoxHeight);
-                this.ctxDTP.lineTo(this.hitBounds[i].x2 - this.nowWeight * this.smallBoxWidth, this.hitBounds[i].y1);
+                this.ctxDTP.lineTo(this.hitBounds[i].x2 - 1, this.hitBounds[i].y1 + .50 * this.nowWeight * this.smallBoxHeight);
+                this.ctxDTP.lineTo(this.hitBounds[i].x2 - .50 * this.nowWeight * this.smallBoxWidth, this.hitBounds[i].y1);
                 this.ctxDTP.moveTo(this.hitBounds[i].x1 + triLength * Math.cos(angle1), this.hitBounds[i].y2 - triLength * Math.sin(angle1));
-                this.ctxDTP.lineTo(this.hitBounds[i].x1 + 1, this.hitBounds[i].y2 - this.nowWeight * this.smallBoxHeight);
-                this.ctxDTP.lineTo(this.hitBounds[i].x1 + this.nowWeight * this.smallBoxWidth, this.hitBounds[i].y2);
+                this.ctxDTP.lineTo(this.hitBounds[i].x1 + 1, this.hitBounds[i].y2 - .50 * this.nowWeight * this.smallBoxHeight);
+                this.ctxDTP.lineTo(this.hitBounds[i].x1 + .50 * this.nowWeight * this.smallBoxWidth, this.hitBounds[i].y2);
                 this.ctxDTP.fill();
                 this.ctxDTP.stroke();
             }
 
-            this.dayArray[i].type === CanvDTP.DAY_THIS ? 
-                this.ctxDTP.fillStyle = this.textMainColorn :
-                this.ctxDTP.fillStyle = this.textAltColorn;
+            this.dayArray[i].type === CanvDTP.DAY_THIS ? this.ctxDTP.fillStyle = this.textMainColorn : this.ctxDTP.fillStyle = this.textAltColorn;
 
             //Get the text metrics.
-            text       = this.dayArray[i].day;
-            textHeight = this.smallBoxHeight * this.dayScale
-            textWidth  = this.ctxDTP.measureText(text).width;
-            textLeft   = Math.abs(this.smallBoxWidth - textWidth) / 2;
-            textBottom = Math.abs(this.smallBoxHeight - textHeight) / 2;
+            this.text       = this.dayArray[i].day;
+            this.textHeight = this.smallBoxHeight * this.dayScale
+            this.textWidth  = this.ctxDTP.measureText(this.text).width;
+            this.textLeft   = Math.abs(this.smallBoxWidth - this.textWidth) / 2;
+            this.textBottom = Math.abs(this.smallBoxHeight - this.textHeight) / 2;
             
             this.ctxDTP.textBaseline = "top";
             this.ctxDTP.fillText
             (
-                text,
-                this.hitBounds[i].x1 + textLeft,
-                this.hitBounds[i].y2 + textBottom - this.smallBoxHeight
+                this.text,
+                this.hitBounds[i].x1 + this.textLeft,
+                this.hitBounds[i].y2 + this.textBottom - this.smallBoxHeight
             );
         }
         this.ctxDTP.stroke();
@@ -2500,18 +2529,18 @@ class CanvDTP
             if(index >= this.days.length) index = 0
 
             //Get the text metrics.
-            text       = this.days[index];
-            textHeight = this.smallBoxHeight * this.headerScale
-            textWidth  = this.ctxDTP.measureText(text).width;
-            textLeft   = Math.abs(this.smallBoxWidth - textWidth) / 2;
-            textBottom = Math.abs(this.smallBoxHeight - textHeight) / 2;
+            this.text       = this.days[index];
+            this.textHeight = this.smallBoxHeight * this.headerScale
+            this.textWidth  = this.ctxDTP.measureText(this.text).width;
+            this.textLeft   = Math.abs(this.smallBoxWidth - this.textWidth) / 2;
+            this.textBottom = Math.abs(this.smallBoxHeight - this.textHeight) / 2;
 
             this.ctxDTP.textBaseline = "top";
             this.ctxDTP.fillText
             (
                 this.days[index++],
-                this.contentLeft + i * this.smallBoxWidth + textLeft,
-                this.contentTop + this.smallBoxHeight + textBottom
+                this.contentLeft + i * this.smallBoxWidth + this.textLeft,
+                this.contentTop + this.smallBoxHeight + this.textBottom
             );
         }
         this.ctxDTP.stroke();
@@ -2522,18 +2551,18 @@ class CanvDTP
         this.ctxDTP.font = (this.smallBoxHeight * this.bannerScale) + "px " + this.fontStyle;
 
         //Get the text metrics.
-        text       = this.MonthsArray[this.tempMonth - 1] + " " + this.tempYear;
-        textHeight = this.smallBoxHeight * this.bannerScale;
-        textWidth  = this.ctxDTP.measureText(text).width;
-        textLeft   = Math.abs(5 * this.smallBoxWidth - textWidth) / 2;
-        textBottom = Math.abs(this.smallBoxHeight - textHeight) / 2;
+        this.text       = this.MonthsArray[this.tempMonth - 1] + " " + this.tempYear;
+        this.textHeight = this.smallBoxHeight * this.bannerScale;
+        this.textWidth  = this.ctxDTP.measureText(this.text).width;
+        this.textLeft   = Math.abs(5 * this.smallBoxWidth - this.textWidth) / 2;
+        this.textBottom = Math.abs(this.smallBoxHeight - this.textHeight) / 2;
 
         this.ctxDTP.textBaseline = "top";
         this.ctxDTP.fillText
         (
-            text, 
-            this.contentLeft + this.smallBoxWidth + textLeft,
-            this.contentTop + textBottom
+            this.text, 
+            this.contentLeft + this.smallBoxWidth + this.textLeft,
+            this.contentTop + this.textBottom
         );
         this.ctxDTP.stroke();
         
@@ -2609,18 +2638,18 @@ class CanvDTP
                         }
             
                         //Get the text metrics.
-                        text       = this.dayArray[i].day;
-                        textHeight = this.smallBoxHeight * this.dayScale;
-                        textWidth  = this.ctxDTP.measureText(text).width;
-                        textLeft   = Math.abs(this.smallBoxWidth - textWidth) / 2;
-                        textBottom = Math.abs(this.smallBoxHeight - textHeight) / 2;
+                        this.text       = this.dayArray[i].day;
+                        this.textHeight = this.smallBoxHeight * this.dayScale;
+                        this.textWidth  = this.ctxDTP.measureText(this.text).width;
+                        this.textLeft   = Math.abs(this.smallBoxWidth - this.textWidth) / 2;
+                        this.textBottom = Math.abs(this.smallBoxHeight - this.textHeight) / 2;
             
                         this.ctxDTP.textBaseline = "top";
                         this.ctxDTP.fillText
                         (
-                            text,
-                            this.hitBounds[i].x1 + textLeft,
-                            this.hitBounds[i].y2 + textBottom - this.smallBoxHeight
+                            this.text,
+                            this.hitBounds[i].x1 + this.textLeft,
+                            this.hitBounds[i].y2 + this.textBottom - this.smallBoxHeight
                         );
                         
                         this.ctxDTP.stroke();
@@ -2633,18 +2662,18 @@ class CanvDTP
                         this.ctxDTP.font = (this.smallBoxHeight * this.bannerScale) + "px " + this.fontStyle;
 
                         //Get the text metrics.
-                        text       = this.MonthsArray[this.tempMonth - 1] + " " + this.tempYear;
-                        textHeight = this.smallBoxHeight * this.bannerScale;
-                        textWidth  = this.ctxDTP.measureText(text).width;
-                        textLeft   = Math.abs(5 * this.smallBoxWidth - textWidth) / 2;
-                        textBottom = Math.abs(this.smallBoxHeight - textHeight) / 2;
+                        this.text       = this.MonthsArray[this.tempMonth - 1] + " " + this.tempYear;
+                        this.textHeight = this.smallBoxHeight * this.bannerScale;
+                        this.textWidth  = this.ctxDTP.measureText(this.text).width;
+                        this.textLeft   = Math.abs(5 * this.smallBoxWidth - this.textWidth) / 2;
+                        this.textBottom = Math.abs(this.smallBoxHeight - this.textHeight) / 2;
 
                         this.ctxDTP.textBaseline = "top";
                         this.ctxDTP.fillText
                         (
-                            text, 
-                            this.contentLeft + this.smallBoxWidth + textLeft,
-                            this.contentTop + textBottom
+                            this.text, 
+                            this.contentLeft + this.smallBoxWidth + this.textLeft,
+                            this.contentTop + this.textBottom
                         );
                         this.ctxDTP.stroke();
                         break;
@@ -2683,8 +2712,6 @@ class CanvDTP
     
     drawYear()
     {
-        let text, textHeight, textWidth, textLeft, textBottom;
-
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_GENERAL);
 
@@ -2730,18 +2757,18 @@ class CanvDTP
             this.ctxDTP.fillStyle = this.textMainColorn;
 
             //Get the text metrics.
-            text       = this.shortMonthsArray[i];
-            textHeight = this.bigBoxHeight * this.monthScale;
-            textWidth  = this.ctxDTP.measureText(text).width;
-            textLeft   = Math.abs(this.bigBoxWidth - textWidth) / 2;
-            textBottom = Math.abs(this.bigBoxHeight - textHeight) / 2;
+            this.text       = this.shortMonthsArray[i];
+            this.textHeight = this.bigBoxHeight * this.monthScale;
+            this.textWidth  = this.ctxDTP.measureText(this.text).width;
+            this.textLeft   = Math.abs(this.bigBoxWidth - this.textWidth) / 2;
+            this.textBottom = Math.abs(this.bigBoxHeight - this.textHeight) / 2;
 
             this.ctxDTP.textBaseline = "top";
             this.ctxDTP.fillText
             (
                 this.shortMonthsArray[i], 
-                this.hitBounds[i].x1 + textLeft,
-                this.hitBounds[i].y2 + textBottom - this.bigBoxHeight
+                this.hitBounds[i].x1 + this.textLeft,
+                this.hitBounds[i].y2 + this.textBottom - this.bigBoxHeight
             );
             this.ctxDTP.stroke();
         }
@@ -2752,18 +2779,18 @@ class CanvDTP
         this.ctxDTP.font = (this.smallBoxHeight * this.bannerScale) + "px " + this.fontStyle;
 
         //Get the text metrics.
-        text       = this.tempYear;
-        textHeight = this.smallBoxHeight * this.bannerScale;
-        textWidth  = this.ctxDTP.measureText(text).width;
-        textLeft   = Math.abs(5 * this.smallBoxWidth - textWidth) / 2;
-        textBottom = Math.abs(this.smallBoxHeight - textHeight) / 2;
+        this.text       = this.tempYear;
+        this.textHeight = this.smallBoxHeight * this.bannerScale;
+        this.textWidth  = this.ctxDTP.measureText(this.text).width;
+        this.textLeft   = Math.abs(5 * this.smallBoxWidth - this.textWidth) / 2;
+        this.textBottom = Math.abs(this.smallBoxHeight - this.textHeight) / 2;
 
         this.ctxDTP.textBaseline = "top";
         this.ctxDTP.fillText
         (
-            text, 
-            this.contentLeft + this.smallBoxWidth + textLeft,
-            this.contentTop + textBottom
+            this.text, 
+            this.contentLeft + this.smallBoxWidth + this.textLeft,
+            this.contentTop + this.textBottom
         );
         this.ctxDTP.stroke();
        
@@ -2827,18 +2854,18 @@ class CanvDTP
                         this.ctxDTP.fillStyle = this.textMainColorh;
 
                         //Get the text metrics.
-                        text       = this.shortMonthsArray[i];
-                        textHeight = this.bigBoxHeight * this.monthScale;
-                        textWidth  = this.ctxDTP.measureText(text).width;
-                        textLeft   = Math.abs(this.bigBoxWidth - textWidth) / 2;
-                        textBottom = Math.abs(this.bigBoxHeight - textHeight) / 2;
+                        this.text       = this.shortMonthsArray[i];
+                        this.textHeight = this.bigBoxHeight * this.monthScale;
+                        this.textWidth  = this.ctxDTP.measureText(this.text).width;
+                        this.textLeft   = Math.abs(this.bigBoxWidth - this.textWidth) / 2;
+                        this.textBottom = Math.abs(this.bigBoxHeight - this.textHeight) / 2;
 
                         this.ctxDTP.textBaseline = "top";
                         this.ctxDTP.fillText
                         (
                             this.shortMonthsArray[i], 
-                            this.hitBounds[i].x1 + textLeft,
-                            this.hitBounds[i].y2 + textBottom - this.bigBoxHeight
+                            this.hitBounds[i].x1 + this.textLeft,
+                            this.hitBounds[i].y2 + this.textBottom - this.bigBoxHeight
                         );
                         this.ctxDTP.stroke();
                         break;
@@ -2849,18 +2876,18 @@ class CanvDTP
                         this.ctxDTP.font = (this.smallBoxHeight * this.bannerScale) + "px " + this.fontStyle;
 
                         //Get the text metrics.
-                        text       = this.tempYear;
-                        textHeight = this.smallBoxHeight * this.bannerScale;
-                        textWidth  = this.ctxDTP.measureText(text).width;
-                        textLeft   = Math.abs(5 * this.smallBoxWidth - textWidth) / 2;
-                        textBottom = Math.abs(this.smallBoxHeight - textHeight) / 2;
+                        this.text       = this.tempYear;
+                        this.textHeight = this.smallBoxHeight * this.bannerScale;
+                        this.textWidth  = this.ctxDTP.measureText(this.text).width;
+                        this.textLeft   = Math.abs(5 * this.smallBoxWidth - this.textWidth) / 2;
+                        this.textBottom = Math.abs(this.smallBoxHeight - this.textHeight) / 2;
 
                         this.ctxDTP.textBaseline = "top";
                         this.ctxDTP.fillText
                         (
-                            text, 
-                            this.contentLeft + this.smallBoxWidth + textLeft,
-                            this.contentTop + textBottom
+                            this.text, 
+                            this.contentLeft + this.smallBoxWidth + this.textLeft,
+                            this.contentTop + this.textBottom
                         );
                         this.ctxDTP.stroke();
                         break;
@@ -2897,8 +2924,6 @@ class CanvDTP
 
     drawDecade()
     {
-        let text, textHeight, textWidth, textLeft, textBottom;
-
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_GENERAL);
 
@@ -2926,18 +2951,18 @@ class CanvDTP
             this.ctxDTP.fillStyle = (!i || i === 11) ? this.textAltColorn : this.ctxDTP.fillStyle = this.textMainColorn;
 
             //Get the text metrics.
-            text       = yearBase + i;
-            textHeight = this.bigBoxHeight * this.yearScale;
-            textWidth  = this.ctxDTP.measureText(text).width;
-            textLeft   = Math.abs(this.bigBoxWidth - textWidth) / 2;
-            textBottom = Math.abs(this.bigBoxHeight - textHeight) / 2;
+            this.text       = yearBase + i;
+            this.textHeight = this.bigBoxHeight * this.yearScale;
+            this.textWidth  = this.ctxDTP.measureText(this.text).width;
+            this.textLeft   = Math.abs(this.bigBoxWidth - this.textWidth) / 2;
+            this.textBottom = Math.abs(this.bigBoxHeight - this.textHeight) / 2;
 
             this.ctxDTP.textBaseline = "top";
             this.ctxDTP.fillText
             (
-                text, 
-                this.hitBounds[i].x1 + textLeft,
-                this.hitBounds[i].y2 + textBottom - this.bigBoxHeight
+                this.text, 
+                this.hitBounds[i].x1 + this.textLeft,
+                this.hitBounds[i].y2 + this.textBottom - this.bigBoxHeight
             );
             this.ctxDTP.stroke();          
         }
@@ -2948,18 +2973,18 @@ class CanvDTP
         this.ctxDTP.font = (this.smallBoxHeight * this.bannerScale) + "px " + this.fontStyle;
 
         //Get the text metrics.
-        text       = (yearBase + 1) + "-" + (yearBase + 10);
-        textHeight = this.smallBoxHeight * this.bannerScale;
-        textWidth  = this.ctxDTP.measureText(text).width;
-        textLeft   = Math.abs(5 * this.smallBoxWidth - textWidth) / 2;
-        textBottom = Math.abs(this.smallBoxHeight - textHeight) / 2;
+        this.text       = (yearBase + 1) + "-" + (yearBase + 10);
+        this.textHeight = this.smallBoxHeight * this.bannerScale;
+        this.textWidth  = this.ctxDTP.measureText(this.text).width;
+        this.textLeft   = Math.abs(5 * this.smallBoxWidth - this.textWidth) / 2;
+        this.textBottom = Math.abs(this.smallBoxHeight - this.textHeight) / 2;
 
         this.ctxDTP.textBaseline = "top";
         this.ctxDTP.fillText
         (
-            text,
-            this.contentLeft + this.smallBoxWidth + textLeft,
-            this.contentTop + textBottom
+            this.text,
+            this.contentLeft + this.smallBoxWidth + this.textLeft,
+            this.contentTop + this.textBottom
         );
         this.ctxDTP.stroke();
 
@@ -2990,22 +3015,22 @@ class CanvDTP
                 {
                     case CanvDTP.SEL_YEAR:
                         this.ctxDTP.beginPath();
-                        this.ctxDTP.font = (this.bigBoxHeight * this.monthScale) + "px " + this.fontStyle;
+                        this.ctxDTP.font = (this.bigBoxHeight * this.yearScale) + "px " + this.fontStyle;
                         this.ctxDTP.fillStyle = (!i || i === 11) ? this.textAltColorh : this.ctxDTP.fillStyle = this.textMainColorh;
 
                         //Get the text metrics.
-                        text       = yearBase + i;
-                        textHeight = this.bigBoxHeight * this.yearScale;
-                        textWidth  = this.ctxDTP.measureText(text).width;
-                        textLeft   = Math.abs(this.bigBoxWidth - textWidth) / 2;
-                        textBottom = Math.abs(this.bigBoxHeight - textHeight) / 2;
+                        this.text       = yearBase + i;
+                        this.textHeight = this.bigBoxHeight * this.yearScale;
+                        this.textWidth  = this.ctxDTP.measureText(this.text).width;
+                        this.textLeft   = Math.abs(this.bigBoxWidth - this.textWidth) / 2;
+                        this.textBottom = Math.abs(this.bigBoxHeight - this.textHeight) / 2;
 
                         this.ctxDTP.textBaseline = "top";
                         this.ctxDTP.fillText
                         (
-                            text, 
-                            this.hitBounds[i].x1 + textLeft,
-                            this.hitBounds[i].y2 + textBottom - this.bigBoxHeight
+                            this.text, 
+                            this.hitBounds[i].x1 + this.textLeft,
+                            this.hitBounds[i].y2 + this.textBottom - this.bigBoxHeight
                         );
                         this.ctxDTP.stroke(); 
                         break;
@@ -3016,18 +3041,18 @@ class CanvDTP
                         this.ctxDTP.font = (this.smallBoxHeight * this.bannerScale) + "px " + this.fontStyle;
 
                         //Get the text metrics.
-                        text       = (yearBase + 1) + "-" + (yearBase + 10);
-                        textHeight = this.smallBoxHeight * this.bannerScale;
-                        textWidth  = this.ctxDTP.measureText(text).width;
-                        textLeft   = Math.abs(5 * this.smallBoxWidth - textWidth) / 2;
-                        textBottom = Math.abs(this.smallBoxHeight - textHeight) / 2;
+                        this.text       = (yearBase + 1) + "-" + (yearBase + 10);
+                        this.textHeight = this.smallBoxHeight * this.bannerScale;
+                        this.textWidth  = this.ctxDTP.measureText(this.text).width;
+                        this.textLeft   = Math.abs(5 * this.smallBoxWidth - this.textWidth) / 2;
+                        this.textBottom = Math.abs(this.smallBoxHeight - this.textHeight) / 2;
 
                         this.ctxDTP.textBaseline = "top";
                         this.ctxDTP.fillText
                         (
-                            text,
-                            this.contentLeft + this.smallBoxWidth + textLeft,
-                            this.contentTop + textBottom
+                            this.text,
+                            this.contentLeft + this.smallBoxWidth + this.textLeft,
+                            this.contentTop + this.textBottom
                         );
                         this.ctxDTP.stroke();
                         break;
@@ -3056,8 +3081,6 @@ class CanvDTP
 
     drawCentury()
     {
-        let text, textHeight, textWidth, textLeft, textBottom;
-
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_GENERAL);
         
@@ -3082,33 +3105,33 @@ class CanvDTP
             this.ctxDTP.fillStyle = (!i || i === 11) ? this.textAltColorn : this.ctxDTP.fillStyle = this.textMainColorn;
 
             //Get the text metrics.
-            text       = (centuryBase + i * 10 - 9);
-            textHeight = this.bigBoxHeight * this.decadeScale;
-            textWidth  = this.ctxDTP.measureText(text).width;
-            textLeft   = Math.abs(this.bigBoxWidth - textWidth) / 2;
-            textBottom = Math.abs(this.bigBoxHeight - textHeight) / 2;
+            this.text       = (centuryBase + i * 10 - 9);
+            this.textHeight = this.bigBoxHeight * this.decadeScale;
+            this.textWidth  = this.ctxDTP.measureText(this.text).width;
+            this.textLeft   = Math.abs(this.bigBoxWidth - this.textWidth) / 2;
+            this.textBottom = Math.abs(this.bigBoxHeight - this.textHeight) / 2;
 
             this.ctxDTP.textBaseline = "top";
             this.ctxDTP.fillText
             (
-                text + "-", 
-                this.hitBounds[i].x1 + textLeft,
-                this.hitBounds[i].y2 + textBottom - 1.20 * this.bigBoxHeight
+                this.text + "-", 
+                this.hitBounds[i].x1 + this.textLeft,
+                this.hitBounds[i].y2 + this.textBottom - 1.20 * this.bigBoxHeight
             );
 
             //Get the text metrics.
-            text       = centuryBase + i * 10;
-            textHeight = this.bigBoxHeight * this.decadeScale;
-            textWidth  = this.ctxDTP.measureText(text).width;
-            textLeft   = Math.abs(this.bigBoxWidth - textWidth) / 2;
-            textBottom = Math.abs(this.bigBoxHeight - textHeight) / 2;
+            this.text       = centuryBase + i * 10;
+            this.textHeight = this.bigBoxHeight * this.decadeScale;
+            this.textWidth  = this.ctxDTP.measureText(this.text).width;
+            this.textLeft   = Math.abs(this.bigBoxWidth - this.textWidth) / 2;
+            this.textBottom = Math.abs(this.bigBoxHeight - this.textHeight) / 2;
 
             this.ctxDTP.textBaseline = "top";
             this.ctxDTP.fillText
             (
-                text, 
-                this.hitBounds[i].x1 + textLeft,
-                this.hitBounds[i].y2 + textBottom - .80 * this.bigBoxHeight
+                this.text, 
+                this.hitBounds[i].x1 + this.textLeft,
+                this.hitBounds[i].y2 + this.textBottom - .80 * this.bigBoxHeight
             );
             this.ctxDTP.stroke();          
         }
@@ -3119,18 +3142,18 @@ class CanvDTP
         this.ctxDTP.font = (this.smallBoxHeight * this.bannerScale) + "px " + this.fontStyle;
 
         //Get the text metrics.
-        text       = (centuryBase + 1) + "-" + (centuryBase + 100);
-        textHeight = this.smallBoxHeight * this.bannerScale;
-        textWidth  = this.ctxDTP.measureText(text).width;
-        textLeft   = Math.abs(5 * this.smallBoxWidth - textWidth) / 2;
-        textBottom = Math.abs(this.smallBoxHeight - textHeight) / 2;
+        this.text       = (centuryBase + 1) + "-" + (centuryBase + 100);
+        this.textHeight = this.smallBoxHeight * this.bannerScale;
+        this.textWidth  = this.ctxDTP.measureText(this.text).width;
+        this.textLeft   = Math.abs(5 * this.smallBoxWidth - this.textWidth) / 2;
+        this.textBottom = Math.abs(this.smallBoxHeight - this.textHeight) / 2;
 
         this.ctxDTP.textBaseline = "top";
         this.ctxDTP.fillText
         (
-            text,
-            this.contentLeft + this.smallBoxWidth + textLeft,
-            this.contentTop + textBottom
+            this.text,
+            this.contentLeft + this.smallBoxWidth + this.textLeft,
+            this.contentTop + this.textBottom
         );
         this.ctxDTP.stroke();
 
@@ -3165,33 +3188,33 @@ class CanvDTP
                         this.ctxDTP.fillStyle = (!i || i === 11) ? this.textAltColorh : this.ctxDTP.fillStyle = this.textMainColorh;
 
                         //Get the text metrics.
-                        text       = (centuryBase + i * 10 - 9);
-                        textHeight = this.bigBoxHeight * this.decadeScale;
-                        textWidth  = this.ctxDTP.measureText(text).width;
-                        textLeft   = Math.abs(this.bigBoxWidth - textWidth) / 2;
-                        textBottom = Math.abs(this.bigBoxHeight - textHeight) / 2;
+                        this.text       = (centuryBase + i * 10 - 9);
+                        this.textHeight = this.bigBoxHeight * this.decadeScale;
+                        this.textWidth  = this.ctxDTP.measureText(this.text).width;
+                        this.textLeft   = Math.abs(this.bigBoxWidth - this.textWidth) / 2;
+                        this.textBottom = Math.abs(this.bigBoxHeight - this.textHeight) / 2;
 
                         this.ctxDTP.textBaseline = "top";
                         this.ctxDTP.fillText
                         (
-                            text + "-", 
-                            this.hitBounds[i].x1 + textLeft,
-                            this.hitBounds[i].y2 + textBottom - 1.20 * this.bigBoxHeight
+                            this.text + "-", 
+                            this.hitBounds[i].x1 + this.textLeft,
+                            this.hitBounds[i].y2 + this.textBottom - 1.20 * this.bigBoxHeight
                         );
 
                         //Get the text metrics.
-                        text       = centuryBase + i * 10;
-                        textHeight = this.bigBoxHeight * this.decadeScale;
-                        textWidth  = this.ctxDTP.measureText(text).width;
-                        textLeft   = Math.abs(this.bigBoxWidth - textWidth) / 2;
-                        textBottom = Math.abs(this.bigBoxHeight - textHeight) / 2;
+                        this.text       = centuryBase + i * 10;
+                        this.textHeight = this.bigBoxHeight * this.decadeScale;
+                        this.textWidth  = this.ctxDTP.measureText(this.text).width;
+                        this.textLeft   = Math.abs(this.bigBoxWidth - this.textWidth) / 2;
+                        this.textBottom = Math.abs(this.bigBoxHeight - this.textHeight) / 2;
 
                         this.ctxDTP.textBaseline = "top";
                         this.ctxDTP.fillText
                         (
-                            text, 
-                            this.hitBounds[i].x1 + textLeft,
-                            this.hitBounds[i].y2 + textBottom - .80 * this.bigBoxHeight
+                            this.text, 
+                            this.hitBounds[i].x1 + this.textLeft,
+                            this.hitBounds[i].y2 + this.textBottom - .80 * this.bigBoxHeight
                         );
                         this.ctxDTP.stroke();  
                         break;
@@ -3220,8 +3243,6 @@ class CanvDTP
     
     drawTime()
     {
-        let text, textHeight, textWidth, textLeft, textBottom;
-
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_TIME);
 
@@ -3311,45 +3332,45 @@ class CanvDTP
         this.ctxDTP.textBaseline = "top";
 
         //Get the text metrics.
-        text       = this.isMilitaryTime ? (this.milHour < 10 ? "0" + this.milHour : this.milHour) : this.hour;
-        textHeight = this.timeBoxHeight * this.timeScale;
-        textWidth  = this.ctxDTP.measureText(text).width;
-        textLeft   = Math.abs(this.timeBoxWidth - textWidth) / 2;
-        textBottom = Math.abs(this.timeBoxHeight - textHeight) / 2;
+        this.text       = this.isMilitaryTime ? (this.milHour < 10 ? "0" + this.milHour : this.milHour) : this.hour;
+        this.textHeight = this.timeBoxHeight * this.timeScale;
+        this.textWidth  = this.ctxDTP.measureText(this.text).width;
+        this.textLeft   = Math.abs(this.timeBoxWidth - this.textWidth) / 2;
+        this.textBottom = Math.abs(this.timeBoxHeight - this.textHeight) / 2;
 
         this.ctxDTP.fillText //Draw the hours.
         (
-            text, 
-            this.contentLeft + textLeft,
-            this.contentTop + this.timeBoxHeight + textBottom
+            this.text, 
+            this.contentLeft + this.textLeft,
+            this.contentTop + this.timeBoxHeight + this.textBottom
         );
 
         //Get the text metrics.
-        text       = ":";
-        textHeight = this.timeBoxHeight * this.timeScale;
-        textWidth  = this.ctxDTP.measureText(text).width;
-        textLeft   = Math.abs(this.timeBoxWidth - textWidth) / 2;
-        textBottom = Math.abs(this.timeBoxHeight - textHeight) / 2;
+        this.text       = ":";
+        this.textHeight = this.timeBoxHeight * this.timeScale;
+        this.textWidth  = this.ctxDTP.measureText(this.text).width;
+        this.textLeft   = Math.abs(this.timeBoxWidth - this.textWidth) / 2;
+        this.textBottom = Math.abs(this.timeBoxHeight - this.textHeight) / 2;
 
         this.ctxDTP.fillText //Draw the hour minute separator.
         (
-            text, 
-            this.contentLeft + 0.75 * this.timeBoxWidth + textLeft,
-            this.contentTop + this.timeBoxHeight + textBottom
+            this.text, 
+            this.contentLeft + 0.75 * this.timeBoxWidth + this.textLeft,
+            this.contentTop + this.timeBoxHeight + this.textBottom
         );
 
         //Get the text metrics.
-        text       = this.minute < 10 ? "0" + this.minute : this.minute;
-        textHeight = this.timeBoxHeight * this.timeScale;
-        textWidth  = this.ctxDTP.measureText(text).width;
-        textLeft   = Math.abs(this.timeBoxWidth - textWidth) / 2;
-        textBottom = Math.abs(this.timeBoxHeight - textHeight) / 2;
+        this.text       = this.minute < 10 ? "0" + this.minute : this.minute;
+        this.textHeight = this.timeBoxHeight * this.timeScale;
+        this.textWidth  = this.ctxDTP.measureText(this.text).width;
+        this.textLeft   = Math.abs(this.timeBoxWidth - this.textWidth) / 2;
+        this.textBottom = Math.abs(this.timeBoxHeight - this.textHeight) / 2;
 
         this.ctxDTP.fillText //Draw the minutes.
         (
-            text, 
-            this.contentLeft + 1.5 * this.timeBoxWidth + textLeft,
-            this.contentTop + this.timeBoxHeight + textBottom
+            this.text, 
+            this.contentLeft + 1.5 * this.timeBoxWidth + this.textLeft,
+            this.contentTop + this.timeBoxHeight + this.textBottom
         );
         
         //Draw the hour inc1 icon.
@@ -3383,17 +3404,17 @@ class CanvDTP
         this.ctxDTP.fillStyle = this.textMainColorn;
 
         //Get the text metrics.
-        text       = this.isMilitaryTime ? "MT" : (this.isAM ? "AM" : "PM");
-        textHeight = this.timeBoxHeight * this.timeAmPmScale;
-        textWidth  = this.ctxDTP.measureText(text).width;
-        textLeft   = Math.abs(this.timeBoxWidth - textWidth) / 2;
-        textBottom = Math.abs(this.timeBoxHeight - textHeight) / 2;
+        this.text       = this.isMilitaryTime ? "MT" : (this.isAM ? "AM" : "PM");
+        this.textHeight = this.timeBoxHeight * this.timeAmPmScale;
+        this.textWidth  = this.ctxDTP.measureText(this.text).width;
+        this.textLeft   = Math.abs(this.timeBoxWidth - this.textWidth) / 2;
+        this.textBottom = Math.abs(this.timeBoxHeight - this.textHeight) / 2;
         
         this.ctxDTP.fillText
         (
-            text, 
-            this.contentLeft + 2.5 * this.timeBoxWidth + textLeft,
-            this.contentTop + this.timeBoxHeight + textBottom
+            this.text, 
+            this.contentLeft + 2.5 * this.timeBoxWidth + this.textLeft,
+            this.contentTop + this.timeBoxHeight + this.textBottom
         );
         this.ctxDTP.stroke();
 
@@ -3448,17 +3469,17 @@ class CanvDTP
                         this.ctxDTP.fillStyle = this.textMainColorh;
 
                         //Get the text metrics.
-                        text       = this.isMilitaryTime ? "MT" : (this.isAM ? "AM" : "PM");
-                        textHeight = this.timeBoxHeight * this.timeAmPmScale;
-                        textWidth  = this.ctxDTP.measureText(text).width;
-                        textLeft   = Math.abs(this.timeBoxWidth - textWidth) / 2;
-                        textBottom = Math.abs(this.timeBoxHeight - textHeight) / 2;
+                        this.text       = this.isMilitaryTime ? "MT" : (this.isAM ? "AM" : "PM");
+                        this.textHeight = this.timeBoxHeight * this.timeAmPmScale;
+                        this.textWidth  = this.ctxDTP.measureText(this.text).width;
+                        this.textLeft   = Math.abs(this.timeBoxWidth - this.textWidth) / 2;
+                        this.textBottom = Math.abs(this.timeBoxHeight - this.textHeight) / 2;
         
                         this.ctxDTP.fillText
                         (
-                            text, 
-                            this.contentLeft + 2.5 * this.timeBoxWidth + textLeft,
-                            this.contentTop + this.timeBoxHeight + textBottom
+                            this.text, 
+                            this.contentLeft + 2.5 * this.timeBoxWidth + this.textLeft,
+                            this.contentTop + this.timeBoxHeight + this.textBottom
                         );
                         this.ctxDTP.stroke();
                         break;
@@ -3469,17 +3490,17 @@ class CanvDTP
                         this.ctxDTP.fillStyle = this.textMainColorh;
 
                         //Get the text metrics.
-                        text       = this.minute < 10 ? "0" + this.minute : this.minute;
-                        textHeight = this.timeBoxHeight * this.timeScale;
-                        textWidth  = this.ctxDTP.measureText(text).width;
-                        textLeft   = Math.abs(this.timeBoxWidth - textWidth) / 2;
-                        textBottom = Math.abs(this.timeBoxHeight - textHeight) / 2;
+                        this.text       = this.minute < 10 ? "0" + this.minute : this.minute;
+                        this.textHeight = this.timeBoxHeight * this.timeScale;
+                        this.textWidth  = this.ctxDTP.measureText(this.text).width;
+                        this.textLeft   = Math.abs(this.timeBoxWidth - this.textWidth) / 2;
+                        this.textBottom = Math.abs(this.timeBoxHeight - this.textHeight) / 2;
 
                         this.ctxDTP.fillText //Draw the minutes.
                         (
-                            text, 
-                            this.contentLeft + 1.5 * this.timeBoxWidth + textLeft,
-                            this.contentTop + this.timeBoxHeight + textBottom
+                            this.text, 
+                            this.contentLeft + 1.5 * this.timeBoxWidth + this.textLeft,
+                            this.contentTop + this.timeBoxHeight + this.textBottom
                         );
                         break;
 
@@ -3489,17 +3510,17 @@ class CanvDTP
                         this.ctxDTP.fillStyle = this.textMainColorh;
                         
                         //Get the text metrics.
-                        text       = this.isMilitaryTime ? (this.milHour < 10 ? "0" + this.milHour : this.milHour) : this.hour;
-                        textHeight = this.timeBoxHeight * this.timeScale;
-                        textWidth  = this.ctxDTP.measureText(text).width;
-                        textLeft   = Math.abs(this.timeBoxWidth - textWidth) / 2;
-                        textBottom = Math.abs(this.timeBoxHeight - textHeight) / 2;
+                        this.text       = this.isMilitaryTime ? (this.milHour < 10 ? "0" + this.milHour : this.milHour) : this.hour;
+                        this.textHeight = this.timeBoxHeight * this.timeScale;
+                        this.textWidth  = this.ctxDTP.measureText(this.text).width;
+                        this.textLeft   = Math.abs(this.timeBoxWidth - this.textWidth) / 2;
+                        this.textBottom = Math.abs(this.timeBoxHeight - this.textHeight) / 2;
 
                         this.ctxDTP.fillText //Draw the hours.
                         (
-                            text, 
-                            this.contentLeft + textLeft,
-                            this.contentTop + this.timeBoxHeight + textBottom
+                            this.text, 
+                            this.contentLeft + this.textLeft,
+                            this.contentTop + this.timeBoxHeight + this.textBottom
                         );
                         this.ctxDTP.stroke();
                         break;
@@ -3515,8 +3536,6 @@ class CanvDTP
 
     drawMinute()
     {
-        let text, textHeight, textWidth, textLeft, textBottom;
-
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_MINUTE);
 
@@ -3549,18 +3568,18 @@ class CanvDTP
             this.ctxDTP.fillStyle = this.textMainColorn;
 
             //Get the text metrics.
-            text       = i < 10 ? "0" + i : i;
-            textHeight = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.minuteScale;
-            textWidth  = this.ctxDTP.measureText(text).width;
-            textLeft   = Math.abs(this.hitBounds[i].x2 - this.hitBounds[i].x1 - textWidth) / 2;
-            textBottom = Math.abs(this.hitBounds[i].y2 - this.hitBounds[i].y1 - textHeight) / 2;
+            this.text       = i < 10 ? "0" + i : i;
+            this.textHeight = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.minuteScale;
+            this.textWidth  = this.ctxDTP.measureText(this.text).width;
+            this.textLeft   = Math.abs(this.hitBounds[i].x2 - this.hitBounds[i].x1 - this.textWidth) / 2;
+            this.textBottom = Math.abs(this.hitBounds[i].y2 - this.hitBounds[i].y1 - this.textHeight) / 2;
 
             this.ctxDTP.textBaseline = "top";
             this.ctxDTP.fillText
             (
-                text,
-                this.hitBounds[i].x1 + textLeft,
-                this.hitBounds[i].y2 + textBottom - (this.hitBounds[i].y2 - this.hitBounds[i].y1)
+                this.text,
+                this.hitBounds[i].x1 + this.textLeft,
+                this.hitBounds[i].y2 + this.textBottom - (this.hitBounds[i].y2 - this.hitBounds[i].y1)
             );
             this.ctxDTP.stroke();
         }
@@ -3589,18 +3608,18 @@ class CanvDTP
                 this.ctxDTP.fillStyle = this.textMainColorh;
 
                 //Get the text metrics.
-                text       = i < 10 ? "0" + i : i;
-                textHeight = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.minuteScale;
-                textWidth  = this.ctxDTP.measureText(text).width;
-                textLeft   = Math.abs(this.hitBounds[i].x2 - this.hitBounds[i].x1 - textWidth) / 2;
-                textBottom = Math.abs(this.hitBounds[i].y2 - this.hitBounds[i].y1 - textHeight) / 2;
+                this.text       = i < 10 ? "0" + i : i;
+                this.textHeight = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.minuteScale;
+                this.textWidth  = this.ctxDTP.measureText(this.text).width;
+                this.textLeft   = Math.abs(this.hitBounds[i].x2 - this.hitBounds[i].x1 - this.textWidth) / 2;
+                this.textBottom = Math.abs(this.hitBounds[i].y2 - this.hitBounds[i].y1 - this.textHeight) / 2;
 
                 this.ctxDTP.textBaseline = "top";
                 this.ctxDTP.fillText
                 (
-                    text,
-                    this.hitBounds[i].x1 + textLeft,
-                    this.hitBounds[i].y2 + textBottom - (this.hitBounds[i].y2 - this.hitBounds[i].y1)
+                    this.text,
+                    this.hitBounds[i].x1 + this.textLeft,
+                    this.hitBounds[i].y2 + this.textBottom - (this.hitBounds[i].y2 - this.hitBounds[i].y1)
                 );
                 this.ctxDTP.stroke();
             }
@@ -3614,8 +3633,6 @@ class CanvDTP
 
     drawStdHour()
     {
-        let text, textHeight, textWidth, textLeft, textBottom;
-
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_STD_HOUR);
 
@@ -3648,17 +3665,18 @@ class CanvDTP
             this.ctxDTP.fillStyle = this.textMainColorn;
 
             //Get the text metrics.
-            text       = i + 1;
-            textHeight = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourScale;
-            textWidth  = this.ctxDTP.measureText(text).width;
-            textLeft   = Math.abs(this.hitBounds[i].x2 - this.hitBounds[i].x1 - textWidth) / 2;
-            textBottom = Math.abs(this.hitBounds[i].y2 - this.hitBounds[i].y1 - textHeight) / 2;
+            this.text       = i + 1;
+            this.textHeight = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourScale;
+            this.textWidth  = this.ctxDTP.measureText(this.text).width;
+            this.textLeft   = Math.abs(this.hitBounds[i].x2 - this.hitBounds[i].x1 - this.textWidth) / 2;
+            this.textBottom = Math.abs(this.hitBounds[i].y2 - this.hitBounds[i].y1 - this.textHeight) / 2;
 
+            this.ctxDTP.textBaseline = "top";
             this.ctxDTP.fillText
             (
-                text,
-                this.hitBounds[i].x1 + textLeft,
-                this.hitBounds[i].y2 + textBottom - (this.hitBounds[i].y2 - this.hitBounds[i].y1)
+                this.text,
+                this.hitBounds[i].x1 + this.textLeft,
+                this.hitBounds[i].y2 + this.textBottom - (this.hitBounds[i].y2 - this.hitBounds[i].y1)
             );
             this.ctxDTP.stroke();
         }
@@ -3687,17 +3705,18 @@ class CanvDTP
                 this.ctxDTP.fillStyle = this.textMainColorh;
 
                 //Get the text metrics.
-                text       = i + 1;
-                textHeight = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourScale;
-                textWidth  = this.ctxDTP.measureText(text).width;
-                textLeft   = Math.abs(this.hitBounds[i].x2 - this.hitBounds[i].x1 - textWidth) / 2;
-                textBottom = Math.abs(this.hitBounds[i].y2 - this.hitBounds[i].y1 - textHeight) / 2;
+                this.text       = i + 1;
+                this.textHeight = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourScale;
+                this.textWidth  = this.ctxDTP.measureText(this.text).width;
+                this.textLeft   = Math.abs(this.hitBounds[i].x2 - this.hitBounds[i].x1 - this.textWidth) / 2;
+                this.textBottom = Math.abs(this.hitBounds[i].y2 - this.hitBounds[i].y1 - this.textHeight) / 2;
 
+                this.ctxDTP.textBaseline = "top";
                 this.ctxDTP.fillText
                 (
-                    text,
-                    this.hitBounds[i].x1 + textLeft,
-                    this.hitBounds[i].y2 + textBottom - (this.hitBounds[i].y2 - this.hitBounds[i].y1)
+                    this.text,
+                    this.hitBounds[i].x1 + this.textLeft,
+                    this.hitBounds[i].y2 + this.textBottom - (this.hitBounds[i].y2 - this.hitBounds[i].y1)
                 );
                 this.ctxDTP.stroke();
             }
@@ -3711,8 +3730,6 @@ class CanvDTP
 
     drawMilHour()
     {
-        let text, textHeight, textWidth, textLeft, textBottom;
-
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_MIL_HOUR);
 
@@ -3745,17 +3762,18 @@ class CanvDTP
             this.ctxDTP.fillStyle = this.textMainColorn;
 
             //Get the text metrics.
-            text       = i < 10 ? "0" + i : i;
-            textHeight = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourScale;
-            textWidth  = this.ctxDTP.measureText(text).width;
-            textLeft   = Math.abs(this.hitBounds[i].x2 - this.hitBounds[i].x1 - textWidth) / 2;
-            textBottom = Math.abs(this.hitBounds[i].y2 - this.hitBounds[i].y1 - textHeight) / 2;
+            this.text       = i < 10 ? "0" + i : i;
+            this.textHeight = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourScale;
+            this.textWidth  = this.ctxDTP.measureText(this.text).width;
+            this.textLeft   = Math.abs(this.hitBounds[i].x2 - this.hitBounds[i].x1 - this.textWidth) / 2;
+            this.textBottom = Math.abs(this.hitBounds[i].y2 - this.hitBounds[i].y1 - this.textHeight) / 2;
 
+            this.ctxDTP.textBaseline = "top";
             this.ctxDTP.fillText
             (
-                text,
-                this.hitBounds[i].x1 + textLeft,
-                this.hitBounds[i].y2 + textBottom - (this.hitBounds[i].y2 - this.hitBounds[i].y1)
+                this.text,
+                this.hitBounds[i].x1 + this.textLeft,
+                this.hitBounds[i].y2 + this.textBottom - (this.hitBounds[i].y2 - this.hitBounds[i].y1)
             );
             this.ctxDTP.stroke();
         }
@@ -3783,17 +3801,18 @@ class CanvDTP
                 this.ctxDTP.fillStyle = this.textMainColorh;
 
                 //Get the text metrics.
-                text       = i < 10 ? "0" + i : i;
-                textHeight = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourScale;
-                textWidth  = this.ctxDTP.measureText(text).width;
-                textLeft   = Math.abs(this.hitBounds[i].x2 - this.hitBounds[i].x1 - textWidth) / 2;
-                textBottom = Math.abs(this.hitBounds[i].y2 - this.hitBounds[i].y1 - textHeight) / 2;
+                this.text       = i < 10 ? "0" + i : i;
+                this.textHeight = (this.hitBounds[i].y2 - this.hitBounds[i].y1) * this.hourScale;
+                this.textWidth  = this.ctxDTP.measureText(this.text).width;
+                this.textLeft   = Math.abs(this.hitBounds[i].x2 - this.hitBounds[i].x1 - this.textWidth) / 2;
+                this.textBottom = Math.abs(this.hitBounds[i].y2 - this.hitBounds[i].y1 - this.textHeight) / 2;
 
+                this.ctxDTP.textBaseline = "top";
                 this.ctxDTP.fillText
                 (
-                    text,
-                    this.hitBounds[i].x1 + textLeft,
-                    this.hitBounds[i].y2 + textBottom - (this.hitBounds[i].y2 - this.hitBounds[i].y1)
+                    this.text,
+                    this.hitBounds[i].x1 + this.textLeft,
+                    this.hitBounds[i].y2 + this.textBottom - (this.hitBounds[i].y2 - this.hitBounds[i].y1)
                 );
                 this.ctxDTP.stroke();
             }

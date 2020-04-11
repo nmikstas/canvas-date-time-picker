@@ -213,12 +213,15 @@ class CanvDTP
 
             //Today's Date.
             nowColor  = "#000000",
-            nowWeight = .25,
+            nowWeight = .20,
 
             //Increment/Decrement Parameters.
             incXPad   = .25,
             incYPad   = .10,
             incWeight = .25,
+
+            //Vertical offset for days of month.
+            dayVertOffset = .05,
 
             dayScale      = .60, //Days of Month.
             monthScale    = .60, //Month Text.
@@ -231,83 +234,84 @@ class CanvDTP
         } = {}
     )
     {
-        this.debug                  = debug;
-        this.fontStyle              = fontStyle;
-        this.textMainColorn         = textMainColorn;
-        this.textMainColorh         = textMainColorh;
-        this.textAltColorn          = textAltColorn;
-        this.textAltColorh          = textAltColorh;
-        this.bannerScale            = bannerScale;
-        this.dateTimeStringCb       = dateTimeStringCb;
-        this.dateTimeJSONCb         = dateTimeJSONCb;
-        this.dateTimeFormat         = dateTimeFormat,
-        this.isDate                 = isDate,
-        this.isTime                 = isTime,
-        this.isAnimated             = isAnimated,
-        this.maxPixelWidth          = maxPixelWidth,
-        this.startOfWeek            = startOfWeek,
-        this.isMilitaryTime         = isMilitaryTime,
-        this.dayExcludeArray        = [...dayExcludeArray],
-        this.dayWhiteArray          = [...dayWhiteArray],
-        this.monthSpotlightArray    = [...monthSpotlightArray],
-        this.monthWhiteArray        = [...monthWhiteArray],
-        this.yearSpotlightArray     = [...yearSpotlightArray],
-        this.yearWhiteArray         = [...yearWhiteArray],
-        this.monthImages            = [...monthImages],
-        this.iBorderRadius          = iBorderRadius;
-        this.iBorderWeight          = iBorderWeight;
-        this.iXPadding              = iXPadding;
-        this.iYPadding              = iYPadding;
-        this.iLineWidth             = iLineWidth;
-        this.iBorderColorn          = iBorderColorn;
-        this.iFillColorn            = iFillColorn;
-        this.iCalColorn             = iCalColorn;
-        this.iBorderColorh          = iBorderColorh;
-        this.iFillColorh            = iFillColorh;
-        this.iCalColorh             = iCalColorh;
-        this.selectRadius           = selectRadius;
-        this.selectWeight           = selectWeight;
-        this.selectBorderColor      = selectBorderColor;
-        this.selectFillColor        = selectFillColor;
-        this.headerScale            = headerScale;
-        this.headerColor            = headerColor;
-        this.dayScale               = dayScale;     
-        this.prevNextXPad           = prevNextXPad;
-        this.prevNextYPad           = prevNextYPad;
-        this.clockPad               = clockPad;
-        this.clockWeight            = clockWeight;
-        this.currentRadius          = currentRadius;
-        this.currentWeight          = currentWeight;
-        this.currentBorderColor     = currentBorderColor;
-        this.currentFillColor       = currentFillColor;
-        this.nowWeight              = nowWeight;
-        this.nowColor               = nowColor;
-        this.monthScale             = monthScale;
-        this.yearScale              = yearScale;
-        this.decadeScale            = decadeScale;
-        this.calXPadding            = calXPadding;
-        this.calYPadding            = calYPadding;
-        this.calLineWidth           = calLineWidth;
-        this.timeScale              = timeScale;
-        this.timeAmPmScale          = timeAmPmScale;
-        this.incXPad                = incXPad;
-        this.incYPad                = incYPad;
-        this.incWeight              = incWeight;
-        this.bBorderRadius          = bBorderRadius;
-        this.bBorderWeight          = bBorderWeight;
-        this.bXPadding              = bXPadding;
-        this.bYPadding              = bYPadding;
-        this.bLineWidth             = bLineWidth;
-        this.bBorderColor           = bBorderColor;
-        this.bFillColor             = bFillColor;
-        this.minuteScale            = minuteScale;
-        this.hourScale              = hourScale;
-        this.infoPointerSize        = infoPointerSize;
-        this.infoBackColor          = infoBackColor;
-        this.infoTextColor          = infoTextColor;
-        this.infoPadding            = infoPadding;
-        this.infoWidth              = infoWidth;
-        this.infoBorderRadius       = infoBorderRadius;
+        this.debug               = debug;
+        this.fontStyle           = fontStyle;
+        this.textMainColorn      = textMainColorn;
+        this.textMainColorh      = textMainColorh;
+        this.textAltColorn       = textAltColorn;
+        this.textAltColorh       = textAltColorh;
+        this.bannerScale         = bannerScale;
+        this.dateTimeStringCb    = dateTimeStringCb;
+        this.dateTimeJSONCb      = dateTimeJSONCb;
+        this.dateTimeFormat      = dateTimeFormat,
+        this.isDate              = isDate,
+        this.isTime              = isTime,
+        this.isAnimated          = isAnimated,
+        this.maxPixelWidth       = maxPixelWidth,
+        this.startOfWeek         = startOfWeek,
+        this.isMilitaryTime      = isMilitaryTime,
+        this.dayExcludeArray     = [...dayExcludeArray],
+        this.dayWhiteArray       = [...dayWhiteArray],
+        this.monthSpotlightArray = [...monthSpotlightArray],
+        this.monthWhiteArray     = [...monthWhiteArray],
+        this.yearSpotlightArray  = [...yearSpotlightArray],
+        this.yearWhiteArray      = [...yearWhiteArray],
+        this.monthImages         = [...monthImages],
+        this.iBorderRadius       = iBorderRadius;
+        this.iBorderWeight       = iBorderWeight;
+        this.iXPadding           = iXPadding;
+        this.iYPadding           = iYPadding;
+        this.iLineWidth          = iLineWidth;
+        this.iBorderColorn       = iBorderColorn;
+        this.iFillColorn         = iFillColorn;
+        this.iCalColorn          = iCalColorn;
+        this.iBorderColorh       = iBorderColorh;
+        this.iFillColorh         = iFillColorh;
+        this.iCalColorh          = iCalColorh;
+        this.selectRadius        = selectRadius;
+        this.selectWeight        = selectWeight;
+        this.selectBorderColor   = selectBorderColor;
+        this.selectFillColor     = selectFillColor;
+        this.headerScale         = headerScale;
+        this.headerColor         = headerColor;
+        this.dayVertOffset       = dayVertOffset;
+        this.dayScale            = dayScale;     
+        this.prevNextXPad        = prevNextXPad;
+        this.prevNextYPad        = prevNextYPad;
+        this.clockPad            = clockPad;
+        this.clockWeight         = clockWeight;
+        this.currentRadius       = currentRadius;
+        this.currentWeight       = currentWeight;
+        this.currentBorderColor  = currentBorderColor;
+        this.currentFillColor    = currentFillColor;
+        this.nowWeight           = nowWeight;
+        this.nowColor            = nowColor;
+        this.monthScale          = monthScale;
+        this.yearScale           = yearScale;
+        this.decadeScale         = decadeScale;
+        this.calXPadding         = calXPadding;
+        this.calYPadding         = calYPadding;
+        this.calLineWidth        = calLineWidth;
+        this.timeScale           = timeScale;
+        this.timeAmPmScale       = timeAmPmScale;
+        this.incXPad             = incXPad;
+        this.incYPad             = incYPad;
+        this.incWeight           = incWeight;
+        this.bBorderRadius       = bBorderRadius;
+        this.bBorderWeight       = bBorderWeight;
+        this.bXPadding           = bXPadding;
+        this.bYPadding           = bYPadding;
+        this.bLineWidth          = bLineWidth;
+        this.bBorderColor        = bBorderColor;
+        this.bFillColor          = bFillColor;
+        this.minuteScale         = minuteScale;
+        this.hourScale           = hourScale;
+        this.infoPointerSize     = infoPointerSize;
+        this.infoBackColor       = infoBackColor;
+        this.infoTextColor       = infoTextColor;
+        this.infoPadding         = infoPadding;
+        this.infoWidth           = infoWidth;
+        this.infoBorderRadius    = infoBorderRadius;
 
         /***************************** Rendering Dimension Variables *****************************/
 
@@ -2507,13 +2511,14 @@ class CanvDTP
             this.textWidth  = this.ctxDTP.measureText(this.text).width;
             this.textLeft   = Math.abs(this.smallBoxWidth - this.textWidth) / 2;
             this.textBottom = Math.abs(this.smallBoxHeight - this.textHeight) / 2;
+            let verOffset   = this.dayVertOffset * this.smallBoxHeight;
             
             this.ctxDTP.textBaseline = "top";
             this.ctxDTP.fillText
             (
                 this.text,
                 this.hitBounds[i].x1 + this.textLeft,
-                this.hitBounds[i].y2 + this.textBottom - this.smallBoxHeight
+                this.hitBounds[i].y2 + this.textBottom - this.smallBoxHeight + verOffset
             );
         }
         this.ctxDTP.stroke();
@@ -2643,13 +2648,14 @@ class CanvDTP
                         this.textWidth  = this.ctxDTP.measureText(this.text).width;
                         this.textLeft   = Math.abs(this.smallBoxWidth - this.textWidth) / 2;
                         this.textBottom = Math.abs(this.smallBoxHeight - this.textHeight) / 2;
+                        let verOffset   = this.dayVertOffset * this.smallBoxHeight;
             
                         this.ctxDTP.textBaseline = "top";
                         this.ctxDTP.fillText
                         (
                             this.text,
                             this.hitBounds[i].x1 + this.textLeft,
-                            this.hitBounds[i].y2 + this.textBottom - this.smallBoxHeight
+                            this.hitBounds[i].y2 + this.textBottom - this.smallBoxHeight + verOffset
                         );
                         
                         this.ctxDTP.stroke();

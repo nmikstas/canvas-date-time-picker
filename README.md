@@ -7,7 +7,7 @@ No React, no Bootstrap, no CSS.
 Detailed documentation will be written after the coding is done.
 
 I've decided to go in and add tons of configurable functionality. Working on that now! May take a few days.  
-Last updated: 4/9/2020.
+Last updated: 4/13/2020.
 
 ## __Things that will be added:__
 - Fully customizeable date/time format string. ***Done***
@@ -29,12 +29,13 @@ Last updated: 4/9/2020.
 - spotlight months in the year view. ***Done***
 - Whitelist for spotlight months in the year view. ***Done***
 - Enable/disable auto pick on picker first time open. ***Done***
-- Set initial date (other than current date) on picker first time open.
+- Set initial date (other than current date) on picker first time open. ***Done***
+- Enable/disable today's date indicator. ***Done***
 - Minimum and maximum date ranges.
+- Textbox click opens calendar.
 - spotlight years in the decade view.
 - Whitelist for spotlight years in the decade view.
 - Enable/disable individual views.
-- Enable/disable today's date indicator.
 - Enable/disable calendar icon (bring up picker when text box clicked).
 - Enable/disable picker always open.
 - Date picker only.

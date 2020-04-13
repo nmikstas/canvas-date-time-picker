@@ -103,9 +103,11 @@ class CanvDTP
     static get PICK_TIME() {return 0x02}
 
     //Date compare return types.
-    static get DATE_EQUAL()   {return 0x00}
-    static get DATE_GREATER() {return 0x01}
-    static get DATE_LESS()    {return 0x02}
+    static get DATE_EQUAL()    {return 0x00}
+    static get DATE_GREATER()  {return 0x01}
+    static get DATE_LESS()     {return 0x02}
+    static get DATE_1INVALID() {return 0x03}
+    static get DATE_2INVALID() {return 0x04}
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //                                        Constructor                                        //
@@ -153,6 +155,8 @@ class CanvDTP
             firstDate = null,             //Earliest date available to user.
             lastDate  = null,             //Latest date available to user.
             autoPick  = true,             //Enable automatic date pick when picker opened.
+
+            todaysDate = true,            //Enable today's date marker on calendar. 
 
             /****************************** Icon Canvas Parameters *******************************/
 
@@ -241,7 +245,11 @@ class CanvDTP
             timeScale     = .80, //Time view text.
             timeAmPmScale = .60, //AM/PM text.
             minuteScale   = .80, //Minute view text.
-            hourScale     = .80  //Hour view text.
+            hourScale     = .80, //Hour view text.
+
+            ///Out of range date colors.
+            rangeTextColor = "#ff0000",
+            rangeBkColor   = "#000000a0"
         } = {}
     )
     {
@@ -272,6 +280,7 @@ class CanvDTP
         this.firstDate           = firstDate,
         this.lastDate            = lastDate,
         this.autoPick            = autoPick,
+        this.todaysDate          = todaysDate,
         this.iBorderRadius       = iBorderRadius;
         this.iBorderWeight       = iBorderWeight;
         this.iXPadding           = iXPadding;
@@ -327,6 +336,8 @@ class CanvDTP
         this.infoPadding         = infoPadding;
         this.infoWidth           = infoWidth;
         this.infoBorderRadius    = infoBorderRadius;
+        this.rangeTextColor      = rangeTextColor;
+        this.rangeBkColor        = rangeBkColor;
 
         /***************************** Rendering Dimension Variables *****************************/
 
@@ -454,6 +465,12 @@ class CanvDTP
         this.pickedMonth  = 0;
         this.pickedYear   = 0;
         this.pickedDecade = 0;
+
+        //Keep track of wether out or range checks need to be done.
+        this.checkBefore = false;
+        this.checkAfter  = false;
+        this.firstHit    = false;
+        this.lastHit     = false;
 
         //Array of excluded/highlighted days for the currently selected month.
         this.monthSpecial = new Array(42);
@@ -787,6 +804,9 @@ class CanvDTP
         //Get the current date and break it down.
         let todaysIndex   = -1;
         let todayExcluded = false;
+        let isFirstValid  = true;
+        let isLastValid   = true;
+        let isOrderValid  = true;
         let date          = new Date();
         this.month        = date.getMonth() + 1;
         this.day          = date.getDate();
@@ -813,13 +833,83 @@ class CanvDTP
             this.hour -= 12;
         }
 
+        //Add today's date to the calendar.
+        if(this.todaysDate)
+        {
+            this.nowYear  = this.year;
+            this.nowMonth = this.month;
+            this.nowDay   = this.day;
+        }
+        
+        //If an initial date is set, assign it to the calendar.
+        if(this.initDate && this.checkValidDate(this.initDate))
+        {
+            this.month  = this.initDate.month;
+            this.day    = this.initDate.day;
+            this.year   = this.initDate.year;
+        }
+
+        //Display error if initial date is invalid.
+        if(this.initDate && !this.checkValidDate(this.initDate))
+        {
+            console.log("Invalid initial date.");
+            this.initDate = null;
+        }
+
+        //Display error if first date is invalid.
+        if(this.firstDate && !this.checkValidDate(this.firstDate))
+        {
+            console.log("Invalid first date.");
+            isFirstValid = false;
+            this.firstDate = null;
+        }
+
+        //Display error if last date is invalid.
+        if(this.lastDate && !this.checkValidDate(this.lastDate))
+        {
+            console.log("Invalid last date.");
+            isLastValid = false;
+            this.lastDate = null;
+        }
+
+        //Display error if first and last dates are in the wrong order.
+        if(this.firstDate && isFirstValid && this.lastDate && isLastValid)
+        {
+            if(this.compareDates(this.firstDate, this.lastDate) === CanvDTP.DATE_GREATER)
+            {
+                console.log("Invalid first/last date order.");
+                isOrderValid = false;
+                this.firstDate = null;
+                this.lastDate = null;
+            }
+        }
+
+        //Determine if a first date check needs to be done.
+        if(this.firstDate && isFirstValid && isOrderValid) this.checkBefore = true;
+
+        //Determine if a last date check needs to be done.
+        if(this.lastDate && isLastValid && isOrderValid) this.checkAfter = true;
+
+        //If the initial pick date is before first date, set it to first date. 
+        if(this.checkBefore && this.compareDates({month: this.month, day: this.day, year: this.year}, this.firstDate) === CanvDTP.DATE_LESS)
+        {
+            this.month = this.firstDate.month;
+            this.day   = this.firstDate.day;
+            this.year  = this.firstDate.year;
+        }
+
+        //If the initial pick date is before first date, set it to last date. 
+        if(this.checkAfter && this.compareDates({month: this.month, day: this.day, year: this.year}, this.lastDate) === CanvDTP.DATE_GREATER)
+        {
+            this.month = this.lastDate.month;
+            this.day   = this.lastDate.day;
+            this.year  = this.lastDate.year;
+        }
+
         this.tempMonth   = this.month;
         this.tempYear    = this.year;
         this.tempDecade  = parseInt(this.year / 10)  * 10;
         this.tempCentury = parseInt(this.year / 100) * 100;
-        this.nowYear     = this.year;
-        this.nowMonth    = this.month;
-        this.nowDay      = this.day;
 
         //Indicate the month exclusions need to be calculated.
         this.updateMonth  = true;
@@ -829,14 +919,14 @@ class CanvDTP
         this.updateDayArray();
         this.monthExclude();
         
-        //Try to find the current day in the day array.
+        //Try to find the currently selected date in the current month being displayed.
         for(let i = 0; i < this.dayArray.length; i++)
         {
             if
             (
-                this.tempYear === this.nowYear &&
-                this.tempMonth === this.nowMonth &&
-                this.nowDay === this.dayArray[i].day
+                this.year  === this.dayArray[i].year &&
+                this.month === this.dayArray[i].month &&
+                this.day   === this.dayArray[i].day
             )
             {
                 todaysIndex = i;
@@ -845,7 +935,7 @@ class CanvDTP
 
         //Check if current date is blocked.
         if(todaysIndex >= 0 && this.monthSpecial[todaysIndex].excluded) todayExcluded = true;
-        
+
         //Delete the current date if no auto pick or date is blocked.
         if(!this.autoPick || todayExcluded)
         {
@@ -856,29 +946,45 @@ class CanvDTP
             this.dayOfYear  = undefined;
             this.isLeapYear = undefined;
         }
-
-        if(this.autoPick) this.isFirstPicked = true;        
-        this.textBoxDateTime();        
+        else
+        {
+            this.isFirstPicked = true;
+        }
+   
+        this.textBoxDateTime();
     }
 
     //Determines if a date object is valid. date object has keys day, month and year.
     checkValidDate(date)
     {
-        let isValid = true;
+        if(!date.hasOwnProperty("day")   || typeof date.day !== "number")   return false;
+        if(!date.hasOwnProperty("month") || typeof date.month !== "number") return false;
+        if(!date.hasOwnProperty("year")  || typeof date.year !== "number")  return false;
+        if(date.month < CanvDTP.JANUARY  || date.month > CanvDTP.DECEMBER)  return false;
 
+        if(date.day < 1) return false;
 
-
-        return isValid;
+        if(this.leapCalc(date.year))
+        {
+            if(parseInt(date.month) === CanvDTP.FEBRUARY && parseInt(date.day) === 29) return true;
+        }
+        
+        if(date.day > this.monthDaysArray[date.month - 1]) return false;
+        return true;
     }
 
     //Determines if date1 is greater than less than or equal to date2.
     compareDates(date1, date2)
     {
-        let dateStatus = CanvDTP.DATE_EQUAL;
-
-
-
-        return dateStatus;
+        if(!this.checkValidDate(date1)) return CanvDTP.DATE_1INVALID;
+        if(!this.checkValidDate(date2)) return CanvDTP.DATE_2INVALID;
+        if(date1.year > date2.year)     return CanvDTP.DATE_GREATER;
+        if(date1.year < date2.year)     return CanvDTP.DATE_LESS;
+        if(date1.month > date2.month)   return CanvDTP.DATE_GREATER;
+        if(date1.month < date2.month)   return CanvDTP.DATE_LESS;
+        if(date1.day > date2.day)       return CanvDTP.DATE_GREATER;
+        if(date1.day < date2.day)       return CanvDTP.DATE_LESS;
+        return CanvDTP.DATE_EQUAL;
     }
 
     //Calculate the day of the year.
@@ -1937,6 +2043,9 @@ class CanvDTP
     //Draw the previous button.
     drawPrevious(color)
     {
+        //Exit if at beginning of the date range.
+        if(this.firstHit) return;
+
         this.ctxDTP.beginPath();
         this.ctxDTP.strokeStyle = color;
         this.ctxDTP.fillStyle   = color;
@@ -1954,6 +2063,9 @@ class CanvDTP
     //Draw the next button.
     drawNext(color)
     {
+        //Exit if at end of the date range.
+        if(this.lastHit) return;
+
         this.ctxDTP.beginPath();
         this.ctxDTP.strokeStyle = color;
         this.ctxDTP.fillStyle   = color;
@@ -1987,8 +2099,8 @@ class CanvDTP
 
     incDraw(x1, x2, y1, y2, color, incType)
     {
-        let xPad = this.incXPad * (x2 - x1);
-        let yPad = this.incYPad * (y2 - y1);
+        let xPad      = this.incXPad * (x2 - x1);
+        let yPad      = this.incYPad * (y2 - y1);
         let incLeft   = x1 + xPad;
         let incRight  = x2 - xPad;
         let incTop    = y1 + yPad;
@@ -2099,9 +2211,17 @@ class CanvDTP
     //Highlight the hovered item.
     highlightHovItem(i)
     {
+        //Get highlighted item type.
+        this.pickedType = this.hitBounds[i].type;
+
+        //Exit if first date is hit.
+        if(this.pickedType === CanvDTP.SEL_PREVIOUS && this.firstHit) return;
+
+        //Exit if last date is hit.
+        if(this.pickedType === CanvDTP.SEL_NEXT && this.lastHit) return;
+
         //Indicate something can be picked.
         this.isPicked   = true;
-        this.pickedType = this.hitBounds[i].type;
 
         //Get additional info for days of month.
         if(i < CanvDTP.NUM_DAYS)
@@ -2150,10 +2270,7 @@ class CanvDTP
             this.ctxDTP.fill();
             this.ctxDTP.stroke();
         }
-        catch
-        {
-            //Do nothing. Just catch exception.
-        }
+        catch{ /*Do nothing. Just catch exception.*/ }
     }
 
     /*********************************** Body Canvas Functions ***********************************/
@@ -2413,6 +2530,9 @@ class CanvDTP
         let x1, x2, y1, y2;
         let hitIndex = 0;
         let index;
+        let inRange   = true;
+        this.firstHit = false;
+        this.lastHit  = false;
 
         //Hit boundaries for the days.
         for(let i = 2; i < 8; i++)
@@ -2425,8 +2545,37 @@ class CanvDTP
                 y2 = this.contentTop + (i + 1) * this.smallBoxHeight - 1;
                 this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_DAY, index: hitIndex});
 
+                //Check if the day is out of range.
+                if(this.checkBefore && this.compareDates(this.dayArray[hitIndex], this.firstDate) === CanvDTP.DATE_LESS)
+                {
+                    inRange = false;
+                }
+
+                //First day of month may be first block on calendar.
+                if(this.checkBefore && this.compareDates(this.dayArray[hitIndex], this.firstDate) === CanvDTP.DATE_EQUAL)
+                {
+                    this.firstHit = true;
+                }
+                
+                //There will always be some left over days at the end of the month.
+                if(this.checkAfter && this.compareDates(this.dayArray[hitIndex], this.lastDate) === CanvDTP.DATE_GREATER)
+                {
+                    inRange = false;
+                    if(this.tempMonth === this.lastDate.month) this.lastHit = true;
+                }
+
                 //Highlight the background of special days.
-                if(this.monthSpecial[hitIndex].isSpecial)
+                if(!inRange)
+                {
+                    this.ctxDTP.beginPath();
+                    this.ctxDTP.strokeStyle = this.rangeBkColor;           
+                    this.ctxDTP.fillStyle   = this.rangeBkColor;
+                    this.ctxDTP.lineWidth   = 1;
+                    this.ctxDTP.rect(x1, y1, x2 - x1, y2 - y1);
+                    this.ctxDTP.fill();
+                    this.ctxDTP.stroke();
+                }
+                else if(this.monthSpecial[hitIndex].isSpecial)
                 {
                     this.ctxDTP.beginPath();
                     this.ctxDTP.strokeStyle = this.monthSpecial[hitIndex].color;           
@@ -2437,6 +2586,7 @@ class CanvDTP
                     this.ctxDTP.stroke();
                 }
                 hitIndex++;
+                inRange = true;
             }
         }
 
@@ -2690,8 +2840,6 @@ class CanvDTP
 
                 this.highlightHovItem(i); //Highlight the hovered item.
 
-                let text, textHeight, textWidth, textLeft, textBottom
-
                 //Draw the highlighted text.
                 switch(this.hitBounds[i].type)
                 {
@@ -2786,6 +2934,9 @@ class CanvDTP
     
     drawYear()
     {
+        this.firstHit = false;
+        this.lastHit  = false;
+
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_GENERAL);
 
@@ -2998,6 +3149,9 @@ class CanvDTP
 
     drawDecade()
     {
+        this.firstHit = false;
+        this.lastHit  = false;
+
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_GENERAL);
 
@@ -3155,6 +3309,9 @@ class CanvDTP
 
     drawCentury()
     {
+        this.firstHit = false;
+        this.lastHit  = false;
+
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_GENERAL);
         

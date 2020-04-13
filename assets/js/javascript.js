@@ -49,10 +49,13 @@ let canDTP = new CanvDTP
         dateTimeJSONCb:   showDateTimeJSON,
         dateTimeFormat:   "dddd, MMMM Do YYYY h:mm a. DDDo [Day of the Year], Wo [Week of the Year]",
         fontStyle: "Arial Black",
-        textAltColorn: "#555555",
-        autoPick: false,
+        //autoPick: false,
+        //todaysDate: false,
         bannerScale: .70,
         yearScale: .55,
+        //initDate: { month: 3, day: 3, year: 2020 },
+        firstDate: {month: 1, day: 1, year: 2020},
+        lastDate:  {month: 12, day: 31, year: 2020},
         dayExcludeArray:
         [
             {   //Highlight, but don't exclude all weekend days.
@@ -72,7 +75,14 @@ let canDTP = new CanvDTP
                 excluded:  true,
                 color:     "#ff000030",
                 info:      "Whole month of May blocked out, weekends whitelisted"
-            }
+            },
+            // {   
+            //     days:      [22],
+            //     months:    [CanvDTP.MARCH],
+            //     excluded:  true,
+            //     color:     "#ff000030",
+            //     info:      "Excluded"
+            // }
         ],
         dayWhiteArray:
         [

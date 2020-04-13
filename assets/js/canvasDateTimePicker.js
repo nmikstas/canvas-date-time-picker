@@ -230,6 +230,9 @@ class CanvDTP
             nowColor  = "#000000",
             nowWeight = .20,
 
+            ///Out of range date colors.
+            rangeBkColor   = "#000000a0",
+
             //Increment/Decrement Parameters.
             incXPad   = .25,
             incYPad   = .10,
@@ -245,11 +248,7 @@ class CanvDTP
             timeScale     = .80, //Time view text.
             timeAmPmScale = .60, //AM/PM text.
             minuteScale   = .80, //Minute view text.
-            hourScale     = .80, //Hour view text.
-
-            ///Out of range date colors.
-            rangeTextColor = "#ff0000",
-            rangeBkColor   = "#000000a0"
+            hourScale     = .80  //Hour view text.
         } = {}
     )
     {
@@ -336,7 +335,6 @@ class CanvDTP
         this.infoPadding         = infoPadding;
         this.infoWidth           = infoWidth;
         this.infoBorderRadius    = infoBorderRadius;
-        this.rangeTextColor      = rangeTextColor;
         this.rangeBkColor        = rangeBkColor;
 
         /***************************** Rendering Dimension Variables *****************************/
@@ -1650,6 +1648,7 @@ class CanvDTP
                 month:     CanvDTP.JANUARY + i,
                 year:      this.tempYear,
                 isSpecial: false,
+                excluded:  false,
                 color:     "transparent",
                 info:      [],
                 whitelist: CanvDTP.WHITE_NONE
@@ -2526,11 +2525,11 @@ class CanvDTP
 
         //Create an array of hit boundaries for the various buttons.
         //Each element has 4 points representing the upper left and lower right corners.
+        let inRange = true;
         this.hitBounds = [];
         let x1, x2, y1, y2;
         let hitIndex = 0;
         let index;
-        let inRange   = true;
         this.firstHit = false;
         this.lastHit  = false;
 
@@ -2546,7 +2545,7 @@ class CanvDTP
                 this.hitBounds.push({x1: x1, y1: y1, x2: x2, y2: y2, type: CanvDTP.SEL_DAY, index: hitIndex});
 
                 //Check if the day is out of range.
-                if(this.checkBefore && this.compareDates(this.dayArray[hitIndex], this.firstDate) === CanvDTP.DATE_LESS)
+                if(this.checkBefore && this.compareDates(this.dayArray[hitIndex], this.firstDate) === CanvDTP.DATE_LESS) 
                 {
                     inRange = false;
                 }
@@ -2558,24 +2557,22 @@ class CanvDTP
                 }
                 
                 //There will always be some left over days at the end of the month.
-                if(this.checkAfter && this.compareDates(this.dayArray[hitIndex], this.lastDate) === CanvDTP.DATE_GREATER)
+                if(this.checkAfter && this.compareDates(this.dayArray[hitIndex], this.lastDate) === CanvDTP.DATE_GREATER) 
                 {
-                    inRange = false;
                     if(this.tempMonth === this.lastDate.month) this.lastHit = true;
+                    inRange = false;
                 }
 
-                //Highlight the background of special days.
                 if(!inRange)
                 {
-                    this.ctxDTP.beginPath();
-                    this.ctxDTP.strokeStyle = this.rangeBkColor;           
-                    this.ctxDTP.fillStyle   = this.rangeBkColor;
-                    this.ctxDTP.lineWidth   = 1;
-                    this.ctxDTP.rect(x1, y1, x2 - x1, y2 - y1);
-                    this.ctxDTP.fill();
-                    this.ctxDTP.stroke();
+                    this.monthSpecial[hitIndex].isSpecial = true;
+                    this.monthSpecial[hitIndex].excluded = true;
+                    this.monthSpecial[hitIndex].info = [];
+                    this.monthSpecial[hitIndex].color = this.rangeBkColor;
+                    this.monthSpecial[hitIndex].color = this.rangeBkColor;
                 }
-                else if(this.monthSpecial[hitIndex].isSpecial)
+
+                if(this.monthSpecial[hitIndex].isSpecial)
                 {
                     this.ctxDTP.beginPath();
                     this.ctxDTP.strokeStyle = this.monthSpecial[hitIndex].color;           
@@ -2602,7 +2599,6 @@ class CanvDTP
             let isToday    = false;
             let calcMonth, calcYear;
 
-            //Highlight the currently selected day.
             switch(this.dayArray[i].type)
             {
                 //Check for day before this month.
@@ -2812,8 +2808,7 @@ class CanvDTP
                 //Do special stuff for special days.
                 if(this.hitBounds[i].hasOwnProperty("index") && this.monthSpecial[this.hitBounds[i].index].isSpecial) 
                 {
-                    
-                    if(this.monthSpecial[this.hitBounds[i].index].hasOwnProperty("info"))
+                    if(this.monthSpecial[this.hitBounds[i].index].info.length)
                     {
                         let text = "";
                         this.calcInfoTextPos(this.hitBounds[i])
@@ -2833,7 +2828,7 @@ class CanvDTP
                         this.infoText.innerHTML = text;
                         infoFound = true;
                     }
-
+                
                     //If the day is excluded, stop here to prevent highlighting.
                     if(this.monthSpecial[this.hitBounds[i].index].excluded) continue;
                 }
@@ -2936,6 +2931,9 @@ class CanvDTP
     {
         this.firstHit = false;
         this.lastHit  = false;
+        let inRange   = true;
+        let first;
+        let last;
 
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_GENERAL);
@@ -2951,13 +2949,58 @@ class CanvDTP
         this.hitBounds = [];
         this.doCommonHitBounds(true, true, CanvDTP.SEL_MONTH);
 
-        //Highlight the background of special days.
+        //Get first date and set day of month to is min value.
+        if(this.checkBefore)
+        {
+            first = {...this.firstDate};
+            first.day = 1;
+        }
+        
+        //Get last date and set day of month to its max value.
+        if(this.checkAfter)
+        {
+            last = {...this.lastDate};
+            last.day = this.monthDaysArray[last.month - 1];
+            if(this.leapCalc(last.year) && (last.month === CanvDTP.FEBRUARY)) last.day = 29;
+        }
+
+        //Highlight the background of special months.
         for(let i = 0; i < 12; i++)
         {
             let x1 = this.hitBounds[i].x1;
             let x2 = this.hitBounds[i].x2;
             let y1 = this.hitBounds[i].y1;
             let y2 = this.hitBounds[i].y2;
+
+            //Disable previous button if necessary.
+            if(this.checkBefore && this.compareDates({month: i + 1, day: first.day, year: this.tempYear}, first) === CanvDTP.DATE_EQUAL) 
+            {
+                this.firstHit = true;
+            }
+            //Blackout month if neccessary.
+            if(this.checkBefore && this.compareDates({month: i + 1, day: first.day, year: this.tempYear}, first) === CanvDTP.DATE_LESS) 
+            {
+                inRange = false;
+            }
+            //Disable next button if necessary.
+            if(this.checkAfter && this.compareDates({month: i + 1, day: last.day, year: this.tempYear}, last) === CanvDTP.DATE_EQUAL) 
+            {
+                this.lastHit = true;
+            }
+            //Blackout month if neccessary.
+            if(this.checkAfter && this.compareDates({month: i + 1, day: last.day, year: this.tempYear}, last) === CanvDTP.DATE_GREATER) 
+            {
+                inRange = false;
+            }
+
+            if(!inRange)
+            {
+                this.yearSpecial[i].isSpecial = true;
+                this.yearSpecial[i].excluded = true;
+                this.yearSpecial[i].info = [];
+                this.yearSpecial[i].color = this.rangeBkColor;
+                this.yearSpecial[i].color = this.rangeBkColor;
+            }
 
             if(this.yearSpecial[i].isSpecial)
             {
@@ -2969,6 +3012,7 @@ class CanvDTP
                 this.ctxDTP.fill();
                 this.ctxDTP.stroke();
             }
+            inRange = true;
         }
 
         //Draw the months.
@@ -3039,11 +3083,11 @@ class CanvDTP
                 this.bodyY <= this.hitBounds[i].y2
             )
             {
-                //Do special stuff for special days.
+                //Do special stuff for special months.
                 if(i < 12 && this.yearSpecial[i].isSpecial) 
                 {
                     
-                    if(this.yearSpecial[i].hasOwnProperty("info"))
+                    if(this.yearSpecial[i].info.length)
                     {
                         let text = "";
                         this.calcInfoTextPos(this.hitBounds[i])
@@ -3063,6 +3107,9 @@ class CanvDTP
                         this.infoText.innerHTML = text;
                         infoFound = true;
                     }
+
+                    //If the month is excluded, stop here to prevent highlighting.
+                    if(this.yearSpecial[i].excluded) continue;
                 }
 
                 this.highlightHovItem(i); //Highlight the hovered item.
@@ -4230,6 +4277,7 @@ class CanvDTP
                             case CanvDTP.SEL_VIEW:
                                 this.calView = CanvDTP.CAL_YEAR;
                                 document.body.style.cursor = "default";
+                                this.updateYear = true;
                                 this.bodyDraw();
                                 break;
                         }
@@ -4268,6 +4316,7 @@ class CanvDTP
                             case CanvDTP.SEL_VIEW:
                                 this.calView = CanvDTP.CAL_DECADE;
                                 document.body.style.cursor = "default";
+                                this.updateDecade = true;
                                 this.bodyDraw();
                                 break;
                         }

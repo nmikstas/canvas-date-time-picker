@@ -54,14 +54,14 @@ let canDTP = new CanvDTP
         bannerScale: .70,
         yearScale: .55,
         //initDate: { month: 3, day: 3, year: 2020 },
-        firstDate: {month: 1, day: 1, year: 2020},
-        lastDate:  {month: 12, day: 31, year: 2020},
+        firstDate: {month: 2, day: 2, year: 2020},
+        lastDate:  {month: 11, day: 29, year: 2020},
         dayExcludeArray:
         [
             {   //Highlight, but don't exclude all weekend days.
                 daysOfWeek: [CanvDTP.SATURDAY, CanvDTP.SUNDAY],
                 color:     "#0000ff30",
-                info:      "Weekend"
+                //info:      "Weekend"
             },
             {   //Highlight April 2nd, 2020.
                 days:      [2],

@@ -54,7 +54,7 @@ let canDTP = new CanvDTP
         bannerScale: .70,
         yearScale: .55,
         //initDate: { month: 3, day: 3, year: 2020 },
-        firstDate: {month: 2, day: 2, year: 2001},
+        firstDate: {month: 2, day: 2, year: 1989},
         lastDate:  {month: 11, day: 29, year: 2029},
         dayExcludeArray:
         [

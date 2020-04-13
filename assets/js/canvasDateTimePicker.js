@@ -2625,7 +2625,6 @@ class CanvDTP
                     this.monthSpecial[hitIndex].excluded = true;
                     this.monthSpecial[hitIndex].info = [];
                     this.monthSpecial[hitIndex].color = this.rangeBkColor;
-                    this.monthSpecial[hitIndex].color = this.rangeBkColor;
                 }
 
                 if(this.monthSpecial[hitIndex].isSpecial)
@@ -3055,7 +3054,6 @@ class CanvDTP
                 this.yearSpecial[i].excluded = true;
                 this.yearSpecial[i].info = [];
                 this.yearSpecial[i].color = this.rangeBkColor;
-                this.yearSpecial[i].color = this.rangeBkColor;
             }
 
             if(this.yearSpecial[i].isSpecial)
@@ -3324,7 +3322,6 @@ class CanvDTP
                 this.decadeSpecial[i].excluded = true;
                 this.decadeSpecial[i].info = [];
                 this.decadeSpecial[i].color = this.rangeBkColor;
-                this.decadeSpecial[i].color = this.rangeBkColor;
             }
 
             if(this.decadeSpecial[i].isSpecial)
@@ -3520,8 +3517,13 @@ class CanvDTP
 
     drawCentury()
     {
-        this.firstHit = false;
-        this.lastHit  = false;
+        this.firstHit   = false;
+        this.lastHit    = false;
+        let centuryBase = parseInt(this.tempYear / 100) * 100 - 1;
+        let thisDecade  = parseInt(this.year / 10) * 10;
+        let inRange     = true;
+        let first;
+        let last;
 
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_GENERAL);
@@ -3530,9 +3532,84 @@ class CanvDTP
         this.hitBounds = [];
         this.doCommonHitBounds(true, false, CanvDTP.SEL_DECADE);
 
-        let centuryBase = parseInt(this.tempYear / 100) * 100 - 1;
-        let thisDecade = parseInt(this.year / 10) * 10;
-        
+        //Create an array of potentially excluded decades.
+        let decadeExclude = new Array(12);
+        for(let i = 0; i < 12; i++)
+        {
+            decadeExclude[i] =
+            {
+                excluded:  false,
+                color:     "transparent",
+                year: centuryBase - 10 + 10 * i + 1
+            }
+        }
+
+        //Get first date and set it to first day of the year.
+        if(this.checkBefore)
+        {
+            first       = {...this.firstDate};
+            first.day   = 1;
+            first.month = 1;
+            first.year  = parseInt(first.year / 10) * 10;
+        }
+
+        //Get last date and set it to the last day of the year.
+        if(this.checkAfter)
+        {
+            last       = {...this.lastDate};
+            last.day   = 31;
+            last.month = 12;
+            last.year  = parseInt(last.year / 10) * 10;
+        }
+
+        //Highlight the background of special months.
+        for(let i = 0; i < 12; i++)
+        {
+            let x1 = this.hitBounds[i].x1;
+            let x2 = this.hitBounds[i].x2;
+            let y1 = this.hitBounds[i].y1;
+            let y2 = this.hitBounds[i].y2;
+
+            //Disable previous button if necessary.
+            if(this.checkBefore && this.compareDates({month: first.month, day: first.day, year: decadeExclude[i].year}, first) === CanvDTP.DATE_EQUAL) 
+            {
+                this.firstHit = true;
+            }
+            //Blackout year if neccessary.
+            if(this.checkBefore && this.compareDates({month: first.month, day: first.day, year: decadeExclude[i].year}, first) === CanvDTP.DATE_LESS) 
+            {
+                inRange = false;
+            }
+            //Disable next button if necessary.
+            if(this.checkAfter && this.compareDates({month: last.month, day: last.day, year: decadeExclude[i].year}, last) === CanvDTP.DATE_EQUAL) 
+            {
+                this.lastHit = true;
+            }
+            //Blackout month if neccessary.
+            if(this.checkAfter && this.compareDates({month: last.month, day: last.day, year: decadeExclude[i].year}, last) === CanvDTP.DATE_GREATER) 
+            {
+                inRange = false;
+            }
+
+            if(!inRange)
+            {
+                decadeExclude[i].excluded = true;
+                decadeExclude[i].color = this.rangeBkColor;
+            }
+
+            if(decadeExclude[i].excluded)
+            {
+                this.ctxDTP.beginPath();
+                this.ctxDTP.strokeStyle = decadeExclude[i].color;           
+                this.ctxDTP.fillStyle   = decadeExclude[i].color;
+                this.ctxDTP.lineWidth   = 1;
+                this.ctxDTP.rect(x1, y1, x2 - x1, y2 - y1);
+                this.ctxDTP.fill();
+                this.ctxDTP.stroke();
+            }
+            inRange = true;
+        }
+
         //Draw the decades.
         for(let i = 0; i < 12; i++)
         {
@@ -3616,6 +3693,9 @@ class CanvDTP
                 this.bodyY <= this.hitBounds[i].y2
             )
             {
+                //If the decade is excluded, stop here to prevent highlighting.
+                if(i < 12 && decadeExclude[i].excluded) continue;
+
                 this.highlightHovItem(i); //Highlight the hovered item.
 
                 //Get additional info for days of month.

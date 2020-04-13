@@ -33,7 +33,7 @@ Last updated: 4/13/2020.
 - Enable/disable auto pick on picker first time open. ***Done***
 - Set initial date (other than current date) on picker first time open. ***Done***
 - Enable/disable today's date indicator. ***Done***
-- Minimum and maximum date ranges.
+- Minimum and maximum date ranges. ***Done***
 - Textbox click opens calendar.
 - Enable/disable individual views.
 - Enable/disable calendar icon (bring up picker when text box clicked).

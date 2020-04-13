@@ -479,7 +479,7 @@ class CanvDTP
         this.updateYear  = false;
 
         //Array of highlighted years for the currently selected decade.
-        this.decadeSpecial = new Array(10);
+        this.decadeSpecial = new Array(12);
         this.updateDecade  = false;
 
         //Calendar drawing and hit detection variables.
@@ -1584,28 +1584,85 @@ class CanvDTP
 
     /******************************** Decade Spotlight Functions *********************************/
 
-    decadeSpotlightYear()
+    decadeSpotlightYear(yearObj, spotlightObj)
     {
-        
+        if(!spotlightObj.hasOwnProperty("years") || !spotlightObj.years.length)
+        {
+            return true;
+        }
+        else
+        {
+            for(let i = 0; i < spotlightObj.years.length; i++)
+            {
+                if(yearObj.year === spotlightObj.years[i]) return true;
+            }
+        }
+        return false;
     }
 
-    decadeSpotlight()
+    decadeSpotlight(yearBase)
     {
+        //Loop through every year of the yearArray to insert whitelist markers.
+        for(let i = 0; i < 12; i++)
+        {
+            //Create a placeholder object.
+            this.decadeSpecial[i] =
+            {
+                year:      yearBase + i,
+                isSpecial: false,
+                excluded:  false,
+                color:     "transparent",
+                info:      [],
+                whitelist: CanvDTP.WHITE_NONE
+            }
 
+            let hit = false;
+            
+            //Loop through the whitelist array looking for years that align with the current decade view.
+            for(let j = 0; j < this.yearWhiteArray.length; j++)
+            {
+                hit = this.decadeSpotlightYear(this.decadeSpecial[i], this.yearWhiteArray[j]);
 
+                //Update the element in the yearSpecial array.
+                if(hit)
+                {
+                    this.decadeSpecial[i].whitelist = CanvDTP.WHITE_SPTLT;
+                }
+            }
+        }
 
+        //Loop through every year of the decade Array to find spotlights.
+        for(let i = 0; i < this.decadeSpecial.length; i++)
+        {
+            let hit = false;
 
-
-
-
-
+            //Loop through the spotlights array looking for years that align with the current decade view.
+            for(let j = 0; j < this.yearSpotlightArray.length; j++)
+            {
+                hit = this.decadeSpotlightYear(this.decadeSpecial[i], this.yearSpotlightArray[j]);
+               
+                //Update the element in the yearSpecial array.
+                if(hit)
+                {
+                    //Exit if this element is whitelisted.
+                    if(this.decadeSpecial[i].whitelist === CanvDTP.WHITE_SPTLT) continue;
+                    this.decadeSpecial[i].isSpecial = true;                    
+                    this.decadeSpecial[i].color = this.yearSpotlightArray[j].color;
+                
+                    //Append any info for this month.
+                    if(this.yearSpotlightArray[j].info)
+                    {
+                        this.decadeSpecial[i].info.push(this.yearSpotlightArray[j].info);
+                    }
+                }
+            }
+        }
     }
 
     /********************************* Year Spotlight Functions **********************************/
 
     yearSpotlightYear(monthObj, spotlightObj)
     {
-        let hit = false;
         if(!spotlightObj.hasOwnProperty("years") || !spotlightObj.years.length)
         {
             return true;
@@ -1617,7 +1674,7 @@ class CanvDTP
                 if(monthObj.year === spotlightObj.years[i]) return true;
             }
         }
-        return hit;
+        return false;
     }
 
     yearSpotlightMonth(monthObj, spotlightObj)
@@ -1656,7 +1713,7 @@ class CanvDTP
 
             let hit = false;
 
-            //Loop through the exclusion array looking for months that align with the current month view.
+            //Loop through the whitelist array looking for months that align with the current year view.
             for(let j = 0; j < this.monthWhiteArray.length; j++)
             {
                 hit = this.yearSpotlightMonth({month: CanvDTP.JANUARY + i,  year: this.tempYear}, this.monthWhiteArray[j]);
@@ -1669,12 +1726,12 @@ class CanvDTP
             }
         }
 
-        //Loop through every day of the dayArray to find exclusions.
+        //Loop through every month of the year Array to find spotlights.
         for(let i = 0; i < this.yearSpecial.length; i++)
         {
             let hit = false;
 
-            //Loop through the exclusion array looking for days that align with the current month view.
+            //Loop through the spotlights array looking for months that align with the current year view.
             for(let j = 0; j < this.monthSpotlightArray.length; j++)
             {
                 hit = this.yearSpotlightMonth(this.yearSpecial[i], this.monthSpotlightArray[j]);
@@ -1701,7 +1758,6 @@ class CanvDTP
 
     monthExcludeYear(dayObj, excludeObj)
     {
-        let hit = false;
         if(!excludeObj.hasOwnProperty("years") || !excludeObj.years.length)
         {
             return true;
@@ -1713,7 +1769,7 @@ class CanvDTP
                 if(dayObj.year === excludeObj.years[i]) return true;
             }
         }
-        return hit;
+        return false;
     }
 
     monthExcludeMonth(dayObj, excludeObj)
@@ -3198,6 +3254,10 @@ class CanvDTP
     {
         this.firstHit = false;
         this.lastHit  = false;
+        let inRange   = true;
+        let yearBase  = parseInt(this.tempYear / 10) * 10 - 1;
+        let first;
+        let last;
 
         //Draw a grid on the canvas. For debugging purposes.
         if(this.debug) this.gridDraw(CanvDTP.GRID_GENERAL);
@@ -3206,15 +3266,80 @@ class CanvDTP
         if(this.updateDecade)
         {
             this.updateDecade = false;
-            this.decadeSpotlight();
+            this.decadeSpotlight(yearBase);
         }
         
         //Do hit bounds for previous, next, time and the banner.
         this.hitBounds = [];
         this.doCommonHitBounds(true, true, CanvDTP.SEL_YEAR);
 
-        let yearBase = parseInt(this.tempYear / 10) * 10 - 1;
+        //Get first date and set it to first day of the year.
+        if(this.checkBefore)
+        {
+            first = {...this.firstDate};
+            first.day = 1;
+            first.month = 1;
+        }
 
+        //Get last date and set it to the last day of the year.
+        if(this.checkAfter)
+        {
+            last = {...this.lastDate};
+            last.day = 31;
+            last.month = 12;
+        }
+
+        //Highlight the background of special months.
+        for(let i = 0; i < 12; i++)
+        {
+            let x1 = this.hitBounds[i].x1;
+            let x2 = this.hitBounds[i].x2;
+            let y1 = this.hitBounds[i].y1;
+            let y2 = this.hitBounds[i].y2;
+
+            //Disable previous button if necessary.
+            if(this.checkBefore && this.compareDates({month: first.month, day: first.day, year: this.decadeSpecial[i].year}, first) === CanvDTP.DATE_EQUAL) 
+            {
+                this.firstHit = true;
+            }
+            //Blackout year if neccessary.
+            if(this.checkBefore && this.compareDates({month: first.month, day: first.day, year: this.decadeSpecial[i].year}, first) === CanvDTP.DATE_LESS) 
+            {
+                inRange = false;
+            }
+            //Disable next button if necessary.
+            if(this.checkAfter && this.compareDates({month: last.month, day: last.day, year: this.decadeSpecial[i].year}, last) === CanvDTP.DATE_EQUAL) 
+            {
+                this.lastHit = true;
+            }
+            //Blackout month if neccessary.
+            if(this.checkAfter && this.compareDates({month: last.month, day: last.day, year: this.decadeSpecial[i].year}, last) === CanvDTP.DATE_GREATER) 
+            {
+                inRange = false;
+            }
+
+            if(!inRange)
+            {
+                this.decadeSpecial[i].isSpecial = true;
+                this.decadeSpecial[i].excluded = true;
+                this.decadeSpecial[i].info = [];
+                this.decadeSpecial[i].color = this.rangeBkColor;
+                this.decadeSpecial[i].color = this.rangeBkColor;
+            }
+
+            if(this.decadeSpecial[i].isSpecial)
+            {
+                this.ctxDTP.beginPath();
+                this.ctxDTP.strokeStyle = this.decadeSpecial[i].color;           
+                this.ctxDTP.fillStyle   = this.decadeSpecial[i].color;
+                this.ctxDTP.lineWidth   = 1;
+                this.ctxDTP.rect(x1, y1, x2 - x1, y2 - y1);
+                this.ctxDTP.fill();
+                this.ctxDTP.stroke();
+            }
+            inRange = true;
+        }
+        
         //Draw the years.
         for(let i = 0; i < 12; i++)
         {
@@ -3270,6 +3395,9 @@ class CanvDTP
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
 
+        //Indicate if any info text was found.
+        let infoFound = false;
+        
         for(let i = 0; i < this.hitBounds.length; i++)
         {
             if
@@ -3280,6 +3408,35 @@ class CanvDTP
                 this.bodyY <= this.hitBounds[i].y2
             )
             {
+                //Do special stuff for special years.
+                if(i < 12 && this.decadeSpecial[i].isSpecial) 
+                {
+                    
+                    if(this.decadeSpecial[i].info.length)
+                    {
+                        let text = "";
+                        this.calcInfoTextPos(this.hitBounds[i])
+                        this.infoText.style.visibility = "visible";
+                        this.infoPoint.style.visibility = "visible";
+
+                        //Print all the info text with comma separations.
+                        for(let j = 0; j < this.decadeSpecial[i].info.length; j++)
+                        {
+                            text += this.decadeSpecial[i].info[j];
+                            if(j < this.decadeSpecial[i].info.length - 1)
+                            {
+                                text += ", ";
+                            }
+                        }
+
+                        this.infoText.innerHTML = text;
+                        infoFound = true;
+                    }
+
+                    //If the month is excluded, stop here to prevent highlighting.
+                    if(this.decadeSpecial[i].excluded) continue;
+                }
+
                 this.highlightHovItem(i); //Highlight the hovered item.
 
                 //Get additional info for days of month.
@@ -3346,6 +3503,13 @@ class CanvDTP
                         break;
                 }
             }
+        }
+
+        //Make sure the info text box is not visible when nothing selected.
+        if(!infoFound)
+        {
+            this.infoText.style.visibility = "hidden"
+            this.infoPoint.style.visibility = "hidden"
         }
 
         //Change pointer if hovering over selectable item.

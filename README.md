@@ -28,13 +28,13 @@ Last updated: 4/13/2020.
 - Whitelist for blocked/spotlight days in the month view. ***Done***
 - spotlight months in the year view. ***Done***
 - Whitelist for spotlight months in the year view. ***Done***
+- spotlight years in the decade view. ***Done***
+- Whitelist for spotlight years in the decade view. ***Done***
 - Enable/disable auto pick on picker first time open. ***Done***
 - Set initial date (other than current date) on picker first time open. ***Done***
 - Enable/disable today's date indicator. ***Done***
 - Minimum and maximum date ranges.
 - Textbox click opens calendar.
-- spotlight years in the decade view.
-- Whitelist for spotlight years in the decade view.
 - Enable/disable individual views.
 - Enable/disable calendar icon (bring up picker when text box clicked).
 - Enable/disable picker always open.

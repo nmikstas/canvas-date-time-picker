@@ -54,8 +54,8 @@ let canDTP = new CanvDTP
         bannerScale: .70,
         yearScale: .55,
         //initDate: { month: 3, day: 3, year: 2020 },
-        firstDate: {month: 2, day: 2, year: 2020},
-        lastDate:  {month: 11, day: 29, year: 2020},
+        firstDate: {month: 2, day: 2, year: 2001},
+        lastDate:  {month: 11, day: 29, year: 2029},
         dayExcludeArray:
         [
             {   //Highlight, but don't exclude all weekend days.
@@ -111,6 +111,25 @@ let canDTP = new CanvDTP
             {   //Whitelist February 2100.
                 years:  [2100],
                 months: [CanvDTP.FEBRUARY]
+            }
+        ],
+        yearSpotlightArray:
+        [
+            {
+                years: [2000, 2005, 2010, 2020],
+                color: "#00ffff50",
+                info:  "Start of decade"
+            },
+            {
+                years: [2002, 2004, 2005, 2006, 2008, 2010],
+                color: "#ff00ff50",
+                info:  "Even year"
+            },
+        ],
+        yearWhiteArray:
+        [
+            {
+                years:  [2005]
             }
         ],
         monthImages:

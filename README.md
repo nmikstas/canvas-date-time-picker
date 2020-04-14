@@ -37,17 +37,12 @@ Last updated: 4/13/2020.
 - Enable/disable individual views. ***Done***
 - Enable/disable calendar icon. ***Done***
 - Textbox click opens calendar. ***Done***
+- Picker relative position to textbox (left, right, top, bottom). ***Done***
+- Enable/disable picker always open.
 - Date picker only.
 - Time picker only.
-- Enable/disable picker always open.
 - API configuration calls.
 - Event listeners.
-
-## __Things that might be added:__
-- Enable/disable text input.
-- Picker relative position to textbox (left, right, top, bottom).
-- Seperate format strings for user input and event listener/get functions output.
-- Color gradient options to all background colored objects.
 
 # __These are some quick notes on the functionality of the date/time fomat string:__  
 M    = No zero pad month.       ***Can append ordinal***  

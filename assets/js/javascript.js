@@ -53,6 +53,8 @@ let canDTP = new CanvDTP
         //todaysDate: false,
         bannerScale: .70,
         yearScale: .55,
+        bodyPosition: CanvDTP.POS_TOPRIGHT,
+        //maxPixelWidth: 200,
         //calendarIcon: false,
         //topView: CanvDTP.CAL_MONTH,
         //initDate: { month: 3, day: 3, year: 2020 },
@@ -75,7 +77,7 @@ let canDTP = new CanvDTP
             {   //Exclude the whole month of May in every year.
                 months:    [CanvDTP.MAY],
                 excluded:  true,
-                color:     "#ff000030",
+                color:     "#800000",
                 info:      "Whole month of May blocked out, weekends whitelisted"
             },
             // {   

@@ -109,6 +109,12 @@ class CanvDTP
     static get DATE_1INVALID() {return 0x03}
     static get DATE_2INVALID() {return 0x04}
 
+    //Bosy canvas position relative to the textbox.
+    static get POS_BOTLEFT()  {return 0x00}
+    static get POS_BOTRIGHT() {return 0x01}
+    static get POS_TOPLEFT()  {return 0x02}
+    static get POS_TOPRIGHT() {return 0x03}
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //                                        Constructor                                        //
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -157,6 +163,7 @@ class CanvDTP
             todaysDate   = true,                //Enable today's date marker on calendar.
             topView      = CanvDTP.CAL_CENTURY, //Top view is the century view. 
             calendarIcon = true,                //Enable the calendar icon next to the textbox.
+            bodyPosition = CanvDTP.POS_BOTLEFT, //Position of body canvas with respect to the textbox.
 
             /****************************** Icon Canvas Parameters *******************************/
 
@@ -282,6 +289,7 @@ class CanvDTP
         this.autoPick            = autoPick,
         this.todaysDate          = todaysDate,
         this.calendarIcon        = calendarIcon,
+        this.bodyPosition        = bodyPosition,
         this.iBorderRadius       = iBorderRadius;
         this.iBorderWeight       = iBorderWeight;
         this.iXPadding           = iXPadding;
@@ -528,7 +536,6 @@ class CanvDTP
         //Only create an icon canvas if it is enabled.
         if(this.calendarIcon) this.iconCanvas = document.createElement("canvas");
         
-        
         //Setup initial styling of the info text.
         this.infoParent.style.position      = "absolute";
         this.infoParent.style.textAlign     = "center";
@@ -625,19 +632,12 @@ class CanvDTP
             this.dtpText.style.width = rect.width + "px";
         }
         
-        
         //Save a copy of the canvas widths. Base for future calculations.
         this.bodyCanMaxWidth = rect.width;
         this.iconCanWidth = rect.height;
 
         //Set the animation step size for the body canvas.
         this.bodyAnimStep = this.bodyCanMaxWidth / this.animSteps;
-
-        //Place the main date/time picker canvas below the text area.
-        this.bodyCanvas.style.left = "0px";
-        this.bodyCanvas.style.top = "0px";
-        this.canParent.style.left = "0px";
-        this.canParent.style.top = rect.height + "px";
 
         //Maximize the canvas size if it is open.
         if(this.bodyCanAnim === CanvDTP.BODY_OPEN)
@@ -653,11 +653,40 @@ class CanvDTP
         }
 
         //Make the date/time picker a square.
-        this.bodyCanvas.width  = this.bodyCanWidth;
-        this.bodyCanvas.height = this.bodyCanWidth;
-        this.canParent.style.width   = "" + this.bodyCanWidth + "px";
-        this.canParent.style.height  = "" + this.bodyCanWidth + "px";
+        this.bodyCanvas.width       = this.bodyCanWidth;
+        this.bodyCanvas.height      = this.bodyCanWidth;
+        this.canParent.style.width  = "" + this.bodyCanWidth + "px";
+        this.canParent.style.height = "" + this.bodyCanWidth + "px";
+
+        this.bodyCanvas.style.left = "0px";
+        this.bodyCanvas.style.top  = "0px";
+
+        let leftPos = rect.width - this.bodyCanWidth;
         
+        //Place the main date/time picker in the proper location.
+        switch(this.bodyPosition)
+        {
+            case CanvDTP.POS_TOPLEFT:
+                this.canParent.style.left = "0px";
+                this.canParent.style.bottom  = rect.height + "px";
+                break;
+
+            case CanvDTP.POS_TOPRIGHT:
+                this.canParent.style.left = leftPos + "px";
+                this.canParent.style.bottom  = rect.height + "px";
+                break
+                
+            case CanvDTP.POS_BOTRIGHT:
+                this.canParent.style.left = leftPos + "px";
+                this.canParent.style.top  = rect.height + "px";
+                break;
+
+            default:
+                this.canParent.style.left = "0px";
+                this.canParent.style.top  = rect.height + "px";
+                break;
+        }
+
         //Place the calendar icon to the right of the text box.
         if(this.calendarIcon)
         {

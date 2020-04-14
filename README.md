@@ -34,14 +34,14 @@ Last updated: 4/13/2020.
 - Set initial date (other than current date) on picker first time open. ***Done***
 - Enable/disable today's date indicator. ***Done***
 - Minimum and maximum date ranges. ***Done***
+- Enable/disable individual views. ***Done***
+- Enable/disable calendar icon.
 - Textbox click opens calendar.
-- Enable/disable individual views.
-- Enable/disable calendar icon (bring up picker when text box clicked).
-- Enable/disable picker always open.
 - Date picker only.
 - Time picker only.
+- Enable/disable picker always open.
 - API configuration calls.
-- Open, close, event listeners.
+- Event listeners.
 
 ## __Things that might be added:__
 - Enable/disable text input.

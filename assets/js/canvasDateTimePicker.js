@@ -119,44 +119,43 @@ class CanvDTP
         {
             /***************************** Configuration Parameters ******************************/
 
-            debug = false,                //Enable/disable debug.
+            debug = false,                    //Enable/disable debug.
 
-            dateTimeStringCb = null,      //Callback function - returns selected time string.
-            dateTimeJSONCb   = null,      //Callback function - returns selected time JSON object.
+            dateTimeStringCb = null,          //Callback function - returns selected time string.
+            dateTimeJSONCb   = null,          //Callback function - returns selected time JSON object.
 
-            dateTimeFormat = null,        //Enable date and/or time and set the string format.
+            dateTimeFormat = null,            //Enable date and/or time and set the string format.
 
-            isDate = true,                //Enable date picker.
-            isTime = true,                //Enable time picker.
+            isDate = true,                    //Enable date picker.
+            isTime = true,                    //Enable time picker.
 
-            isAnimated = true,            //Enable/disable open/close animation.
-            maxPixelWidth = null,         //Maximum width in pixels of the body canvas.
-            startOfWeek = CanvDTP.SUNDAY, //Sets which day the week starts on.
-            isMilitaryTime = false,       //Select time format.
+            isAnimated = true,                //Enable/disable open/close animation.
+            maxPixelWidth = null,             //Maximum width in pixels of the body canvas.
+            startOfWeek = CanvDTP.SUNDAY,     //Sets which day the week starts on.
+            isMilitaryTime = false,           //Select time format.
             
-            dayExcludeArray = [],         //Array of excluded months, days, years in the month view.
-            dayWhiteArray   = [],         //Array of whitelist months, days, years in the month view.
+            dayExcludeArray = [],             //Array of excluded months, days, years in the month view.
+            dayWhiteArray   = [],             //Array of whitelist months, days, years in the month view.
+            monthSpotlightArray = [],         //Array of spotlighted months in the year view.
+            monthWhiteArray     = [],         //Array of whitelist months, in the year view.
+            yearSpotlightArray = [],          //Array of spotlighted years in the decade view.
+            yearWhiteArray     = [],          //Array of whitelist years, in the decade view.
 
-            monthSpotlightArray = [],     //Array of spotlighted months in the year view.
-            monthWhiteArray     = [],     //Array of whitelist months, in the year view.
+            fontStyle      = "Arial",         //The font to use for all the text.
+            textMainColorn = "#000000",       //The primary color for non-hovered items.
+            textMainColorh = "#ffffff",       //The primary color for hovered items.
+            textAltColorn  = "#888888",       //The alternate for non-hovered items.
+            textAltColorh  = "#ff8888",       //The alternate for hovered items.
 
-            yearSpotlightArray = [],      //Array of spotlighted years in the decade view.
-            yearWhiteArray     = [],      //Array of whitelist years, in the decade view.
+            monthImages = [],                 //Optional images to display in the month view.
 
-            fontStyle      = "Arial",     //The font to use for all the text.
-            textMainColorn = "#000000",   //The primary color for non-hovered items.
-            textMainColorh = "#ffffff",   //The primary color for hovered items.
-            textAltColorn  = "#888888",   //The alternate for non-hovered items.
-            textAltColorh  = "#ff8888",   //The alternate for hovered items.
+            initDate  = null,                 //Date to use on first pick when picker opened.
+            firstDate = null,                 //Earliest date available to user.
+            lastDate  = null,                 //Latest date available to user.
+            autoPick  = true,                 //Enable automatic date pick when picker opened.
 
-            monthImages = [],             //Optional images to display in the month view.
-
-            initDate  = null,             //Date to use on first pick when picker opened.
-            firstDate = null,             //Earliest date available to user.
-            lastDate  = null,             //Latest date available to user.
-            autoPick  = true,             //Enable automatic date pick when picker opened.
-
-            todaysDate = true,            //Enable today's date marker on calendar. 
+            todaysDate = true,                //Enable today's date marker on calendar.
+            topView    = CanvDTP.CAL_CENTURY, //Top view is the century view. 
 
             /****************************** Icon Canvas Parameters *******************************/
 
@@ -268,6 +267,7 @@ class CanvDTP
         this.maxPixelWidth       = maxPixelWidth,
         this.startOfWeek         = startOfWeek,
         this.isMilitaryTime      = isMilitaryTime,
+        this.topView             = topView,
         this.dayExcludeArray     = [...dayExcludeArray],
         this.dayWhiteArray       = [...dayWhiteArray],
         this.monthSpotlightArray = [...monthSpotlightArray],
@@ -2275,6 +2275,9 @@ class CanvDTP
         //Exit if last date is hit.
         if(this.pickedType === CanvDTP.SEL_NEXT && this.lastHit) return;
 
+        //Determine the top view that can be shown.
+        if(this.pickedType === CanvDTP.SEL_VIEW && this.calView <= this.topView) return;
+
         //Indicate something can be picked.
         this.isPicked   = true;
 
@@ -2929,6 +2932,7 @@ class CanvDTP
 
                     //Highlight the month and year.
                     case CanvDTP.SEL_VIEW:
+                        if(this.topView >= CanvDTP.CAL_MONTH) break;
                         this.ctxDTP.beginPath();
                         this.ctxDTP.fillStyle = this.textMainColorh;
                         this.ctxDTP.font = (this.smallBoxHeight * this.bannerScale) + "px " + this.fontStyle;
@@ -3197,6 +3201,7 @@ class CanvDTP
                         break;
 
                     case CanvDTP.SEL_VIEW:
+                        if(this.topView >= CanvDTP.CAL_YEAR) break;
                         this.ctxDTP.beginPath();
                         this.ctxDTP.fillStyle = this.textMainColorh;
                         this.ctxDTP.font = (this.smallBoxHeight * this.bannerScale) + "px " + this.fontStyle;
@@ -3465,6 +3470,7 @@ class CanvDTP
                         break;
 
                     case CanvDTP.SEL_VIEW:
+                        if(this.topView >= CanvDTP.CAL_DECADE) break;
                         this.ctxDTP.beginPath();
                         this.ctxDTP.fillStyle = this.textMainColorh;
                         this.ctxDTP.font = (this.smallBoxHeight * this.bannerScale) + "px " + this.fontStyle;

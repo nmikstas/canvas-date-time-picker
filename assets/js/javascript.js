@@ -53,6 +53,7 @@ let canDTP = new CanvDTP
         //todaysDate: false,
         bannerScale: .70,
         yearScale: .55,
+        //topView: CanvDTP.CAL_MONTH,
         //initDate: { month: 3, day: 3, year: 2020 },
         firstDate: {month: 2, day: 2, year: 1989},
         lastDate:  {month: 11, day: 29, year: 2029},

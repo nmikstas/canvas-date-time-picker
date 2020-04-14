@@ -35,8 +35,8 @@ Last updated: 4/13/2020.
 - Enable/disable today's date indicator. ***Done***
 - Minimum and maximum date ranges. ***Done***
 - Enable/disable individual views. ***Done***
-- Enable/disable calendar icon.
-- Textbox click opens calendar.
+- Enable/disable calendar icon. ***Done***
+- Textbox click opens calendar. ***Done***
 - Date picker only.
 - Time picker only.
 - Enable/disable picker always open.

@@ -119,43 +119,44 @@ class CanvDTP
         {
             /***************************** Configuration Parameters ******************************/
 
-            debug = false,                    //Enable/disable debug.
+            debug = false,                      //Enable/disable debug.
 
-            dateTimeStringCb = null,          //Callback function - returns selected time string.
-            dateTimeJSONCb   = null,          //Callback function - returns selected time JSON object.
+            dateTimeStringCb = null,            //Callback function - returns selected time string.
+            dateTimeJSONCb   = null,            //Callback function - returns selected time JSON object.
 
-            dateTimeFormat = null,            //Enable date and/or time and set the string format.
+            dateTimeFormat = null,              //Enable date and/or time and set the string format.
 
-            isDate = true,                    //Enable date picker.
-            isTime = true,                    //Enable time picker.
+            isDate = true,                      //Enable date picker.
+            isTime = true,                      //Enable time picker.
 
-            isAnimated = true,                //Enable/disable open/close animation.
-            maxPixelWidth = null,             //Maximum width in pixels of the body canvas.
-            startOfWeek = CanvDTP.SUNDAY,     //Sets which day the week starts on.
-            isMilitaryTime = false,           //Select time format.
+            isAnimated = true,                  //Enable/disable open/close animation.
+            maxPixelWidth = null,               //Maximum width in pixels of the body canvas.
+            startOfWeek = CanvDTP.SUNDAY,       //Sets which day the week starts on.
+            isMilitaryTime = false,             //Select time format.
             
-            dayExcludeArray = [],             //Array of excluded months, days, years in the month view.
-            dayWhiteArray   = [],             //Array of whitelist months, days, years in the month view.
-            monthSpotlightArray = [],         //Array of spotlighted months in the year view.
-            monthWhiteArray     = [],         //Array of whitelist months, in the year view.
-            yearSpotlightArray = [],          //Array of spotlighted years in the decade view.
-            yearWhiteArray     = [],          //Array of whitelist years, in the decade view.
+            dayExcludeArray     = [],           //Array of excluded months, days, years in the month view.
+            dayWhiteArray       = [],           //Array of whitelist months, days, years in the month view.
+            monthSpotlightArray = [],           //Array of spotlighted months in the year view.
+            monthWhiteArray     = [],           //Array of whitelist months, in the year view.
+            yearSpotlightArray  = [],           //Array of spotlighted years in the decade view.
+            yearWhiteArray      = [],           //Array of whitelist years, in the decade view.
 
-            fontStyle      = "Arial",         //The font to use for all the text.
-            textMainColorn = "#000000",       //The primary color for non-hovered items.
-            textMainColorh = "#ffffff",       //The primary color for hovered items.
-            textAltColorn  = "#888888",       //The alternate for non-hovered items.
-            textAltColorh  = "#ff8888",       //The alternate for hovered items.
+            fontStyle      = "Arial",           //The font to use for all the text.
+            textMainColorn = "#000000",         //The primary color for non-hovered items.
+            textMainColorh = "#ffffff",         //The primary color for hovered items.
+            textAltColorn  = "#888888",         //The alternate for non-hovered items.
+            textAltColorh  = "#ff8888",         //The alternate for hovered items.
 
-            monthImages = [],                 //Optional images to display in the month view.
+            monthImages = [],                   //Optional images to display in the month view.
 
-            initDate  = null,                 //Date to use on first pick when picker opened.
-            firstDate = null,                 //Earliest date available to user.
-            lastDate  = null,                 //Latest date available to user.
-            autoPick  = true,                 //Enable automatic date pick when picker opened.
+            initDate  = null,                   //Date to use on first pick when picker opened.
+            firstDate = null,                   //Earliest date available to user.
+            lastDate  = null,                   //Latest date available to user.
+            autoPick  = true,                   //Enable automatic date pick when picker opened.
 
-            todaysDate = true,                //Enable today's date marker on calendar.
-            topView    = CanvDTP.CAL_CENTURY, //Top view is the century view. 
+            todaysDate   = true,                //Enable today's date marker on calendar.
+            topView      = CanvDTP.CAL_CENTURY, //Top view is the century view. 
+            calendarIcon = true,                //Enable the calendar icon next to the textbox.
 
             /****************************** Icon Canvas Parameters *******************************/
 
@@ -280,6 +281,7 @@ class CanvDTP
         this.lastDate            = lastDate,
         this.autoPick            = autoPick,
         this.todaysDate          = todaysDate,
+        this.calendarIcon        = calendarIcon,
         this.iBorderRadius       = iBorderRadius;
         this.iBorderWeight       = iBorderWeight;
         this.iXPadding           = iXPadding;
@@ -516,14 +518,17 @@ class CanvDTP
     {
         //Create the components necessary for the date/time picker.
         this.paddingDiv = document.createElement("div");
-        this.dtpText    = document.createElement("input");
         this.bodyCanvas = document.createElement("canvas");
-        this.iconCanvas = document.createElement("canvas");
+        this.dtpText    = document.createElement("input");
         this.canParent  = document.createElement("div");
         this.infoParent = document.createElement("div");
         this.infoText   = document.createElement("span");
         this.infoPoint  = document.createElement("span");
 
+        //Only create an icon canvas if it is enabled.
+        if(this.calendarIcon) this.iconCanvas = document.createElement("canvas");
+        
+        
         //Setup initial styling of the info text.
         this.infoParent.style.position      = "absolute";
         this.infoParent.style.textAlign     = "center";
@@ -551,14 +556,14 @@ class CanvDTP
 
         //Get 2D contexts of the canvases.
         this.ctxDTP  = this.bodyCanvas.getContext("2d");
-        this.ctxIcon = this.iconCanvas.getContext("2d");
+        if(this.calendarIcon) this.ctxIcon = this.iconCanvas.getContext("2d");
 
         //Clear anything out of the parent div.
         this.parentDiv.innerHTML = "";
 
         //Add all the components to the div.
         this.paddingDiv.appendChild(this.dtpText);
-        this.paddingDiv.appendChild(this.iconCanvas);
+        if(this.calendarIcon) this.paddingDiv.appendChild(this.iconCanvas);
         this.paddingDiv.appendChild(this.canParent);
         this.canParent.appendChild(this.bodyCanvas);
         this.parentDiv.appendChild(this.paddingDiv);
@@ -567,31 +572,37 @@ class CanvDTP
         this.infoParent.appendChild(this.infoPoint);      
 
         //Add placeholder text to the textbox and make it read only.
-        this.dtpText.placeholder = "Click Icon for Date/Time";
+        this.dtpText.placeholder = this.calendarIcon ? "Click Icon for Date/Time" : "Click Textbox for Date/Time";
         this.dtpText.readOnly    = true;
         
         //Setup positioning to ignore any parent padding.
         this.paddingDiv.style.position = "relative";
-        this.iconCanvas.style.position = "absolute";
+        if(this.calendarIcon) this.iconCanvas.style.position = "absolute";
         this.canParent.style.position  = "absolute";
         this.bodyCanvas.style.position = "absolute";
 
         //Setup default cursor for icon canvas.
-        this.iconCanvas.style.cursor = "pointer";
+        if(this.calendarIcon) this.iconCanvas.style.cursor = "pointer";
 
         //Add resize and click listeners to the window.
         window.addEventListener("resize", () => this.resize());
         window.addEventListener("click", (event) => this.windowClick(event));
 
         //Add icon event listeners.
-        this.iconCanvas.addEventListener("mouseenter", () => this.iconEnter());
-        this.iconCanvas.addEventListener("mouseleave", () => this.iconExit());
-        this.iconCanvas.addEventListener("click", () => this.iconClick());
+        if(this.calendarIcon) 
+        {
+            this.iconCanvas.addEventListener("mouseenter", () => this.iconEnter());
+            this.iconCanvas.addEventListener("mouseleave", () => this.iconExit());
+            this.iconCanvas.addEventListener("click", () => this.iconClick());
+        }
 
         //Add body event listeners.
         this.bodyCanvas.addEventListener('mousemove',  () => this.bodyCoords());
         this.bodyCanvas.addEventListener('mouseleave', () => this.bodyExit());
         this.bodyCanvas.addEventListener("click", () => this.bodyClick());
+
+        //Add textbox event listener.
+        this.dtpText.addEventListener("click", () => this.textClick());
 
         //Format the max pixel width variable.
         if(this.maxPixelWidth) this.maxPixelWidth = parseInt(Math.abs(this.maxPixelWidth));
@@ -605,7 +616,15 @@ class CanvDTP
         let rect = this.parentDiv.getBoundingClientRect();
 
         //Set the width of the text area - leave room for the icon canvas.
-        this.dtpText.style.width = (rect.width - rect.height) + "px";
+        if(this.calendarIcon)
+        {
+            this.dtpText.style.width = (rect.width - rect.height) + "px";
+        }
+        else
+        {
+            this.dtpText.style.width = rect.width + "px";
+        }
+        
         
         //Save a copy of the canvas widths. Base for future calculations.
         this.bodyCanMaxWidth = rect.width;
@@ -640,15 +659,21 @@ class CanvDTP
         this.canParent.style.height  = "" + this.bodyCanWidth + "px";
         
         //Place the calendar icon to the right of the text box.
-        this.iconCanvas.width  = this.iconCanWidth;
-        this.iconCanvas.height = this.iconCanWidth;
+        if(this.calendarIcon)
+        {
+            this.iconCanvas.width  = this.iconCanWidth;
+            this.iconCanvas.height = this.iconCanWidth;
+        }
 
         //Round the text box left border.
-        this.dtpText.style.borderTopLeftRadius = (this.iconCanWidth * this.iBorderRadius) + "px";
-        this.dtpText.style.borderBottomLeftRadius = (this.iconCanWidth * this.iBorderRadius) + "px";
-
+        if(this.calendarIcon)
+        {
+            this.dtpText.style.borderTopLeftRadius    = (this.iconCanWidth * this.iBorderRadius) + "px";
+            this.dtpText.style.borderBottomLeftRadius = (this.iconCanWidth * this.iBorderRadius) + "px";
+        }
+        
         //Draw the date/time picker.
-        this.iconDraw();
+        if(this.calendarIcon) this.iconDraw();
         this.bodyDraw();
     }
 
@@ -664,6 +689,23 @@ class CanvDTP
                 this.bodyAnimTimer = setInterval(() => this.bodyAnimate(), this.animTime);
             }
         }        
+    }
+
+    /********************************** Textbox Event Listener ***********************************/
+
+    textClick()
+    {
+        //Set the animation to expanding or collapsing.
+        if(this.bodyCanAnim === CanvDTP.BODY_CLOSED || this.bodyCanAnim === CanvDTP.BODY_COLLAPSING) 
+        {
+            this.bodyCanAnim = this.isAnimated ? CanvDTP.BODY_EXPANDING : CanvDTP.BODY_OPEN;
+
+            //Check if date/time has been picked already.
+            if(!this.isFirstPicked) this.firstPick();
+        
+            clearInterval(this.bodyAnimTimer);
+            this.bodyAnimTimer = setInterval(() => this.bodyAnimate(), this.animTime);
+        } 
     }
 
     /*********************************** Icon Canvas Functions ***********************************/

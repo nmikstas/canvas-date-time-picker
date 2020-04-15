@@ -123,51 +123,43 @@ class CanvDTP
     (
         parentDiv,
         {
+            /******************************** Callback Functions *********************************/
+
+            dateTimeStringCb    = null,                //Callback function - returns selected time string.
+            dateTimeJSONCb      = null,                //Callback function - returns selected time JSON object.
+
             /***************************** Configuration Parameters ******************************/
 
-            debug = false,                      //Enable/disable debug.
-
-            dateTimeStringCb = null,            //Callback function - returns selected time string.
-            dateTimeJSONCb   = null,            //Callback function - returns selected time JSON object.
-
-            dateTimeFormat = null,              //Enable date and/or time and set the string format.
-
-            pickerType = CanvDTP.PICK_BOTH,     //Enable date and/or time picker.
-            isDate = true,                      //Enable date picker.
-            isTime = true,                      //Enable time picker.
-
-            isAnimated = true,                  //Enable/disable open/close animation.
-            maxPixelWidth = null,               //Maximum width in pixels of the body canvas.
-            startOfWeek = CanvDTP.SUNDAY,       //Sets which day the week starts on.
-            isMilitaryTime = false,             //Select time format.
+            debug               = false,               //Enable/disable debug.
+            dateTimeFormat      = null,                //Enable date and/or time and set the string format.
+            pickerType          = CanvDTP.PICK_BOTH,   //Enable date and/or time picker.
+            isAnimated          = true,                //Enable/disable open/close animation.
+            maxPixelWidth       = null,                //Maximum width in pixels of the body canvas.
+            startOfWeek         = CanvDTP.SUNDAY,      //Sets which day the week starts on.
+            isMilitaryTime      = false,               //Select time format.
+            dayExcludeArray     = [],                  //Array of excluded months, days, years in the month view.
+            dayWhiteArray       = [],                  //Array of whitelist months, days, years in the month view.
+            monthSpotlightArray = [],                  //Array of spotlighted months in the year view.
+            monthWhiteArray     = [],                  //Array of whitelist months, in the year view.
+            yearSpotlightArray  = [],                  //Array of spotlighted years in the decade view.
+            yearWhiteArray      = [],                  //Array of whitelist years, in the decade view.
+            monthImages         = [],                  //Optional images to display in the month view.
+            fontStyle           = "Arial",             //The font to use for all the text.
+            textMainColorn      = "#000000",           //The primary color for non-hovered items.
+            textMainColorh      = "#ffffff",           //The primary color for hovered items.
+            textAltColorn       = "#888888",           //The alternate for non-hovered items.
+            textAltColorh       = "#ff8888",           //The alternate for hovered items.
+            rangeBkColor        = "#000000a0",         //Out of range date colors.
+            firstDate           = null,                //Earliest date available to user.
+            lastDate            = null,                //Latest date available to user.
+            initDate            = null,                //Date to use on first pick when picker opened.
+            autoPick            = true,                //Enable automatic date pick when picker opened.
+            todaysDate          = true,                //Enable today's date marker on calendar.
+            topView             = CanvDTP.CAL_CENTURY, //Top view is the century view. 
+            calendarIcon        = true,                //Enable the calendar icon next to the textbox.
+            bodyPosition        = CanvDTP.POS_BOTLEFT, //Position of body canvas with respect to the textbox.
+            isCollapsible       = true,                //Allows the body canvas to be minimized.
             
-            dayExcludeArray     = [],           //Array of excluded months, days, years in the month view.
-            dayWhiteArray       = [],           //Array of whitelist months, days, years in the month view.
-            monthSpotlightArray = [],           //Array of spotlighted months in the year view.
-            monthWhiteArray     = [],           //Array of whitelist months, in the year view.
-            yearSpotlightArray  = [],           //Array of spotlighted years in the decade view.
-            yearWhiteArray      = [],           //Array of whitelist years, in the decade view.
-
-            fontStyle      = "Arial",           //The font to use for all the text.
-            textMainColorn = "#000000",         //The primary color for non-hovered items.
-            textMainColorh = "#ffffff",         //The primary color for hovered items.
-            textAltColorn  = "#888888",         //The alternate for non-hovered items.
-            textAltColorh  = "#ff8888",         //The alternate for hovered items.
-
-            monthImages = [],                   //Optional images to display in the month view.
-
-            initDate  = null,                   //Date to use on first pick when picker opened.
-            firstDate = null,                   //Earliest date available to user.
-            lastDate  = null,                   //Latest date available to user.
-            autoPick  = true,                   //Enable automatic date pick when picker opened.
-
-            todaysDate   = true,                //Enable today's date marker on calendar.
-            topView      = CanvDTP.CAL_CENTURY, //Top view is the century view. 
-            calendarIcon = true,                //Enable the calendar icon next to the textbox.
-            bodyPosition = CanvDTP.POS_BOTLEFT, //Position of body canvas with respect to the textbox.
-
-            isCollapsible = true,               //Allows the body canvas to be minimized.
-
             /****************************** Icon Canvas Parameters *******************************/
 
             iBorderColorn = "#a0a0a0",
@@ -200,7 +192,7 @@ class CanvDTP
             infoWidth        = "150px",
             infoBorderRadius = "10px",
 
-            /********************************* Common Parameters *********************************/
+            /********************************** View Parameters **********************************/
 
             //Selectable Items.
             selectBorderColor = "#202020a0",
@@ -221,11 +213,6 @@ class CanvDTP
             calYPadding  = .10,
             calLineWidth = .05,
 
-            //Font scaler for banners between the prev. and next buttons.
-            bannerScale = .80,            
-            
-            /********************************** View Parameters **********************************/
-
             //Days of Week header.
             headerColor = "#0087b6",
             headerScale = .80,
@@ -240,9 +227,6 @@ class CanvDTP
             nowColor  = "#000000",
             nowWeight = .20,
 
-            ///Out of range date colors.
-            rangeBkColor   = "#000000a0",
-
             //Increment/Decrement Parameters.
             incXPad   = .25,
             incYPad   = .10,
@@ -251,6 +235,7 @@ class CanvDTP
             //Vertical offset for days of month.
             dayVertOffset = .05,
 
+            bannerScale   = .80, //View banner.
             dayScale      = .60, //Days of Month.
             monthScale    = .60, //Month Text.
             yearScale     = .60, //Year Text.
@@ -1589,6 +1574,7 @@ class CanvDTP
             this.dateTimeJSONCb(
             {
                 isPicked:  this.isFirstPicked,
+                string:    this.dtpText.value,
                 month:     this.month - 1,
                 day:       this.day,
                 year:      this.year,
@@ -2010,60 +1996,6 @@ class CanvDTP
                 }
             }
         }
-    }
-
-    /*********************************** Data Access Functions ***********************************/
-
-    getDateTimeString()
-    {
-        if(!this.isFirstPicked) return null;
-
-        let dateTimeString;
-        let formatString;
-
-        //Check user defined format.
-        if(this.dateTimeFormat)
-        {
-            formatString = this.dateTimeFormat;
-        }
-        //Use default format if no user format defined.
-        else if(this.pickerType === CanvDTP.PICK_BOTH)
-        {
-            formatString = "M/D/YYYY h:mm a";
-        }
-        else if(this.pickerType === CanvDTP.PICK_DATE)
-        {
-            formatString = "M/D/YYYY";
-        }
-        else
-        {
-            formatString = "h:mm a";
-        }
-
-        dateTimeString = this.formatDateTime(formatString);
-        return dateTimeString;
-    }
-
-    getDateTimeJSON()
-    {
-        //Calculate the day of the week.
-        let d = new Date(this.year, this.month - 1, this.day);
-        this.dayOfWeek = d.getDay();
-        this.weekOfYearCalc();
-
-        return {
-            isPicked:  this.isFirstPicked,
-            month:     this.month - 1,
-            day:       this.day,
-            year:      this.year,
-            hour:      this.hour,
-            milHour:   this.milHour,
-            minute:    this.minute,
-            ampm:      this.isAM ? "AM" : "PM",
-            dayOfWeek: this.dayOfWeek,
-            dayOfYear: this.dayOfYear,
-            weekOfYear: this.weekOfYear
-        };
     }
 
     /************************************** Debug Functions **************************************/
@@ -4790,4 +4722,61 @@ class CanvDTP
             }
         }
     }
+
+    /*************************************** API Functions ***************************************/
+
+    getDateTimeString()
+    {
+        if(!this.isFirstPicked) return null;
+
+        let dateTimeString;
+        let formatString;
+
+        //Check user defined format.
+        if(this.dateTimeFormat)
+        {
+            formatString = this.dateTimeFormat;
+        }
+        //Use default format if no user format defined.
+        else if(this.pickerType === CanvDTP.PICK_BOTH)
+        {
+            formatString = "M/D/YYYY h:mm a";
+        }
+        else if(this.pickerType === CanvDTP.PICK_DATE)
+        {
+            formatString = "M/D/YYYY";
+        }
+        else
+        {
+            formatString = "h:mm a";
+        }
+
+        dateTimeString = this.formatDateTime(formatString);
+        return dateTimeString;
+    }
+
+    getDateTimeJSON()
+    {
+        //Calculate the day of the week.
+        let d = new Date(this.year, this.month - 1, this.day);
+        this.dayOfWeek = d.getDay();
+        this.weekOfYearCalc();
+
+        return {
+            isPicked:  this.isFirstPicked,
+            string:    this.dtpText.value,
+            month:     this.month - 1,
+            day:       this.day,
+            year:      this.year,
+            hour:      this.hour,
+            milHour:   this.milHour,
+            minute:    this.minute,
+            ampm:      this.isAM ? "AM" : "PM",
+            dayOfWeek: this.dayOfWeek,
+            dayOfYear: this.dayOfYear,
+            weekOfYear: this.weekOfYear
+        };
+    }
+
+    /************************************ Callback Functions *************************************/
 }

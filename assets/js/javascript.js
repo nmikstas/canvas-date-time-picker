@@ -1,5 +1,6 @@
 let dateTimeSpan        = document.getElementById("date-time-span");
 let jsonPickedSpan      = document.getElementById("json-picked-span");
+let jsonStringSpan      = document.getElementById("json-string-span");
 let jsonMonthSpan       = document.getElementById("json-month-span");
 let jsonDaySpan         = document.getElementById("json-day-span");
 let jsonYearSpan        = document.getElementById("json-year-span");
@@ -12,6 +13,7 @@ let jsonDayOfYearSpan   = document.getElementById("json-day-of-year-span");
 let jsonWeekOfYearSpan  = document.getElementById("json-week-of-year-span");
 let dateTimeSpan1       = document.getElementById("date-time-span1");
 let jsonPickedSpan1     = document.getElementById("json-picked-span1");
+let jsonStringSpan1     = document.getElementById("json-string-span1");
 let jsonMonthSpan1      = document.getElementById("json-month-span1");
 let jsonDaySpan1        = document.getElementById("json-day-span1");
 let jsonYearSpan1       = document.getElementById("json-year-span1");
@@ -28,6 +30,7 @@ let showDateTimeString = (dateTimeString) => dateTimeSpan.innerHTML = dateTimeSt
 let showDateTimeJSON = (dateTimeJSON) =>
 {
     jsonPickedSpan.innerHTML     = dateTimeJSON.isPicked;
+    jsonStringSpan.innerHTML     = dateTimeJSON.string;
     jsonMonthSpan.innerHTML      = dateTimeJSON.month;
     jsonDaySpan.innerHTML        = dateTimeJSON.day;
     jsonYearSpan.innerHTML       = dateTimeJSON.year;
@@ -53,7 +56,7 @@ let canDTP = new CanvDTP
         //todaysDate: false,
         bannerScale: .70,
         yearScale: .55,
-        //bodyPosition: CanvDTP.POS_TOPLEFT,
+        bodyPosition: CanvDTP.POS_BOTRIGHT,
         //isCollapsible: false,
         //pickerType: CanvDTP.PICK_TIME,
         //isAnimated: false,
@@ -172,6 +175,7 @@ let getData = () =>
 
     dateTimeSpan1.innerHTML       = dateTime ? dateTime : "Null";
     jsonPickedSpan1.innerHTML     = json.isPicked;
+    jsonStringSpan1.innerHTML     = json.string;
     jsonMonthSpan1.innerHTML      = json.month;
     jsonDaySpan1.innerHTML        = json.day;
     jsonYearSpan1.innerHTML       = json.year;

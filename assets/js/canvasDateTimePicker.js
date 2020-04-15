@@ -132,6 +132,7 @@ class CanvDTP
 
             dateTimeFormat = null,              //Enable date and/or time and set the string format.
 
+            pickerType = CanvDTP.PICK_BOTH,     //Enable date and/or time picker.
             isDate = true,                      //Enable date picker.
             isTime = true,                      //Enable time picker.
 
@@ -271,8 +272,7 @@ class CanvDTP
         this.dateTimeStringCb    = dateTimeStringCb;
         this.dateTimeJSONCb      = dateTimeJSONCb;
         this.dateTimeFormat      = dateTimeFormat,
-        this.isDate              = isDate;
-        this.isTime              = isTime;
+        this.pickerType          = pickerType;
         this.isAnimated          = isAnimated;
         this.maxPixelWidth       = maxPixelWidth;
         this.startOfWeek         = startOfWeek;
@@ -617,6 +617,12 @@ class CanvDTP
         //Add textbox event listener.
         this.dtpText.addEventListener("click", () => this.textClick());
 
+        //Setup picker type.
+        if(this.pickerType === CanvDTP.PICK_TIME)
+        {
+            this.dateTime = CanvDTP.CAL_TIME;
+        }
+
         //Format the max pixel width variable.
         if(this.maxPixelWidth) this.maxPixelWidth = parseInt(Math.abs(this.maxPixelWidth));
         this.resize();
@@ -665,6 +671,7 @@ class CanvDTP
             let padHeight;
             this.bodyCanAnim = CanvDTP.BODY_OPEN;
 
+            //Set the height of the calendar.
             if(this.maxPixelWidth && (this.maxPixelWidth < this.bodyCanMaxWidth))
             {
                 this.bodyCanWidth = this.maxPixelWidth
@@ -676,11 +683,13 @@ class CanvDTP
                 padHeight = rect.width;
             }
 
+            //Move the textbox to the bottom if the calendar is above it.
             if(this.bodyPosition === CanvDTP.POS_TOPRIGHT || this.bodyPosition === CanvDTP.POS_TOPLEFT)
             {
                 this.paddingDiv.style.top = padHeight + "px";
             }
 
+            //Set the height of the main div that contains all the sub-components.
             this.parentDiv.style.height = (padHeight + padRect.height) + "px";
             
             //Check if date/time has been picked already.
@@ -1290,7 +1299,7 @@ class CanvDTP
             switch(currentToken[0])
             {
                 case 'M': //Month
-                    if(!this.isDate)
+                    if(this.pickerType === CanvDTP.PICK_TIME)
                     {
                         //Date is disabled. Token non-meaningful.
                         dtString += currentToken;
@@ -1322,7 +1331,7 @@ class CanvDTP
                     break;
 
                 case 'D': //Day
-                    if(!this.isDate)
+                    if(this.pickerType === CanvDTP.PICK_TIME)
                     {
                         //Date is disabled. Token non-meaningful.
                         dtString += currentToken;
@@ -1363,7 +1372,7 @@ class CanvDTP
                     break;
 
                 case 'W':
-                    if(!this.isDate)
+                    if(this.pickerType === CanvDTP.PICK_TIME)
                     {
                         //Date is disabled. Token non-meaningful.
                         dtString += currentToken;
@@ -1388,7 +1397,7 @@ class CanvDTP
                     break;
 
                 case 'd': //Day of week.
-                    if(!this.isDate)
+                    if(this.pickerType === CanvDTP.PICK_TIME)
                     {
                         //Date is disabled. Token non-meaningful.
                         dtString += currentToken;
@@ -1413,7 +1422,7 @@ class CanvDTP
                     break;
 
                 case 'Y': //Year
-                    if(!this.isDate)
+                    if(this.pickerType === CanvDTP.PICK_TIME)
                     {
                         //Date is disabled. Token non-meaningful.
                         dtString += currentToken;
@@ -1439,7 +1448,7 @@ class CanvDTP
                     break;
 
                 case 'H': //Hour - military time.
-                    if(!this.isTime)
+                    if(this.pickerType === CanvDTP.PICK_DATE)
                     {
                         //Time is disabled. Token non-meaningful.
                         dtString += currentToken;
@@ -1456,7 +1465,7 @@ class CanvDTP
                     break;
 
                 case 'h': //Hour - standard time.
-                    if(!this.isTime)
+                    if(this.pickerType === CanvDTP.PICK_DATE)
                     {
                         //Time is disabled. Token non-meaningful.
                         dtString += currentToken;
@@ -1473,7 +1482,7 @@ class CanvDTP
                     break;
 
                 case 'm': //Minute
-                    if(!this.isTime)
+                    if(this.pickerType === CanvDTP.PICK_DATE)
                     {
                         //Time is disabled. Token non-meaningful.
                         dtString += currentToken;
@@ -1491,7 +1500,7 @@ class CanvDTP
 
                 case 'a': //am/pm
                 case 'p':
-                    if(!this.isTime)
+                    if(this.pickerType === CanvDTP.PICK_DATE)
                     {
                         //Time is disabled. Token non-meaningful.
                         dtString += currentToken;
@@ -1507,7 +1516,7 @@ class CanvDTP
 
                 case 'A':  //AM/PM
                 case 'P':
-                    if(!this.isTime)
+                    if(this.pickerType === CanvDTP.PICK_DATE)
                     {
                         //Time is disabled. Token non-meaningful.
                         dtString += currentToken;
@@ -1556,11 +1565,11 @@ class CanvDTP
             formatString = this.dateTimeFormat;
         }
         //Use default format if no user format defined.
-        else if(this.isDate && this.isTime)
+        else if(this.pickerType === CanvDTP.PICK_BOTH)
         {
             formatString = "M/D/YYYY h:mm a";
         }
-        else if(this.isDate)
+        else if(this.pickerType === CanvDTP.PICK_DATE)
         {
             formatString = "M/D/YYYY";
         }
@@ -2018,11 +2027,11 @@ class CanvDTP
             formatString = this.dateTimeFormat;
         }
         //Use default format if no user format defined.
-        else if(this.isDate && this.isTime)
+        else if(this.pickerType === CanvDTP.PICK_BOTH)
         {
             formatString = "M/D/YYYY h:mm a";
         }
-        else if(this.isDate)
+        else if(this.pickerType === CanvDTP.PICK_DATE)
         {
             formatString = "M/D/YYYY";
         }
@@ -2508,7 +2517,7 @@ class CanvDTP
             case CanvDTP.BODY_CLOSED:
                 this.bodyCanWidth = 0;
                 this.calView      = CanvDTP.CAL_MONTH;
-                this.dateTime     = CanvDTP.CAL_DATE;
+                this.dateTime     = (this.pickerType === CanvDTP.PICK_TIME) ? CanvDTP.CAL_TIME : CanvDTP.CAL_DATE;
                 this.tempYear     = this.year;
                 this.tempMonth    = this.month;
                 this.updateMonth  = true;
@@ -2952,8 +2961,12 @@ class CanvDTP
         
         this.drawPrevious(this.textMainColorn); //Draw the previous button.
         this.drawNext(this.textMainColorn);     //Draw the next button.
-        this.drawClock(this.textMainColorn);    //Draw the clock button.
 
+        if(this.pickerType === CanvDTP.PICK_BOTH)
+        {
+            this.drawClock(this.textMainColorn);    //Draw the clock button.
+        }
+        
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
 
@@ -2970,6 +2983,9 @@ class CanvDTP
                 this.bodyY <= this.hitBounds[i].y2
             )
             {
+                //Exit if date picker only.
+                if((this.pickerType === CanvDTP.PICK_DATE) && (this.hitBounds[i].type === CanvDTP.SEL_TIME)) continue;
+
                 //Do special stuff for special days.
                 if(this.hitBounds[i].hasOwnProperty("index") && this.monthSpecial[this.hitBounds[i].index].isSpecial) 
                 {
@@ -3230,7 +3246,11 @@ class CanvDTP
        
         this.drawPrevious(this.textMainColorn); //Draw the previous button.
         this.drawNext(this.textMainColorn);     //Draw the next button.
-        this.drawClock(this.textMainColorn);    //Draw the clock button.
+
+        if(this.pickerType === CanvDTP.PICK_BOTH)
+        {
+            this.drawClock(this.textMainColorn);    //Draw the clock button.
+        }
 
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
@@ -3248,6 +3268,9 @@ class CanvDTP
                 this.bodyY <= this.hitBounds[i].y2
             )
             {
+                //Exit if date picker only.
+                if((this.pickerType === CanvDTP.PICK_DATE) && (this.hitBounds[i].type === CanvDTP.SEL_TIME)) continue;
+
                 //Do special stuff for special months.
                 if(i < 12 && this.yearSpecial[i].isSpecial) 
                 {
@@ -3499,7 +3522,11 @@ class CanvDTP
 
         this.drawPrevious(this.textMainColorn); //Draw the previous button.
         this.drawNext(this.textMainColorn);     //Draw the next button.
-        this.drawClock(this.textMainColorn);    //Draw the clock button.
+
+        if(this.pickerType === CanvDTP.PICK_BOTH)
+        {
+            this.drawClock(this.textMainColorn);    //Draw the clock button.
+        }
 
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
@@ -3517,6 +3544,9 @@ class CanvDTP
                 this.bodyY <= this.hitBounds[i].y2
             )
             {
+                //Exit if date picker only.
+                if((this.pickerType === CanvDTP.PICK_DATE) && (this.hitBounds[i].type === CanvDTP.SEL_TIME)) continue;
+
                 //Do special stuff for special years.
                 if(i < 12 && this.decadeSpecial[i].isSpecial) 
                 {
@@ -3791,7 +3821,11 @@ class CanvDTP
 
         this.drawPrevious(this.textMainColorn); //Draw the previous button.
         this.drawNext(this.textMainColorn);     //Draw the next button.
-        this.drawClock(this.textMainColorn);    //Draw the clock button.
+
+        if(this.pickerType === CanvDTP.PICK_BOTH)
+        {
+            this.drawClock(this.textMainColorn);    //Draw the clock button.
+        }
 
         //Highlight the section being touched by the mouse cursor.
         this.isPicked = false;
@@ -3806,6 +3840,9 @@ class CanvDTP
                 this.bodyY <= this.hitBounds[i].y2
             )
             {
+                //Exit if date picker only.
+                if((this.pickerType === CanvDTP.PICK_DATE) && (this.hitBounds[i].type === CanvDTP.SEL_TIME)) continue;
+                
                 //If the decade is excluded, stop here to prevent highlighting.
                 if(i < 12 && decadeExclude[i].excluded) continue;
 
@@ -3891,7 +3928,7 @@ class CanvDTP
         y1 = this.contentBottom - this.smallBoxHeight;
         y2 = this.contentBottom - 1;
         this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_DATE});
-
+        
         //Hour increment hit boundaries.
         x1 = this.contentLeft;
         x2 = this.contentLeft + this.timeBoxWidth - 1;
@@ -3959,7 +3996,7 @@ class CanvDTP
         this.hitBounds.push({x1: x1, x2: x2, y1: y1, y2: y2, type: CanvDTP.SEL_MINUTE});
         
         //Draw the calendar icon.
-        this.calDraw(this.textMainColorn);
+        if(this.pickerType !== CanvDTP.PICK_TIME) this.calDraw(this.textMainColorn);
 
         this.ctxDTP.beginPath();
         this.ctxDTP.font = (this.timeBoxHeight * this.timeScale) + "px " + this.fontStyle;
@@ -4066,6 +4103,9 @@ class CanvDTP
                 this.bodyY <= this.hitBounds[i].y2
             )
             {
+                //Exit if time picker only.
+                if(this.pickerType === CanvDTP.PICK_TIME && this.hitBounds[i].type === CanvDTP.SEL_DATE) return;
+
                 this.highlightHovItem(i); //Highlight the hovered item.
 
                 //Draw the highlighted text.

@@ -7,7 +7,7 @@ No React, no Bootstrap, no CSS.
 Detailed documentation will be written after the coding is done.
 
 I've decided to go in and add tons of configurable functionality. Working on that now! May take a few days.  
-Last updated: 4/13/2020.
+Last updated: 4/15/2020.
 
 ## __Things that will be added:__
 - Fully customizeable date/time format string. ***Done***
@@ -39,8 +39,8 @@ Last updated: 4/13/2020.
 - Textbox click opens calendar. ***Done***
 - Picker relative position to textbox (left, right, top, bottom). ***Done***
 - Enable/disable picker always open. ***Done***
-- Date picker only.
-- Time picker only.
+- Date picker only. ***Done***
+- Time picker only. ***Done***
 - API configuration calls.
 - Event listeners.
 

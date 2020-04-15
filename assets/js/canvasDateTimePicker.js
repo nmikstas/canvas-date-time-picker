@@ -165,6 +165,8 @@ class CanvDTP
             calendarIcon = true,                //Enable the calendar icon next to the textbox.
             bodyPosition = CanvDTP.POS_BOTLEFT, //Position of body canvas with respect to the textbox.
 
+            isCollapsible = true,               //Allows the body canvas to be minimized.
+
             /****************************** Icon Canvas Parameters *******************************/
 
             iBorderColorn = "#a0a0a0",
@@ -269,27 +271,28 @@ class CanvDTP
         this.dateTimeStringCb    = dateTimeStringCb;
         this.dateTimeJSONCb      = dateTimeJSONCb;
         this.dateTimeFormat      = dateTimeFormat,
-        this.isDate              = isDate,
-        this.isTime              = isTime,
-        this.isAnimated          = isAnimated,
-        this.maxPixelWidth       = maxPixelWidth,
-        this.startOfWeek         = startOfWeek,
-        this.isMilitaryTime      = isMilitaryTime,
-        this.topView             = topView,
-        this.dayExcludeArray     = [...dayExcludeArray],
-        this.dayWhiteArray       = [...dayWhiteArray],
-        this.monthSpotlightArray = [...monthSpotlightArray],
-        this.monthWhiteArray     = [...monthWhiteArray],
-        this.yearSpotlightArray  = [...yearSpotlightArray],
-        this.yearWhiteArray      = [...yearWhiteArray],
-        this.monthImages         = [...monthImages],
-        this.initDate            = initDate,
-        this.firstDate           = firstDate,
-        this.lastDate            = lastDate,
-        this.autoPick            = autoPick,
-        this.todaysDate          = todaysDate,
-        this.calendarIcon        = calendarIcon,
-        this.bodyPosition        = bodyPosition,
+        this.isDate              = isDate;
+        this.isTime              = isTime;
+        this.isAnimated          = isAnimated;
+        this.maxPixelWidth       = maxPixelWidth;
+        this.startOfWeek         = startOfWeek;
+        this.isMilitaryTime      = isMilitaryTime;
+        this.topView             = topView;
+        this.dayExcludeArray     = [...dayExcludeArray];
+        this.dayWhiteArray       = [...dayWhiteArray];
+        this.monthSpotlightArray = [...monthSpotlightArray];
+        this.monthWhiteArray     = [...monthWhiteArray];
+        this.yearSpotlightArray  = [...yearSpotlightArray];
+        this.yearWhiteArray      = [...yearWhiteArray];
+        this.monthImages         = [...monthImages];
+        this.initDate            = initDate;
+        this.firstDate           = firstDate;
+        this.lastDate            = lastDate;
+        this.autoPick            = autoPick;
+        this.todaysDate          = todaysDate;
+        this.calendarIcon        = calendarIcon;
+        this.bodyPosition        = bodyPosition;
+        this.isCollapsible       = isCollapsible;
         this.iBorderRadius       = iBorderRadius;
         this.iBorderWeight       = iBorderWeight;
         this.iXPadding           = iXPadding;
@@ -533,6 +536,9 @@ class CanvDTP
         this.infoText   = document.createElement("span");
         this.infoPoint  = document.createElement("span");
 
+        //Do not draw calendar icon if the calendar is not collapsible.
+        if(!this.isCollapsible) this.calendarIcon = false;
+
         //Only create an icon canvas if it is enabled.
         if(this.calendarIcon) this.iconCanvas = document.createElement("canvas");
         
@@ -620,7 +626,8 @@ class CanvDTP
 
     resize()
     {
-        let rect = this.parentDiv.getBoundingClientRect();
+        let rect    = this.parentDiv.getBoundingClientRect();
+        let padRect = this.paddingDiv.getBoundingClientRect();
 
         //Set the width of the text area - leave room for the icon canvas.
         if(this.calendarIcon)
@@ -652,6 +659,34 @@ class CanvDTP
             }
         }
 
+        //Open the body canvase if its not collapsible.
+        if(!this.isCollapsible)
+        {
+            let padHeight;
+            this.bodyCanAnim = CanvDTP.BODY_OPEN;
+
+            if(this.maxPixelWidth && (this.maxPixelWidth < this.bodyCanMaxWidth))
+            {
+                this.bodyCanWidth = this.maxPixelWidth
+                padHeight = this.maxPixelWidth;
+            }
+            else
+            {
+                this.bodyCanWidth = this.bodyCanMaxWidth;
+                padHeight = rect.width;
+            }
+
+            if(this.bodyPosition === CanvDTP.POS_TOPRIGHT || this.bodyPosition === CanvDTP.POS_TOPLEFT)
+            {
+                this.paddingDiv.style.top = padHeight + "px";
+            }
+
+            this.parentDiv.style.height = (padHeight + padRect.height) + "px";
+            
+            //Check if date/time has been picked already.
+            if(!this.isFirstPicked) this.firstPick();
+        }
+
         //Make the date/time picker a square.
         this.bodyCanvas.width       = this.bodyCanWidth;
         this.bodyCanvas.height      = this.bodyCanWidth;
@@ -661,6 +696,7 @@ class CanvDTP
         this.bodyCanvas.style.left = "0px";
         this.bodyCanvas.style.top  = "0px";
 
+        
         let leftPos = rect.width - this.bodyCanWidth;
         
         //Place the main date/time picker in the proper location.
@@ -668,22 +704,22 @@ class CanvDTP
         {
             case CanvDTP.POS_TOPLEFT:
                 this.canParent.style.left = "0px";
-                this.canParent.style.bottom  = rect.height + "px";
+                this.canParent.style.bottom  = padRect.height + "px";
                 break;
 
             case CanvDTP.POS_TOPRIGHT:
                 this.canParent.style.left = leftPos + "px";
-                this.canParent.style.bottom  = rect.height + "px";
+                this.canParent.style.bottom  = padRect.height + "px";
                 break
                 
             case CanvDTP.POS_BOTRIGHT:
                 this.canParent.style.left = leftPos + "px";
-                this.canParent.style.top  = rect.height + "px";
+                this.canParent.style.top  = padRect.height + "px";
                 break;
 
             default:
                 this.canParent.style.left = "0px";
-                this.canParent.style.top  = rect.height + "px";
+                this.canParent.style.top  = padRect.height + "px";
                 break;
         }
 
@@ -700,7 +736,7 @@ class CanvDTP
             this.dtpText.style.borderTopLeftRadius    = (this.iconCanWidth * this.iBorderRadius) + "px";
             this.dtpText.style.borderBottomLeftRadius = (this.iconCanWidth * this.iBorderRadius) + "px";
         }
-        
+
         //Draw the date/time picker.
         if(this.calendarIcon) this.iconDraw();
         this.bodyDraw();

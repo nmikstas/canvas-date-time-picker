@@ -38,7 +38,7 @@ Last updated: 4/13/2020.
 - Enable/disable calendar icon. ***Done***
 - Textbox click opens calendar. ***Done***
 - Picker relative position to textbox (left, right, top, bottom). ***Done***
-- Enable/disable picker always open.
+- Enable/disable picker always open. ***Done***
 - Date picker only.
 - Time picker only.
 - API configuration calls.

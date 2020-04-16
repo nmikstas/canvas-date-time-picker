@@ -1573,17 +1573,17 @@ class CanvDTP
         {
             this.dateTimeJSONCb(
             {
-                isPicked:  this.isFirstPicked,
-                string:    this.dtpText.value,
-                month:     this.month - 1,
-                day:       this.day,
-                year:      this.year,
-                hour:      this.hour,
-                milHour:   this.milHour,
-                minute:    this.minute,
-                ampm:      this.isAM ? "AM" : "PM",
-                dayOfWeek: this.dayOfWeek,
-                dayOfYear: this.dayOfYear,
+                isPicked:   this.isFirstPicked,
+                string:     this.dtpText.value,
+                month:      this.month - 1,
+                day:        this.day,
+                year:       this.year,
+                hour:       this.hour,
+                milHour:    this.milHour,
+                minute:     this.minute,
+                ampm:       this.isAM ? "AM" : "PM",
+                dayOfWeek:  this.dayOfWeek,
+                dayOfYear:  this.dayOfYear,
                 weekOfYear: this.weekOfYear
             });
         }
@@ -4763,20 +4763,18 @@ class CanvDTP
         this.weekOfYearCalc();
 
         return {
-            isPicked:  this.isFirstPicked,
-            string:    this.dtpText.value,
-            month:     this.month - 1,
-            day:       this.day,
-            year:      this.year,
-            hour:      this.hour,
-            milHour:   this.milHour,
-            minute:    this.minute,
-            ampm:      this.isAM ? "AM" : "PM",
-            dayOfWeek: this.dayOfWeek,
-            dayOfYear: this.dayOfYear,
+            isPicked:   this.isFirstPicked,
+            string:     this.dtpText.value,
+            month:      this.month - 1,
+            day:        this.day,
+            year:       this.year,
+            hour:       this.hour,
+            milHour:    this.milHour,
+            minute:     this.minute,
+            ampm:       this.isAM ? "AM" : "PM",
+            dayOfWeek:  this.dayOfWeek,
+            dayOfYear:  this.dayOfYear,
             weekOfYear: this.weekOfYear
         };
     }
-
-    /************************************ Callback Functions *************************************/
 }

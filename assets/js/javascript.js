@@ -51,21 +51,22 @@ let canDTP = new CanvDTP
         dateTimeStringCb: showDateTimeString,
         dateTimeJSONCb:   showDateTimeJSON,
         dateTimeFormat:   "dddd, MMMM Do YYYY h:mm a. DDDo [Day of the Year], Wo [Week of the Year]",
-        fontStyle: "Arial Black",
-        //autoPick: false,
-        //todaysDate: false,
-        bannerScale: .70,
-        yearScale: .55,
-        bodyPosition: CanvDTP.POS_BOTRIGHT,
-        //isCollapsible: false,
-        //pickerType: CanvDTP.PICK_TIME,
-        //isAnimated: false,
-        //maxPixelWidth: 200,
-        //calendarIcon: false,
-        //topView: CanvDTP.CAL_MONTH,
-        //initDate: { month: 3, day: 3, year: 2020 },
-        firstDate: {month: 2, day: 2, year: 1989},
-        lastDate:  {month: 11, day: 29, year: 2029},
+        fontStyle:        "Arial Black",
+        bannerScale:      .70,
+        yearScale:        .55,
+        bodyPosition:     CanvDTP.POS_BOTRIGHT,
+        firstDate:        {month: 2, day: 2, year: 1989},
+        lastDate:         {month: 11, day: 29, year: 2029},
+        //autoPick:         false,
+        //todaysDate:       false,
+        //isCollapsible:    false,
+        //pickerType:       CanvDTP.PICK_TIME,
+        //isAnimated:       false,
+        //maxPixelWidth:    200,
+        //calendarIcon:     false,
+        //topView:          CanvDTP.CAL_MONTH,
+        //initDate:         {month: 3, day: 3, year: 2020},
+        
         dayExcludeArray:
         [
             {   //Highlight, but don't exclude all weekend days.
@@ -86,13 +87,6 @@ let canDTP = new CanvDTP
                 color:     "#800000",
                 info:      "Whole month of May blocked out, weekends whitelisted"
             },
-            // {   
-            //     days:      [22],
-            //     months:    [CanvDTP.MARCH],
-            //     excluded:  true,
-            //     color:     "#ff000030",
-            //     info:      "Excluded"
-            // }
         ],
         dayWhiteArray:
         [

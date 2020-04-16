@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Date/Time Picker</title>
+
+    <!--Reset Styling-->
+    <link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+    
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    
+    <!--Personal Styling-->
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+</head>
+<body>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <!--<div style="height: 400px;"></div>-->
+                <div>Some text above the calendar</div>
+                <div id="dtp">Date/Time Picker Div</div>
+                <div>Some text below the calendar</div>
+            </div>
+            
+            <div class="col-md-8 col-style">
+                <div class="col-md-12 my-3 border">
+                    <h1>API Calls</h1>
+                    <button type="button" class="btn btn-outline-success mb-2 mt-3" onclick="setPickerType(1)">Set Picker Date Only</button>
+                    <button type="button" class="btn btn-outline-success mb-2 mt-3" onclick="setPickerType(2)">Set Picker Time Only</button>
+                    <button type="button" class="btn btn-outline-success mb-2 mt-3" onclick="setPickerType(0)">Set Picker Date and Time</button>
+                    <button type="button" class="btn btn-outline-success mb-2 mt-3" onclick="getPickerType()">Get Picker Type</button>
+                    <hr>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <img id="january" width="0" height="0" src="./assets/img/january.png" alt="January">
+    <img id="february" width="0" height="0" src="./assets/img/february.png" alt="February">
+    <img id="march" width="0" height="0" src="./assets/img/march.png" alt="March">
+    <img id="april" width="0" height="0" src="./assets/img/april.png" alt="April">
+    <img id="may" width="0" height="0" src="./assets/img/may.png" alt="May">
+    <img id="june" width="0" height="0" src="./assets/img/june.png" alt="June">
+    <img id="july" width="0" height="0" src="./assets/img/july.png" alt="July">
+    <img id="august" width="0" height="0" src="./assets/img/august.png" alt="August">
+    <img id="september" width="0" height="0" src="./assets/img/september.png" alt="September">
+    <img id="october" width="0" height="0" src="./assets/img/october.png" alt="October">
+    <img id="november" width="0" height="0" src="./assets/img/november.png" alt="November">
+    <img id="december" width="0" height="0" src="./assets/img/december.png" alt="December">
+
+    <!--Bootstrap-->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    
+    <!--Javascript-->
+    <script src="assets/js/canvasDateTimePicker.js"></script>
+    <script src="assets/js/dtpTests.js"></script>
+</body>
+</html>

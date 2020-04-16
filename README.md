@@ -47,7 +47,9 @@ Last updated: 4/15/2020.
 # __API Function Calls__ #
 
 ***Done*** getDateTimeString - Returns a string representation of the currently selected date.  
-***Done*** getDateTimeJSON - Returns a JSON object of the currently selected date. {isPicked, string, month, day, year, hour, milHour, minute, ampm, dayOfWeek, dayOfYear, weekOfYear}  
+***Done*** getDateTimeJSON - Returns a JSON object of the currently selected date {isPicked, string, month, day, year, hour, milHour, minute, ampm, dayOfWeek, dayOfYear, weekOfYear}.  
+***Done*** getPickerType - Returns the picker type (both date and time, date only, time only).  
+***Done*** setPickerType - Sets the picker type  (both date and time, date only, time only).  
 
 getDayExcludeArray  
 setDayExcludeArray  
@@ -95,8 +97,6 @@ getFontColors
 setFontColors  
 getDateTimeFormat  
 setDateTimeFormat  
-getPickerType  
-setPickerType  
 getIsAnimated  
 setIsAnimated  
 getMaxPixelWidth  

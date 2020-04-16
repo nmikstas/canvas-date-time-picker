@@ -4777,4 +4777,37 @@ class CanvDTP
             weekOfYear: this.weekOfYear
         };
     }
+
+    setPickerType(type)
+    {
+        switch(type)
+        {
+            case CanvDTP.PICK_DATE:
+                this.pickerType = CanvDTP.PICK_DATE;
+                if(this.dateTime !== CanvDTP.CAL_DATE)
+                {
+                    this.calView    = CanvDTP.CAL_MONTH;
+                    this.dateTime   = CanvDTP.CAL_DATE;
+                }
+                break;
+            case CanvDTP.PICK_TIME:
+                this.pickerType = CanvDTP.PICK_TIME;
+                if(this.dateTime !== CanvDTP.CAL_TIME)
+                {
+                    this.timeView   = CanvDTP.CAL_MIN_HOUR;
+                    this.dateTime   = CanvDTP.CAL_TIME;
+                }
+                break;
+            default:
+                this.pickerType = CanvDTP.PICK_BOTH;
+                break;
+        }
+        this.textBoxDateTime();
+        this.bodyDraw();
+    }
+
+    getPickerType()
+    {
+        return this.pickerType;
+    }
 }

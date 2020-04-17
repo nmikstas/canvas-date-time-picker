@@ -3,83 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canvas Date/Time Picker</title>
+    <title>Date/Time Picker Overview</title>
 
     <!--Reset Styling-->
-    <link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="./assets/css/reset.css">
     
     <!--Bootstrap-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     
     <!--Personal Styling-->
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
 </head>
-<body>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <!--<div style="height: 400px;"></div>-->
-                <div>Some text above the calendar</div>
-                <div id="dtp">Date/Time Picker Div</div>
-                <div>Some text below the calendar</div>
+
+<body class="d-flex flex-column" id="main-body">
+
+     <!--Header-->
+    <header class="header-class">
+        <nav class="navbar navbar-dark navbar-expand-lg">
+            <a class="navbar-brand nav-title px-2" href="https://nmikstas.github.io/portfolio/">Nick Mikstas Portfolio</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="container text-center">
+                <h1>Date/Time Picker Overview</h1>
             </div>
-            <div class="col-md-4 col-style">
-                <div class="col-md-12 my-3 border">
-                    <h1>Callbacks</h1>
-                    <span>Date-Time String: </span><span id="date-time-span"></span><br>
-                    <h4>JSON Return Values</h4>
-                    <span>Is Picked: </span><span id="json-picked-span"></span><br>
-                    <span>String: </span><span id="json-string-span"></span><br>
-                    <span>Month: </span><span id="json-month-span"></span><br>
-                    <span>Day: </span><span id="json-day-span"></span><br>
-                    <span>Year: </span><span id="json-year-span"></span><br>
-                    <span>Day Of Week: </span><span id="json-day-of-week-span"></span><br>
-                    <span>Day Of Year: </span><span id="json-day-of-year-span"></span><br>
-                    <span>Week Of Year: </span><span id="json-week-of-year-span"></span><br>
-                    <span>Hour: </span><span id="json-hour-span"></span><br>
-                    <span>Military Hour: </span><span id="json-mil-hour-span"></span><br>
-                    <span>Minute: </span><span id="json-minute-span"></span><br>
-                    <span>AM/PM: </span><span id="json-am-pm-span"></span><br>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://nmikstas.github.io/portfolio/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://nmikstas.github.io/portfolio/resume.html">Resume</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://nmikstas.github.io/portfolio/web.html">Web</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://nmikstas.github.io/portfolio/embedded.html">Embedded</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://nmikstas.github.io/portfolio/fpga.html">FPGA</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://nmikstas.github.io/portfolio/dsp.html">DSP</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://nmikstas.github.io/portfolio/games.html">Games</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!--Main content body-->
+    <div id="page-body">
+        <img id="january" width="0" height="0" src="./assets/img/january.png" alt="January">
+    <img id="february" width="0" height="0" src="./assets/img/february.png" alt="February">
+    <img id="march" width="0" height="0" src="./assets/img/march.png" alt="March">
+    <img id="april" width="0" height="0" src="./assets/img/april.png" alt="April">
+    <img id="may" width="0" height="0" src="./assets/img/may.png" alt="May">
+    <img id="june" width="0" height="0" src="./assets/img/june.png" alt="June">
+    <img id="july" width="0" height="0" src="./assets/img/july.png" alt="July">
+    <img id="august" width="0" height="0" src="./assets/img/august.png" alt="August">
+    <img id="september" width="0" height="0" src="./assets/img/september.png" alt="September">
+    <img id="october" width="0" height="0" src="./assets/img/october.png" alt="October">
+    <img id="november" width="0" height="0" src="./assets/img/november.png" alt="November">
+    <img id="december" width="0" height="0" src="./assets/img/december.png" alt="December">
+
+        <div class="container-fluid bg-white px-4 py-4 my-4">
+            <div class="project-title mb-4">Canvas Date/Time Picker</div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="indent">Canvas Date/Time Picker Overview</h4>
+                    <p>
+                        This date/time picker is a canvas based project. The goal was to make a date/time picker that is composed of a single
+                        class that has no other dependancies. No React, no Bootstrap, no JQuery, no CSS. The date/time picker has many
+                        configurable options, API function calls and callback functions. Days can be excluded or highllighted on initialization
+                        or programatically. The look of the date/time picker is also customizeable.
+                    </p>
+
+                    <a class="page-link indent" href="./docIntro.html">
+                        Canvas Date/Time Picker Documentation
+                    </a>
+                    <a class="page-link indent" href="https://github.com/nmikstas/canvas-date-time-picker">
+                        Canvas Date/Time Picker Repository
+                    </a>
+                    <br>
+
+                    <div class="divider"></div>
+                    <h4 class="indent">Canvas Date/Time Picker Sample Configurations</h4>
                 </div>
-                <div class="col-md-12 border">
-                    <h1>Textbox Value</h1>
-                    <span id="tb-span"></span><br>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3"></div>
+
+                <div class="col-md-3">
+                    <h5 class="text-center">Default Date/Time Picker</h5>
+                    <div id="dtp1" class="dtp-format"></div>
                 </div>
-            </div>
-            <div class="col-md-4 col-style">
-            <div class="col-md-12 my-3 border">
-                <h1>Function Calls</h1>
-                <span>Date-Time String: </span><span id="date-time-span1"></span><br>
-                <h4>JSON Return Values</h4>
-                <span>Is Picked: </span><span id="json-picked-span1"></span><br>
-                <span>String: </span><span id="json-string-span1"></span><br>
-                <span>Month: </span><span id="json-month-span1"></span><br>
-                <span>Day: </span><span id="json-day-span1"></span><br>
-                <span>Year: </span><span id="json-year-span1"></span><br>
-                <span>Day Of Week: </span><span id="json-day-of-week-span1"></span><br>
-                <span>Day Of Year: </span><span id="json-day-of-year-span1"></span><br>
-                <span>Week Of Year: </span><span id="json-week-of-year-span1"></span><br>
-                <span>Hour: </span><span id="json-hour-span1"></span><br>
-                <span>Military Hour: </span><span id="json-mil-hour-span1"></span><br>
-                <span>Minute: </span><span id="json-minute-span1"></span><br>
-                <span>AM/PM: </span><span id="json-am-pm-span1"></span><br>
-            </div>
+                <div class="col-md-3">
+                    <h5 class="text-center">Customized Date/Time Picker</h5>
+                    <div id="dtp2" class="dtp-format"></div>
+                </div>
+            </div> 
+            
+            <div class="row">
+
             </div>
         </div>
-        <img id="january" width="0" height="0" src="./assets/img/january.png" alt="January">
-        <img id="february" width="0" height="0" src="./assets/img/february.png" alt="February">
-        <img id="march" width="0" height="0" src="./assets/img/march.png" alt="March">
-        <img id="april" width="0" height="0" src="./assets/img/april.png" alt="April">
-        <img id="may" width="0" height="0" src="./assets/img/may.png" alt="May">
-        <img id="june" width="0" height="0" src="./assets/img/june.png" alt="June">
-        <img id="july" width="0" height="0" src="./assets/img/july.png" alt="July">
-        <img id="august" width="0" height="0" src="./assets/img/august.png" alt="August">
-        <img id="september" width="0" height="0" src="./assets/img/september.png" alt="September">
-        <img id="october" width="0" height="0" src="./assets/img/october.png" alt="October">
-        <img id="november" width="0" height="0" src="./assets/img/november.png" alt="November">
-        <img id="december" width="0" height="0" src="./assets/img/december.png" alt="December">
     </div>
+
+    <!--Footer-->
+    <footer id="sticky-footer" class="pt-4 pb-1">
+        <div class="container text-center">
+            <small>&copy;Nick Mikstas - nmikstas@alumni.scu.edu</small>
+        </div>
+    </footer>
+
+    <!--jQuery-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     <!--Bootstrap-->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -91,6 +138,6 @@
     
     <!--Javascript-->
     <script src="assets/js/canvasDateTimePicker.js"></script>
-    <script src="assets/js/javascript.js"></script>
+    <script src="assets/js/overview.js"></script>
 </body>
 </html>

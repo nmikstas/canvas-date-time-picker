@@ -131,6 +131,7 @@ class CanvDTP
             /***************************** Configuration Parameters ******************************/
 
             debug               = false,               //Enable/disable debug.
+            zIndex              = 1,                   //Z index of the body canvas.
             dateTimeFormat      = null,                //Enable date and/or time and set the string format.
             pickerType          = CanvDTP.PICK_BOTH,   //Enable date and/or time picker.
             isAnimated          = true,                //Enable/disable open/close animation.
@@ -388,6 +389,9 @@ class CanvDTP
         this.iconCanvas;
         this.infotext;
 
+        //Set the z index of the body canvas.
+        this.zIndex = zIndex;
+
         //Contexts of the canvases.
         this.ctxDTP;
         this.ctxIcon;
@@ -539,6 +543,8 @@ class CanvDTP
         this.infoPoint.style.visibility     = "hidden";
         this.infoPoint.style.position       = "absolute";
         this.infoPoint.style.borderStyle    = "solid";
+        this.infoPoint.style.zIndex         = this.zIndex;
+        this.infoText.style.zIndex          = this.zIndex;
         this.infoText.style.backgroundColor = this.infoBackColor;
         this.infoText.style.color           = this.infoTextColor;
         this.infoText.style.borderRadius    = this.infoBorderRadius;
@@ -578,6 +584,7 @@ class CanvDTP
         if(this.calendarIcon) this.iconCanvas.style.position = "absolute";
         this.canParent.style.position  = "absolute";
         this.bodyCanvas.style.position = "absolute";
+        this.bodyCanvas.style.zIndex   = this.zIndex;
 
         //Setup default cursor for icon canvas.
         if(this.calendarIcon) this.iconCanvas.style.cursor = "pointer";
@@ -595,7 +602,7 @@ class CanvDTP
         }
 
         //Add body event listeners.
-        this.bodyCanvas.addEventListener('mousemove',  () => this.bodyCoords());
+        this.bodyCanvas.addEventListener('mousemove',  (e) => this.bodyCoords(e));
         this.bodyCanvas.addEventListener('mouseleave', () => this.bodyExit());
         this.bodyCanvas.addEventListener("click", () => this.bodyClick());
 
@@ -2412,9 +2419,9 @@ class CanvDTP
     }
 
     //Calculate the x, y coordinates of the mouse over the body canvas.
-    bodyCoords()
+    bodyCoords(mouseEvent)
     {
-        let obj = this.bodyCanvas;
+        let obj      = this.bodyCanvas;
         let obj_left = 0;
         let obj_top  = 0;
         
@@ -2422,13 +2429,25 @@ class CanvDTP
         while (obj.offsetParent)
         {
             obj_left += obj.offsetLeft;
-            obj_top += obj.offsetTop;
-            obj = obj.offsetParent;
+            obj_top  += obj.offsetTop;
+            obj       = obj.offsetParent;
         }
 
-        //Figure out the total offset taking the mouse position and scroll into account.
-        this.bodyX = window.event.x + window.pageXOffset - obj_left;
-        this.bodyY = window.event.y + window.pageYOffset - obj_top;
+        if (mouseEvent)
+        {
+            //FireFox
+            this.bodyX = mouseEvent.pageX;
+            this.bodyY = mouseEvent.pageY;
+        }
+        else
+        {
+            //IE
+            this.bodyX = window.event.x + document.body.scrollLeft - 2;
+            this.bodyY = window.event.y + document.body.scrollTop - 2;
+        }
+
+        this.bodyX = this.bodyX - obj_left + document.body.scrollLeft;
+        this.bodyY = this.bodyY - obj_top  + document.body.scrollTop;
 
         this.bodyDraw();
     }

@@ -2383,7 +2383,7 @@ class CanvDTP
             this.ctxDTP.fill();
             this.ctxDTP.stroke();
         }
-        catch{ /*Do nothing. Just catch exception.*/ }
+        catch(e){ /*Do nothing. Just catch exception.*/ }
     }
 
     /*********************************** Body Canvas Functions ***********************************/
@@ -2578,7 +2578,7 @@ class CanvDTP
                 let img = this.monthImages[this.tempMonth - 1].image;
                 this.ctxDTP.drawImage(img, 0, 0, this.bodyCanWidth, this.bodyCanWidth);
             }
-            catch{} //Just skip if image not found.
+            catch(e){} //Just skip if image not found.
             finally{ this.ctxDTP.globalAlpha = 1; }
         }
         this.ctxDTP.stroke();

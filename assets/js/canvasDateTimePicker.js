@@ -156,7 +156,7 @@ class CanvDTP
             initDate            = null,                //Date to use on first pick when picker opened.
             autoPick            = true,                //Enable automatic date pick when picker opened.
             todaysDate          = true,                //Enable today's date marker on calendar.
-            topView             = CanvDTP.CAL_CENTURY, //Top view is the century view. 
+            topView             = CanvDTP.CAL_CENTURY, //Top view is the century view.
             calendarIcon        = true,                //Enable the calendar icon next to the textbox.
             bodyPosition        = CanvDTP.POS_BOTLEFT, //Position of body canvas with respect to the textbox.
             isCollapsible       = true,                //Allows the body canvas to be minimized.

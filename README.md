@@ -1,13 +1,12 @@
 # canvas-date-time-picker
-A date/time picker that uses plain Javascript and the canvas API.
+A date/time picker that uses plain Javascript and the canvas API.  
 
 The goal is to make a date/time picker consisting of a single class needing no other files.
-No React, no Bootstrap, no JQuery, no CSS.
+No React, no Bootstrap, no JQuery, no CSS.  
 
-Detailed documentation will be written after the coding is done.
+Detailed documentation will be written after the coding is done.  
 
-I've decided to go in and add tons of configurable functionality. Working on that now! May take a few days.  
-Last updated: 4/15/2020.
+Last updated: 4/19/2020.  
 
 ## __Things that will be added:__
 - ***Done*** Fully customizeable date/time format string.
@@ -149,12 +148,13 @@ getIncDecParams
 setIncDecParams  
 getScales  
 setScales  
+getZIndex  
+setZIndex  
 
 # __Callback Functions__ #
 ***Done*** dateTimeStringCb - Returns a string representation of the currently selected date.  
 ***Done*** dateTimeJSONCb - Returns a JSON object of the currently selected date. {isPicked, string, month, day, year, hour, milHour, minute, ampm, dayOfWeek, dayOfYear, weekOfYear}  
 
-paramChangeCb  
 openCb  
 closeCb  
 hourChangeCb  

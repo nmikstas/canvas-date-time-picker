@@ -383,7 +383,10 @@ for(let i = 0; i <presidents.length; i++)
     )
 }
 
+//Default picker.
 new CanvDTP(document.getElementById("dtp1"));
+
+//Customized picker.
 new CanvDTP
 (
     document.getElementById("dtp2"),
@@ -398,18 +401,18 @@ new CanvDTP
         lastDate:         {month: 12, day: 31, year: 2020},
         monthImages:
         [
-            {image: document.getElementById("january"), opacity: 0.2},
-            {image: document.getElementById("february"), opacity: 0.2},
-            {image: document.getElementById("march"), opacity: 0.2},
-            {image: document.getElementById("april"), opacity: 0.2},
-            {image: document.getElementById("may"), opacity: 0.2},
-            {image: document.getElementById("june"), opacity: 0.2},
-            {image: document.getElementById("july"), opacity: 0.2},
-            {image: document.getElementById("august"), opacity: 0.2},
-            {image: document.getElementById("september"), opacity: 0.2},
-            {image: document.getElementById("october"), opacity: 0.2},
-            {image: document.getElementById("november"), opacity: 0.2},
-            {image: document.getElementById("december"), opacity: 0.2},
+            {image: document.getElementById("january"), opacity: 0.4},
+            {image: document.getElementById("february"), opacity: 0.4},
+            {image: document.getElementById("march"), opacity: 0.4},
+            {image: document.getElementById("april"), opacity: 0.4},
+            {image: document.getElementById("may"), opacity: 0.4},
+            {image: document.getElementById("june"), opacity: 0.4},
+            {image: document.getElementById("july"), opacity: 0.4},
+            {image: document.getElementById("august"), opacity: 0.4},
+            {image: document.getElementById("september"), opacity: 0.4},
+            {image: document.getElementById("october"), opacity: 0.4},
+            {image: document.getElementById("november"), opacity: 0.4},
+            {image: document.getElementById("december"), opacity: 0.4},
         ],
         dayExcludeArray:
         [
@@ -422,3 +425,251 @@ new CanvDTP
         yearSpotlightArray:  [...yearsArr]
     }
 );
+
+//Not collapsible, top.
+new CanvDTP(document.getElementById("dtp15"), {bodyPosition: CanvDTP.POS_TOPRIGHT, isCollapsible: false, zIndex: 0});
+
+//Not collapsible bottom.
+new CanvDTP(document.getElementById("dtp16"), {bodyPosition: CanvDTP.POS_BOTRIGHT, isCollapsible: false, zIndex: 0});
+
+//Not collapsible, not textbox.
+new CanvDTP(document.getElementById("dtp17"), {bodyPosition: CanvDTP.POS_TOPRIGHT, isCollapsible: false, zIndex: 0});
+
+//Bottom right picker.
+new CanvDTP(document.getElementById("dtp3"), {bodyPosition: CanvDTP.POS_BOTRIGHT});
+
+//Bottom left picker (default).
+new CanvDTP(document.getElementById("dtp4"), {bodyPosition: CanvDTP.POS_BOTLEFT});
+
+//Top right picker.
+new CanvDTP(document.getElementById("dtp5"), {bodyPosition: CanvDTP.POS_TOPRIGHT});
+
+//Top left picker.
+new CanvDTP(document.getElementById("dtp6"), {bodyPosition: CanvDTP.POS_TOPLEFT});
+
+//Bottom right picker, 250 pixels max.
+new CanvDTP(document.getElementById("dtp7"), {bodyPosition: CanvDTP.POS_BOTRIGHT, maxPixelWidth: 250});
+
+//Bottom left picker, 250 pixels max.
+new CanvDTP(document.getElementById("dtp8"), {bodyPosition: CanvDTP.POS_BOTLEFT, maxPixelWidth: 250});
+
+//Top right picker, 250 pixels max.
+new CanvDTP(document.getElementById("dtp9"), {bodyPosition: CanvDTP.POS_TOPRIGHT, maxPixelWidth: 250});
+
+//Top left picker, 250 pixels max.
+new CanvDTP(document.getElementById("dtp10"), {bodyPosition: CanvDTP.POS_TOPLEFT, maxPixelWidth: 250});
+
+//Bottom picker, no animation.
+new CanvDTP(document.getElementById("dtp11"), {bodyPosition: CanvDTP.POS_BOTRIGHT, isAnimated: false});
+
+//Top picker, no animation.
+new CanvDTP(document.getElementById("dtp12"), {bodyPosition: CanvDTP.POS_TOPRIGHT, isAnimated: false});
+
+//Date picker only.
+new CanvDTP(document.getElementById("dtp13"), {pickerType: CanvDTP.PICK_DATE});
+
+//Time picker only.
+new CanvDTP(document.getElementById("dtp14"), {pickerType: CanvDTP.PICK_TIME});
+
+//Custom date/time string.
+new CanvDTP(document.getElementById("dtp18"), {dateTimeFormat: "dddd, MMMM Do YYYY h:mm a"});
+
+//Monday start of week.
+new CanvDTP(document.getElementById("dtp19"), {startOfWeek: CanvDTP.MONDAY});
+
+//Military time.
+new CanvDTP(document.getElementById("dtp20"), {isMilitaryTime: true, dateTimeFormat: "HH:mm", pickerType: CanvDTP.PICK_TIME});
+
+//Today's date not shown.
+new CanvDTP(document.getElementById("dtp21"), {todaysDate: false});
+
+//Arial black font style.
+new CanvDTP(document.getElementById("dtp22"), {fontStyle: "Arial Black", bannerScale: .70, yearScale: .55});
+
+//Auto pick disabled.
+new CanvDTP(document.getElementById("dtp23"), {autoPick: false});
+
+//No calendar icon.
+new CanvDTP(document.getElementById("dtp24"), {calendarIcon: false});
+
+//Alternate text colors.
+new CanvDTP(document.getElementById("dtp25"), {textMainColorn: "#0000ff", textMainColorh: "#00ffff",
+    textAltColorn: "#ff0000", textAltColorh: "#ffff00"});
+
+//Month and year views only.
+new CanvDTP(document.getElementById("dtp26"), {topView: CanvDTP.CAL_YEAR});
+
+//First date Jan 1, 2000.
+new CanvDTP(document.getElementById("dtp27"), {firstDate: {month: CanvDTP.JANUARY, day: 1, year: 2000}});
+
+//Last date Dec 31, 2030.
+new CanvDTP(document.getElementById("dtp28"), {lastDate: {month: CanvDTP.DECEMBER, day: 31, year: 2030}});
+
+//First date Date Dec 25, 1980.
+new CanvDTP(document.getElementById("dtp29"), {initDate: {month: CanvDTP.DECEMBER, day: 25, year: 1980}});
+
+//Custom Month Background Images.
+new CanvDTP(document.getElementById("dtp30"),
+{
+    monthImages:
+    [
+        {image: document.getElementById("january"), opacity: 0.4},
+        {image: document.getElementById("february"), opacity: 0.4},
+        {image: document.getElementById("march"), opacity: 0.4},
+        {image: document.getElementById("april"), opacity: 0.4},
+        {image: document.getElementById("may"), opacity: 0.4},
+        {image: document.getElementById("june"), opacity: 0.4},
+        {image: document.getElementById("july"), opacity: 0.4},
+        {image: document.getElementById("august"), opacity: 0.4},
+        {image: document.getElementById("september"), opacity: 0.4},
+        {image: document.getElementById("october"), opacity: 0.4},
+        {image: document.getElementById("november"), opacity: 0.4},
+        {image: document.getElementById("december"), opacity: 0.4},
+    ]
+});
+
+//Month Days Excluded, Weekends Whitelisted.
+new CanvDTP(document.getElementById("dtp31"),
+{
+    dayExcludeArray: 
+    [
+        {
+            excluded: true,
+            color: "#ff000080",
+            info: "All Weekdays Excluded"
+        }
+    ],
+    dayWhiteArray:
+        [
+            {   //Whitelist the weekends in May from exclusion.
+                daysOfWeek: [CanvDTP.SATURDAY, CanvDTP.SUNDAY], 
+                type: CanvDTP.WHITE_BLOCK
+            }
+        ]
+});
+
+//Weekends Spotlighted.
+new CanvDTP(document.getElementById("dtp32"), 
+{
+    dayExcludeArray: 
+    [
+        {
+            daysOfWeek: [CanvDTP.SATURDAY, CanvDTP.SUNDAY], 
+            color: "#0000ff80",
+            info: "All Weekend Days Spotlighted"
+        }
+    ]
+});
+
+//All Months Spotlighted, Feb, Apr, Jun Whitelisted.
+new CanvDTP(document.getElementById("dtp33"),
+{
+    monthSpotlightArray:
+    [
+        {
+            color: "#0000ff80",
+            info: "Spotlighted Month"
+        }
+    ],
+    monthWhiteArray:
+    [
+        {
+            months: [CanvDTP.FEBRUARY, CanvDTP.APRIL, CanvDTP.JUNE]
+        }
+    ]
+});
+
+//2010-2030 Spotlighted, 2020 Whitelisted.
+new CanvDTP(document.getElementById("dtp34"),
+{
+    yearSpotlightArray:
+    [
+        {
+            years: 
+            [
+                2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019,
+                2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029,
+                2030
+            ],
+            color: "#0000ff80",
+            info: "Spotlighted Year"
+        }
+    ],
+    yearWhiteArray:
+    [
+        {
+            years: [2020]
+        }
+    ]
+});
+
+//Custom Calendar Icon Parameters.
+new CanvDTP(document.getElementById("dtp35"),
+{
+    iBorderColorn: "#0000ff", iFillColorn: "#c000c0", iCalColorn: "#00ff00", iBorderColorh: "#ff0000",
+    iFillColorh: "#30ff30", iCalColorh: "#ff00ff", iBorderRadius: 0, iBorderWeight: .10,
+    iXPadding: .10, iYPadding: .10, iLineWidth: .001
+});
+
+//Custom Body Canvas Parameters.
+new CanvDTP(document.getElementById("dtp36"),
+{
+    bBorderColor: "#0000ff", bFillColor: "#d0d0ffe0", bBorderRadius: 0,
+    bBorderWeight: .001, bXPadding: .05, bYPadding: .40, bLineWidth: .2
+});
+
+//Custom Info Text Parameters.
+new CanvDTP(document.getElementById("dtp37"),
+{
+    infoPointerSize: "75px",
+    infoBackColor: "#c0c000",
+    infoTextColor: "#ff0000",
+    infoPadding: "2px, 5px",
+    infoWidth: "150px",
+    infoBorderRadius: "10px 10px 0px 0px",
+    dayExcludeArray: 
+    [
+        {
+            daysOfWeek: [CanvDTP.SATURDAY, CanvDTP.SUNDAY], 
+            color: "#0000ff80",
+            info: "Weekend Days Spotlighted"
+        }
+    ]
+});
+
+//Custom Selectable Items Parameters.
+new CanvDTP(document.getElementById("dtp38"),
+{
+    selectBorderColor: "#ff0000", selectFillColor: "#80000040", selectRadius: .50, selectWeight: .01
+});
+
+//Custom Previous/Next Parameters.
+new CanvDTP(document.getElementById("dtp39"), {prevNextXPad: 0, prevNextYPad: .35});
+
+//Custom Clock Graphic Parameters.
+new CanvDTP(document.getElementById("dtp40"), {clockPad: .20, clockWeight: .15});
+
+//Custom Calendar Graphic Parameters.
+new CanvDTP(document.getElementById("dtp41"), {calXPadding: .30, calYPadding: .20, calLineWidth: .015});
+
+//Custom Days of Week Header Parameters.
+new CanvDTP(document.getElementById("dtp42"), {headerColor: "#ffff00", headerScale: .60});
+
+//Custom Currently Selected Day Parameters.
+new CanvDTP(document.getElementById("dtp43"),
+{
+    currentBorderColor: "#ff0000", currentFillColor: "#d0000080", currentRadius: .50, currentWeight: .10
+});
+
+//Custom Today's Date Parameters.
+new CanvDTP(document.getElementById("dtp44"), {nowColor: "#0000ff", nowWeight: .30,});
+
+//Custom Increment/Decrement Parameters.
+new CanvDTP(document.getElementById("dtp45"), {incXPad: .40, incYPad: .40, incWeight: .10});
+
+//Custom Text Scale Parameters.
+new CanvDTP(document.getElementById("dtp46"), 
+{
+    bannerScale: .50, dayScale: .30, monthScale: .30, yearScale: .30, decadeScale: .20,
+    timeScale: .30, timeAmPmScale: .30, minuteScale: .30, hourScale: .30
+});

@@ -1,8 +1,6 @@
 /******************************************* HTML Tags *******************************************/
 body, html
 {
-    height: 100%;
-    width: 100%;
     background-image: url("../img/noisy_net.png");
     overflow-x: hidden;
     font-size: 16px;
@@ -93,6 +91,87 @@ footer
 {
     flex: 1 0 auto;
 }
+
+/****************************************** Navigation *******************************************/
+
+.doc-container
+{
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    padding-left: 15%;
+    padding-right: 15%;
+}
+
+.sidenav
+{
+    grid-column: span 3;
+    padding-left: 20px;
+    padding-top: 20px;
+    background-color: #e0e0e0;
+}
+
+.doc-content
+{
+    grid-column: span 9;
+    padding-left: 20px;
+    padding-top: 20px;
+    background-color: #ffffff;
+}
+
+@media screen and (max-width: 991px)
+{
+    .doc-container
+    {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .sidenav
+    {
+        grid-column: span 4;
+        padding-left: 20px;
+        padding-top: 20px;
+        background-color: #e0e0e0;
+    }
+
+    .doc-content
+    {
+        grid-column: span 8;
+        padding-left: 20px;
+        padding-top: 20px;
+        background-color: #ffffff;
+    }
+}
+
+.subsection
+{
+    padding-left: 30px;
+}
+
+.section-link
+{
+
+}
+
+.subsection-link
+{
+
+}
+
+.section-header
+{
+    height: 50px;
+}
+
+.subsection-header
+{
+    height: 300px;
+    padding-left: 30px;
+}
+
+
+
+  
 
 /***************************************** Page Specific *****************************************/
 

@@ -4742,6 +4742,159 @@ class CanvDTP
         }
     }
 
+    /************************************* Utility Functions *************************************/
+
+    //Function derived from https://www.assa.org.au/edm#Computer
+    //Returns the month and day of easter for a given year.
+    static getEaster(year)
+    {
+        //Return if the year is outside the range of 1583 to 4099.
+        if(year > 4099 || year < 1583) return{month: -1, day: -1};
+
+        let FirstDig, Remain19, temp; //intermediate results
+        let tA, tB, tC, tD, tE;       //table A to E results
+        let d, m;                     //Day and month of easter.
+
+        FirstDig = parseInt(year / 100); //first 2 digits of year
+        Remain19 = year % 19;            //remainder of year / 19
+
+        //calculate PFM date
+        temp = parseInt((FirstDig - 15) / 2) + 202 - 11 * Remain19;
+    
+        switch(FirstDig)
+        {
+            case 21, 24, 25, 27, 28, 29, 30, 31, 32, 34, 35, 38:
+                temp--;
+                break;
+            case 33, 36, 37, 39, 40:
+                temp -= 2;
+                break;
+        }
+   
+        temp = temp % 30;
+        tA = temp + 21;
+
+        if(temp === 29)tA--;
+        if(temp === 28 && Remain19 > 10)tA--;
+
+        //find the next Sunday
+        tB = (tA - 19) % 7;
+        tC = (40 - FirstDig) % 4;
+
+        if(tC === 3)tC++;
+        if(tC > 1)tC++;
+        
+        temp = year % 100;
+        tD = parseInt(temp + temp / 4) % 7;
+        tE = ((20 - tB - tC - tD) % 7) + 1;
+        d = tA + tE;
+
+        //return the date
+        if(d > 31)
+        {
+            d -= 31;
+            m = 4;
+        }
+        else
+        {
+            m = 3;
+        }
+        return {month: m, day: d};
+    }
+
+    //Returns the month and day of thanksgiving for a given year.
+    static getThanksgiving(year)
+    {
+        let first = new Date(year, 10, 1);
+        let dayOfWeek = first.getDay();
+        let d = ((dayOfWeek < 5) ? 26 : 33) - dayOfWeek;
+        return {month: CanvDTP.NOVEMBER, day: d};
+    }
+
+    //Returns the month and day of MLK for a given year.
+    static getMLK(year)
+    {
+        let first = new Date(year, 0, 1);
+        let dayOfWeek = first.getDay();
+        let d = ((dayOfWeek < 1) ? 16 : 23) - dayOfWeek;
+        return {month: CanvDTP.JANUARY, day: d};
+    }
+
+    //Returns the month and day for mother's day for a given year.
+    static getMothers(year)
+    {
+        let first = new Date(year, 4, 1);
+        let dayOfWeek = first.getDay();
+        let d = ((dayOfWeek < 1) ? 8 : 15) - dayOfWeek;
+        return {month: CanvDTP.MAY, day: d};
+    }
+
+    //Returns the month and day for father's day for a given year.
+    static getFathers(year)
+    {
+        let first = new Date(year, 5, 1);
+        let dayOfWeek = first.getDay();
+        let d = ((dayOfWeek < 1) ? 15 : 22) - dayOfWeek;
+        return {month: CanvDTP.JUNE, day: d};
+    }
+
+    //Returns the month and day for Washington's birthday for a given year.
+    static getWashington(year)
+    {
+        let first = new Date(year, 1, 1);
+        let dayOfWeek = first.getDay();
+        let d = ((dayOfWeek < 1) ? 16 : 23) - dayOfWeek;
+        return {month: CanvDTP.FEBRUARY, day: d};
+    }
+
+    //Returns the month and day for memorial day for a given year.
+    static getMemorial(year)
+    {
+        let first = new Date(year, 4, 31);
+        let dayOfWeek = first.getDay();
+        let d = ((dayOfWeek < 2) ? 25 : 32) - dayOfWeek;
+        return {month: CanvDTP.MAY, day: d};
+    }
+
+    //Returns the month and day for labor day for a given year.
+    static getLabor(year)
+    {
+        let first = new Date(year, 8, 1);
+        let dayOfWeek = first.getDay();
+        let d = ((dayOfWeek < 2) ? 2 : 9) - dayOfWeek;
+        return {month: CanvDTP.SEPTEMBER, day: d};
+    }
+
+    //Returns the month and day for Columbus day for a given year.
+    static getColumbus(year)
+    {
+        let first = new Date(year, 8, 1);
+        let dayOfWeek = first.getDay();
+        let d = 14 - dayOfWeek;
+        return {month: CanvDTP.OCTOBER, day: d};
+    }
+
+    //Returns the date of independence day.
+    static get getIndependence() {return {month: CanvDTP.JULY, day: 4}};
+
+    //Returns the date of christmas day.
+    static get getChristmas() {return {month: CanvDTP.DECEMBER, day: 25}};
+
+    //Returns the date of new year's day.
+    static get getNewYears() {return {month: CanvDTP.JANUARY, day: 1}};
+
+    //Returns the date of Halloween.
+    static get getHalloween() {return {month: CanvDTP.OCTOBER, day: 31}};
+
+    //Returns the date of Valentine's day.
+    static get getValentines() {return {month: CanvDTP.FEBRUARY, day: 14}};
+
+    //Returns the date of St. Patrick's day.
+    static get getStPatricks() {return {month: CanvDTP.MARCH, day: 17}};
+
+    //Returns the date of veteran's day.
+    static get getVeterans() {return {month: CanvDTP.NOVEMBER, day: 11}};
+
     /*************************************** API Functions ***************************************/
 
     getDateTimeString()

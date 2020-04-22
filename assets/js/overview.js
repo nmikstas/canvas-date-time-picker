@@ -10,68 +10,11 @@ let monthsArr       = [];
 let yearsArr        = [];
 let easterArr       = [];
 
-//Function derived from https://www.assa.org.au/edm#Computer
-let getEaster = (year) =>
-{
-    //Return if the year is outside the range of 1583 to 4099.
-    if(year > 4099 || year < 1583) return{month: -1, day: -1};
-
-    let FirstDig, Remain19, temp; //intermediate results
-    let tA, tB, tC, tD, tE;       //table A to E results
-    let d, m;                     //Day and month of easter.
-
-    FirstDig = parseInt(year / 100); //first 2 digits of year
-    Remain19 = year % 19;            //remainder of year / 19
-
-    //calculate PFM date
-    temp = parseInt((FirstDig - 15) / 2) + 202 - 11 * Remain19;
-    
-    switch(FirstDig)
-    {
-        case 21, 24, 25, 27, 28, 29, 30, 31, 32, 34, 35, 38:
-            temp--;
-            break;
-        case 33, 36, 37, 39, 40:
-            temp -= 2;
-            break;
-    }
-   
-    temp = temp % 30;
-    tA = temp + 21;
-
-    if(temp === 29)tA--;
-    if(temp === 28 && Remain19 > 10)tA--;
-
-    //find the next Sunday
-    tB = (tA - 19) % 7;
-    tC = (40 - FirstDig) % 4;
-
-    if(tC === 3)tC++;
-    if(tC > 1)tC++;
-        
-    temp = year % 100;
-    tD = parseInt(temp + temp / 4) % 7;
-    tE = ((20 - tB - tC - tD) % 7) + 1;
-    d = tA + tE;
-
-    //return the date
-    if(d > 31)
-    {
-        d -= 31;
-        m = 4;
-    }
-    else
-    {
-        m = 3;
-    }
-      
-    return {month: m, day: d};
-}
-
-//Create an array of easter days.
+//Get all the major U.S. holidays between 1900 and 2020.
 for(let i = 1900; i <= 2020; i++)
 {
-    let easterDate = getEaster(i);
+    //Create an array of easter days.
+    let easterDate = CanvDTP.getEaster(i);
     easterArr.push
     (
         {
@@ -82,260 +25,187 @@ for(let i = 1900; i <= 2020; i++)
             info:   "Easter"
         }
     )
-}
 
-//Calculate thanksgiving day of month.
-let thanksgiving = (year) =>
-{
-    let first = new Date(year, 10, 1);
-    let dayOfWeek = first.getDay();
-    return ((dayOfWeek < 5) ? 26 : 33) - dayOfWeek;
-}
+    //Create an array of thanksgiving days.
+    let thanksgivingDate = CanvDTP.getThanksgiving(i);
+    thanksgivingArr.push
+    (
+        {
+            years:  [i],
+            months: [thanksgivingDate.month],
+            days:   [thanksgivingDate.day],
+            color:  "#ff00ff80",
+            info:   "Thanksgiving"
+        }
+    )
 
-//Create an array of thanksgiving days.
-for(let i = 1900; i <= 2020; i++)
-{
-   thanksgivingArr.push
-   (
-       {
-           years:  [i],
-           months: [CanvDTP.NOVEMBER],
-           days:   [thanksgiving(i)],
-           color:  "#ff00ff80",
-           info:   "Thanksgiving"
+    //Create an array of MLK days.
+    let mlkDate = CanvDTP.getMLK(i)
+    mlkArr.push
+    (
+        {
+            years:  [i],
+            months: [mlkDate.month],
+            days:   [mlkDate.day],
+            color:  "#ff00ff80",
+            info:   "Martin Luther King's Day"
+        }
+    )
+
+    //Create an array of Mother's days.
+    let mothersDate = CanvDTP.getMothers(i);
+    mothersArr.push
+    (
+        {
+            years:  [i],
+            months: [mothersDate.month],
+            days:   [mothersDate.day],
+            color:  "#ff00ff80",
+            info:   "Mother's Day"
+        }
+    )
+
+    //Create an array of Father's days.
+    let fathersDate = CanvDTP.getFathers(i);
+    fathersArr.push
+    (
+        {
+            years:  [i],
+            months: [fathersDate.month],
+            days:   [fathersDate.day],
+            color:  "#ff00ff80",
+            info:   "Father's Day"
+        }
+    )
+
+    //Create an array of Washington's birthdays.
+    let washingtonDate = CanvDTP.getWashington(i);
+    washingtonArr.push
+    (
+        {
+            years:  [i],
+            months: [washingtonDate.month],
+            days:   [washingtonDate.day],
+            color:  "#ff00ff80",
+            info:   "George Washington's Birthday"
+        }
+    )
+
+    //Create an array of memorial days.
+    let memorialDate = CanvDTP.getMemorial(i);
+    memorialArr.push
+    (
+        {
+            years:  [i],
+            months: [memorialDate.month],
+            days:   [memorialDate.day],
+            color:  "#ff00ff80",
+            info:   "Memorial Day"
+        }
+    )
+
+    //Create an array of labor days.
+    let laborDate = CanvDTP.getLabor(i);
+    laborArr.push
+    (
+        {
+            years:  [i],
+            months: [laborDate.month],
+            days:   [laborDate.day],
+            color:  "#ff00ff80",
+            info:   "Labor Day"
+        }
+    )
+
+    //Create an array of Columbus days.
+    let columbusDate = CanvDTP.getColumbus(i);
+    columbusArr.push
+    (
+        {
+            years:  [i],
+            months: [columbusDate.month],
+            days:   [columbusDate.day],
+            color:  "#ff00ff80",
+            info:   "Columbus Day"
         }
     )
 }
 
-//Calculate MLK day of month.
-let mlk = (year) =>
-{
-    let first = new Date(year, 0, 1);
-    let dayOfWeek = first.getDay();
-    return ((dayOfWeek < 1) ? 16 : 23) - dayOfWeek;
-}
-
-//Create an array of MLK days.
-for(let i = 1900; i <= 2020; i++)
-{
-   mlkArr.push
-   (
-       {
-           years:  [i],
-           months: [CanvDTP.JANUARY],
-           days:   [mlk(i)],
-           color:  "#ff00ff80",
-           info:   "Martin Luther King's Birthday"
-        }
-    )
-}
-
-//Calculate Mother's day of month.
-let mothers = (year) =>
-{
-    let first = new Date(year, 4, 1);
-    let dayOfWeek = first.getDay();
-    return ((dayOfWeek < 1) ? 8 : 15) - dayOfWeek;
-}
-
-//Create an array of Mother's days.
-for(let i = 1900; i <= 2020; i++)
-{
-   mothersArr.push
-   (
-       {
-           years:  [i],
-           months: [CanvDTP.MAY],
-           days:   [mothers(i)],
-           color:  "#ff00ff80",
-           info:   "Mother's Day"
-        }
-    )
-}
-
-//Calculate Father's day of month.
-let fathers = (year) =>
-{
-    let first = new Date(year, 5, 1);
-    let dayOfWeek = first.getDay();
-    return ((dayOfWeek < 1) ? 15 : 22) - dayOfWeek;
-}
-
-//Create an array of Father's days.
-for(let i = 1900; i <= 2020; i++)
-{
-   fathersArr.push
-   (
-       {
-           years:  [i],
-           months: [CanvDTP.JUNE],
-           days:   [fathers(i)],
-           color:  "#ff00ff80",
-           info:   "Father's Day"
-        }
-    )
-}
-
-//Calculate Washington's birthday day of month.
-let washington = (year) =>
-{
-    let first = new Date(year, 1, 1);
-    let dayOfWeek = first.getDay();
-    return ((dayOfWeek < 1) ? 16 : 23) - dayOfWeek;
-}
-
-//Create an array of Washington's birthdays.
-for(let i = 1900; i <= 2020; i++)
-{
-   washingtonArr.push
-   (
-       {
-           years:  [i],
-           months: [CanvDTP.FEBRUARY],
-           days:   [washington(i)],
-           color:  "#ff00ff80",
-           info:   "George Washington's Birthday"
-        }
-    )
-}
-
-//Calculate memorial day of month.
-let memorial = (year) =>
-{
-    let first = new Date(year, 4, 31);
-    let dayOfWeek = first.getDay();
-    return ((dayOfWeek < 2) ? 25 : 32) - dayOfWeek;
-}
-
-//Create an array of memorial days.
-for(let i = 1900; i <= 2020; i++)
-{
-   memorialArr.push
-   (
-       {
-           years:  [i],
-           months: [CanvDTP.MAY],
-           days:   [memorial(i)],
-           color:  "#ff00ff80",
-           info:   "Memorial Day"
-        }
-    )
-}
-
-//Calculate labor day of month.
-let labor = (year) =>
-{
-    let first = new Date(year, 8, 1);
-    let dayOfWeek = first.getDay();
-    return ((dayOfWeek < 2) ? 2 : 9) - dayOfWeek;
-}
-
-//Create an array of labor days.
-for(let i = 1900; i <= 2020; i++)
-{
-   laborArr.push
-   (
-       {
-           years:  [i],
-           months: [CanvDTP.SEPTEMBER],
-           days:   [labor(i)],
-           color:  "#ff00ff80",
-           info:   "Labor Day"
-        }
-    )
-}
-
-//Calculate Columbus day of month.
-let columbus = (year) =>
-{
-    let first = new Date(year, 8, 1);
-    let dayOfWeek = first.getDay();
-    return 14 - dayOfWeek;
-}
-
-//Create an array of Columbus days.
-for(let i = 1900; i <= 2020; i++)
-{
-   columbusArr.push
-   (
-       {
-           years:  [i],
-           months: [CanvDTP.OCTOBER],
-           days:   [columbus(i)],
-           color:  "#ff00ff80",
-           info:   "Columbus Day"
-        }
-    )
-}
-
+//Get independence day.
 let july4 =
 [
     {
-        months: [CanvDTP.JULY],
-        days:   [4],
+        months: [CanvDTP.getIndependence.month],
+        days:   [CanvDTP.getIndependence.day],
         color:  "#ff00ff80",
         info:   "Independance Day"
-     }
+    }
 ];
 
+//Get christmas day.
 let christmas =
 [
     {
-        months: [CanvDTP.DECEMBER],
-        days:   [25],
+        months: [CanvDTP.getChristmas.month],
+        days:   [CanvDTP.getChristmas.day],
         color:  "#ff00ff80",
         info:   "Christmas"
-     }
+    }
 ];
 
+//Get new year's day.
 let newYears =
 [
     {
-        months: [CanvDTP.JANUARY],
-        days:   [1],
+        months: [CanvDTP.getNewYears.month],
+        days:   [CanvDTP.getNewYears.day],
         color:  "#ff00ff80",
         info:   "New Year's Day"
-     }
+    }
 ];
 
+//Get halloween day.
 let halloween =
 [
     {
-        months: [CanvDTP.OCTOBER],
-        days:   [31],
+        months: [CanvDTP.getHalloween.month],
+        days:   [CanvDTP.getHalloween.day],
         color:  "#ff00ff80",
         info:   "Halloween"
-     }
+    }
 ];
 
+//Get Valentine's day.
 let valentine =
 [
     {
-        months: [CanvDTP.FEBRUARY],
-        days:   [14],
+        months: [CanvDTP.getValentines.month],
+        days:   [CanvDTP.getValentines.day],
         color:  "#ff00ff80",
         info:   "Valentine's Day"
-     }
+    }
 ];
 
+//Get St. Patrick's day.
 let stPatricks =
 [
     {
-        months: [CanvDTP.MARCH],
-        days:   [17],
+        months: [CanvDTP.getStPatricks.month],
+        days:   [CanvDTP.getStPatricks.day],
         color:  "#ff00ff80",
         info:   "Saint Patrick's Day"
-     }
+    }
 ];
 
+//Get Veteran's day.
 let veterans =
 [
     {
-        months: [CanvDTP.NOVEMBER],
-        days:   [11],
+        months: [CanvDTP.getVeterans.month],
+        days:   [CanvDTP.getVeterans.day],
         color:  "#ff00ff80",
         info:   "Veteran's Day"
-     }
+    }
 ];
 
 //Highlight, but don't exclude all weekend days.
@@ -400,7 +270,7 @@ let presidents =
 ];
 
 //Create an array of special years.
-for(let i = 0; i <presidents.length; i++)
+for(let i = 0; i < presidents.length; i++)
 {
    yearsArr.push
    (

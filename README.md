@@ -181,22 +181,24 @@ centuryPrevClickCb
 
 # __Utiltity Functions__ #
 
-getEaster  
-getThanksgiving  
-getMLK  
-getMothers  
-getFathers  
-getWashington  
-getMemorial  
-getLabor  
-getColumbus  
-getJuly4  
-getChristmas  
-getNewYears  
-getHalloween  
-getValentine  
-getStPatricks  
-getVeterans  
+The utility functions return the month and day of a floating holiday for a given year. The fixed holidays return the month and day of the holiday without the need to supply a year.  
+
+***Done*** getEaster - Requires a year.  
+***Done*** getThanksgiving - Requires a year.  
+***Done*** getMLK - Requires a year.  
+***Done*** getMothers - Requires a year.  
+***Done*** getFathers - Requires a year.  
+***Done*** getWashington - Requires a year.  
+***Done*** getMemorial - Requires a year.  
+***Done*** getLabor - Requires a year.  
+***Done*** getColumbus - Requires a year.  
+***Done*** getIndependence - Returns July 4th.  
+***Done*** getChristmas - Returns December 25th.  
+***Done*** getNewYears - Returns January 1st.  
+***Done*** getHalloween - Returns October 31st.  
+***Done*** getValentines - Returns February 14th.  
+***Done*** getStPatricks - Returns March 17th.  
+***Done*** getVeterans - Returns November 11th.  
 
 # __These are some quick notes on the functionality of the date/time fomat string:__  
 M    = No zero pad month.       ***Can append ordinal***  

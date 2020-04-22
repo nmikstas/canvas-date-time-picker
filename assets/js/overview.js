@@ -1,4 +1,3 @@
-
 let mlkArr          = [];
 let washingtonArr   = [];
 let memorialArr     = [];
@@ -9,47 +8,78 @@ let mothersArr      = [];
 let fathersArr      = [];
 let monthsArr       = [];
 let yearsArr        = [];
+let easterArr       = [];
 
-let easterArr =
-[
-    ["April", 15], 	["April", 7], 	["March", 30], 	["April", 12], 	["April", 3],
-    ["April", 23], 	["April", 15], 	["March", 31], 	["April", 19], 	["April", 11],
-    ["March", 27], 	["April", 16], 	["April", 7], 	["March", 23], 	["April", 12],
-    ["April", 4], 	["April", 23], 	["April", 8], 	["March", 31], 	["April", 20],
-    ["April", 4], 	["March", 27], 	["April", 16], 	["April", 1], 	["April", 20],
-    ["April", 12], 	["April", 4], 	["April", 17], 	["April", 8], 	["March", 31],
-    ["April", 20], 	["April", 5], 	["March", 27], 	["April", 16], 	["April", 1],
-    ["April", 21], 	["April", 12], 	["March", 28], 	["April", 17], 	["April", 9],
-    ["March", 24], 	["April", 13], 	["April", 5], 	["April", 25], 	["April", 9],
-    ["April", 1], 	["April", 21], 	["April", 6], 	["March", 28], 	["April", 17],
-    ["April", 9], 	["March", 25], 	["April", 13], 	["April", 5], 	["April", 18],
-    ["April", 10], 	["April", 1], 	["April", 21], 	["April", 6], 	["March", 29],
-    ["April", 17], 	["April", 2], 	["April", 22], 	["April", 14], 	["March", 29],
-    ["April", 18], 	["April", 10], 	["March", 26], 	["April", 14], 	["April", 6],
-    ["March", 29], 	["April", 11], 	["April", 2], 	["April", 22], 	["April", 14],
-    ["March", 30], 	["April", 18], 	["April", 10], 	["March", 26], 	["April", 15],
-    ["April", 6], 	["April", 19], 	["April", 11], 	["April", 3], 	["April", 22],
-    ["April", 7], 	["March", 30], 	["April", 19], 	["April", 3], 	["March", 26],
-    ["April", 15], 	["March", 31], 	["April", 19], 	["April", 11], 	["April", 3],
-    ["April", 16], 	["April", 7], 	["March", 30], 	["April", 12], 	["April", 4],
-    ["April", 23], 	["April", 15], 	["March", 31], 	["April", 20], 	["April", 11],
-    ["March", 27], 	["April", 16], 	["April", 8], 	["March", 23], 	["April", 12],
-    ["April", 4], 	["April", 24], 	["April", 8], 	["March", 31], 	["April", 20],
-    ["April", 5], 	["March", 27], 	["April", 16], 	["April", 1], 	["April", 21],
-    ["April", 12]
-];
+//Function derived from https://www.assa.org.au/edm#Computer
+let getEaster = (year) =>
+{
+    //Return if the year is outside the range of 1583 to 4099.
+    if(year > 4099 || year < 1583) return{month: -1, day: -1};
+
+    let FirstDig, Remain19, temp; //intermediate results
+    let tA, tB, tC, tD, tE;       //table A to E results
+    let d, m;                     //Day and month of easter.
+
+    FirstDig = parseInt(year / 100); //first 2 digits of year
+    Remain19 = year % 19;            //remainder of year / 19
+
+    //calculate PFM date
+    temp = parseInt((FirstDig - 15) / 2) + 202 - 11 * Remain19;
+    
+    switch(FirstDig)
+    {
+        case 21, 24, 25, 27, 28, 29, 30, 31, 32, 34, 35, 38:
+            temp--;
+            break;
+        case 33, 36, 37, 39, 40:
+            temp -= 2;
+            break;
+    }
+   
+    temp = temp % 30;
+    tA = temp + 21;
+
+    if(temp === 29)tA--;
+    if(temp === 28 && Remain19 > 10)tA--;
+
+    //find the next Sunday
+    tB = (tA - 19) % 7;
+    tC = (40 - FirstDig) % 4;
+
+    if(tC === 3)tC++;
+    if(tC > 1)tC++;
+        
+    temp = year % 100;
+    tD = parseInt(temp + temp / 4) % 7;
+    tE = ((20 - tB - tC - tD) % 7) + 1;
+    d = tA + tE;
+
+    //return the date
+    if(d > 31)
+    {
+        d -= 31;
+        m = 4;
+    }
+    else
+    {
+        m = 3;
+    }
+      
+    return {month: m, day: d};
+}
 
 //Create an array of easter days.
 for(let i = 1900; i <= 2020; i++)
 {
-   thanksgivingArr.push
-   (
-       {
-           years:  [i],
-           months: [(easterArr[i - 1900][0] === "April") ? CanvDTP.APRIL : CanvDTP.MARCH],
-           days:   [easterArr[i - 1900][1]],
-           color:  "#ff00ff80",
-           info:   "Easter"
+    let easterDate = getEaster(i);
+    easterArr.push
+    (
+        {
+            years:  [i],
+            months: [easterDate.month],
+            days:   [easterDate.day],
+            color:  "#ff00ff80",
+            info:   "Easter"
         }
     )
 }
@@ -419,7 +449,7 @@ new CanvDTP
             ...weekends, ...july4, ...christmas, ...newYears, ...halloween,
             ...valentine, ...stPatricks, ...veterans, ...mlkArr, ...thanksgivingArr,
             ...mothersArr, ...fathersArr, ...washingtonArr, ...memorialArr,
-            ...laborArr, ...columbusArr,
+            ...laborArr, ...columbusArr, ...easterArr
         ],
         monthSpotlightArray: [...monthsArr],
         yearSpotlightArray:  [...yearsArr]

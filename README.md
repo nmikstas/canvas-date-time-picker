@@ -179,6 +179,25 @@ decadePrevClickCb
 centuryNextClickCb  
 centuryPrevClickCb  
 
+# __Utiltity Functions__ #
+
+getEaster  
+getThanksgiving  
+getMLK  
+getMothers  
+getFathers  
+getWashington  
+getMemorial  
+getLabor  
+getColumbus  
+getJuly4  
+getChristmas  
+getNewYears  
+getHalloween  
+getValentine  
+getStPatricks  
+getVeterans  
+
 # __These are some quick notes on the functionality of the date/time fomat string:__  
 M    = No zero pad month.       ***Can append ordinal***  
 MM   = Zero padded month.  

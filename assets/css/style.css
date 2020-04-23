@@ -2,7 +2,6 @@
 body, html
 {
     background-image: url("../img/noisy_net.png");
-    overflow-x: hidden;
     font-size: 16px;
 }
 
@@ -44,6 +43,15 @@ p
     color: #3f3f3f;
     padding-left: 2.0rem;
     padding-right: 2.0rem;
+}
+
+label
+{
+    line-height: 1.5;
+    font-size: 1.2rem;
+    font-family: 'Arial', 'Helvetica Neue', Helvetica, sans-serif;
+    color: #3f3f3f;
+    padding-left: 2.0rem;
 }
 
 /******************************************** Header *********************************************/
@@ -133,6 +141,7 @@ footer
     grid-column: span 9;
     padding-left: 20px;
     padding-top: 20px;
+    padding-bottom: 20px;
     background-color: #ffffff;
 }
 

@@ -215,6 +215,7 @@
                 </div>
                 <a href="#section6" class="section-link scroll-link" subclass="subsection6-menu">Miscellaneous</a>
                 <div id="subsection6-menu" class="subsection">
+                    <a href="#subsection6a" class="subsection-link scroll-link">Textbox Formatting</a>
                 </div>
             </div>
        
@@ -469,40 +470,332 @@
                 <div class="divider-bottom"></div>
 
                 <div class="section-header" id="section5">Utility Functions</div>
+                <p>
+                    The utility functions are for getting holiday dates.  For floating holidays, a year must be passed to the function.
+                    For fixed holidays, the function will return a month and day without any parameters.  The utility functions are static.
+                </p>
                 <div class="subsection-header" id="subsection5a">getEaster</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Returns the month and day of easter for a given year. Valid between 1583-4099 inclusive. Values of -1 will be returned if an
+                    invalid year is given.<br><br>
+
+                    Function Usage:
+                    <pre>
+                        let easterDate = CanvDTP.getEaster(year);
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+                        { month: number(3 or 4), day: number(1-31) }
+                    </pre>
+                    
+                    <label>Enter an easter year:</label>
+                    <input type="text" id="easter-text">
+                    <input type="button" class="btn btn-primary" id="easter-btn" value="Calculate" onclick="calcEaster()">
+                    
+                    <br>
+                    <p>Month: <span id="easter-month">N/A</span>, Day: <span id="easter-day">N/A</span></p>
+                </p>
+
                 <div class="subsection-header" id="subsection5b">getThanksgiving</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Returns the month and day of thanksgiving for a given year.
+                    <br><br>
+
+                    Function Usage:
+                    <pre>
+                        let thanksgivingDate = CanvDTP.getThanksgiving(year);
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+                        { month: 11, day: number(1-31) }
+                    </pre>
+                    
+                    <label>Enter a thanksgiving year:</label>
+                    <input type="text" id="thanksgiving-text">
+                    <input type="button" class="btn btn-primary" id="thanksgiving-btn" value="Calculate" onclick="calcThanksgiving()">
+                    
+                    <br>
+                    <p>Month: <span id="thanksgiving-month">N/A</span>, Day: <span id="thanksgiving-day">N/A</span></p>
+                </p>
+
                 <div class="subsection-header" id="subsection5c">getMLK</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Returns the month and day of Martin Luther King's day for a given year.
+                    <br><br>
+
+                    Function Usage:
+                    <pre>
+                        let mlkDate = CanvDTP.getMLK(year);
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+                        { month: 1, day: number(1-31) }
+                    </pre>
+                    
+                    <label>Enter a MLK year:</label>
+                    <input type="text" id="mlk-text">
+                    <input type="button" class="btn btn-primary" id="mlk-btn" value="Calculate" onclick="calcMLK()">
+                    
+                    <br>
+                    <p>Month: <span id="mlk-month">N/A</span>, Day: <span id="mlk-day">N/A</span></p>
+                </p>
+
                 <div class="subsection-header" id="subsection5d">getMothers</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Returns the month and day of mother's day for a given year.
+                    <br><br>
+
+                    Function Usage:
+                    <pre>
+                        let mothersDate = CanvDTP.getMothers(year);
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+                        { month: 5, day: number(1-31) }
+                    </pre>
+                    
+                    <label>Enter a mother's day year:</label>
+                    <input type="text" id="mothers-text">
+                    <input type="button" class="btn btn-primary" id="mothers-btn" value="Calculate" onclick="calcMothers()">
+                    
+                    <br>
+                    <p>Month: <span id="mothers-month">N/A</span>, Day: <span id="mothers-day">N/A</span></p>
+                </p>
+
                 <div class="subsection-header" id="subsection5e">getFathers</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Returns the month and day of father's day for a given year.
+                    <br><br>
+
+                    Function Usage:
+                    <pre>
+                        let fatherssDate = CanvDTP.getFathers(year);
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+                        { month: 6, day: number(1-31) }
+                    </pre>
+                    
+                    <label>Enter a father's day year:</label>
+                    <input type="text" id="fathers-text">
+                    <input type="button" class="btn btn-primary" id="fathers-btn" value="Calculate" onclick="calcFathers()">
+                    
+                    <br>
+                    <p>Month: <span id="fathers-month">N/A</span>, Day: <span id="fathers-day">N/A</span></p>
+                </p>
+
                 <div class="subsection-header" id="subsection5f">getWashington</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Returns the month and day of Washington's birthday for a given year.
+                    <br><br>
+
+                    Function Usage:
+                    <pre>
+                        let washingtonDate = CanvDTP.getWashington(year);
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+                        { month: 1, day: number(1-31) }
+                    </pre>
+                    
+                    <label>Enter a Washington's birthdayday year:</label>
+                    <input type="text" id="washington-text">
+                    <input type="button" class="btn btn-primary" id="washington-btn" value="Calculate" onclick="calcWashington()">
+                    
+                    <br>
+                    <p>Month: <span id="washington-month">N/A</span>, Day: <span id="washington-day">N/A</span></p>
+                </p>
+
                 <div class="subsection-header" id="subsection5g">getMemorial</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Returns the month and day of memorial day for a given year.
+                    <br><br>
+
+                    Function Usage:
+                    <pre>
+                        let memorialDate = CanvDTP.getMemorial(year);
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+                        { month: 5, day: number(1-31) }
+                    </pre>
+                    
+                    <label>Enter a memorial day year:</label>
+                    <input type="text" id="memorial-text">
+                    <input type="button" class="btn btn-primary" id="memorial-btn" value="Calculate" onclick="calcMemorial()">
+                    
+                    <br>
+                    <p>Month: <span id="memorial-month">N/A</span>, Day: <span id="memorial-day">N/A</span></p>
+                </p>
+
                 <div class="subsection-header" id="subsection5h">getLabor</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Returns the month and day of labor day for a given year.
+                    <br><br>
+
+                    Function Usage:
+                    <pre>
+                        let laborDate = CanvDTP.getLabor(year);
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+                        { month: 9, day: number(1-31) }
+                    </pre>
+                    
+                    <label>Enter a labor day year:</label>
+                    <input type="text" id="labor-text">
+                    <input type="button" class="btn btn-primary" id="labor-btn" value="Calculate" onclick="calcLabor()">
+                    
+                    <br>
+                    <p>Month: <span id="labor-month">N/A</span>, Day: <span id="labor-day">N/A</span></p>
+                </p>
+
                 <div class="subsection-header" id="subsection5i">getColumbus</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Returns the month and day of Columnbus day for a given year.
+                    <br><br>
+
+                    Function Usage:
+                    <pre>
+                        let columbusDate = CanvDTP.getColumbus(year);
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+                        { month: 10, day: number(1-31) }
+                    </pre>
+                    
+                    <label>Enter a Columbus day year:</label>
+                    <input type="text" id="columbus-text">
+                    <input type="button" class="btn btn-primary" id="columbus-btn" value="Calculate" onclick="calcColumbus()">
+                    
+                    <br>
+                    <p>Month: <span id="columbus-month">N/A</span>, Day: <span id="columbus-day">N/A</span></p>
+                </p>
+
                 <div class="subsection-header" id="subsection5j">getIndependence</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Get the month and day of independence day.
+                    <br><br>
+
+                    Function Usage:
+                    <pre>
+                        let independenceDate = CanvDTP.getIndependence;
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+                        { month: 7, day: 4 }
+                    </pre>
+                </p>
+
                 <div class="subsection-header" id="subsection5k">getChristmas</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Get the month and day of christmas day.
+                    <br><br>
+
+                    Function Usage:
+                    <pre>
+                        let christmasDate = CanvDTP.getChristmas;
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+                        { month: 12, day: 25 }
+                    </pre>
+                </p>
+
                 <div class="subsection-header" id="subsection5l">getNewYears</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Get the month and day of new Year's day.
+                    <br><br>
+
+                    Function Usage:
+                    <pre>
+                        let newYearsDate = CanvDTP.getNewYears;
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+                        { month: 1, day: 1 }
+                    </pre>
+                </p>
+
                 <div class="subsection-header" id="subsection5m">getHalloween</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Get the month and day of halloween day.
+                    <br><br>
+
+                    Function Usage:
+                    <pre>
+                        let halloweenDate = CanvDTP.getHalloween;
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+                        { month: 10, day: 31 }
+                    </pre>
+                </p>
+
                 <div class="subsection-header" id="subsection5n">getValentines</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Get the month and day of Valentine's day.
+                    <br><br>
+
+                    Function Usage:
+                    <pre>
+                        let valentinesDate = CanvDTP.getValentines;
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+                        { month: 2, day: 14 }
+                    </pre>
+                </p>
+
                 <div class="subsection-header" id="subsection5o">getStPatricks</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Get the month and day of Saint Patrick's day.
+                    <br><br>
+
+                    Function Usage:
+                    <pre>
+                        let stPatricksDate = CanvDTP.getStPatricks;
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+                        { month: 3, day: 17 }
+                    </pre>
+                </p>
+
                 <div class="subsection-header" id="subsection5p">getVeterans</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Get the month and day of veteran's day.
+                    <br><br>
+
+                    Function Usage:
+                    <pre>
+                        let veteransDate = CanvDTP.getVeterans;
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+                        { month: 11, day: 11 }
+                    </pre>
+                </p>
 
                 <div class="section-header" id="section6">Miscellaneous</div>
+                <div class="subsection-header" id="subsection6a">Textbox Formatting</div>
+                <div class="divider-bottom"></div>
             </div>
         </div>
     </div>

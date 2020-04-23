@@ -3,6 +3,8 @@ body, html
 {
     background-image: url("../img/noisy_net.png");
     font-size: 16px;
+    height: 100%;
+    width: 100%;
 }
 
 h1
@@ -102,22 +104,32 @@ footer
 
 /****************************************** Navigation *******************************************/
 
+.sticky
+{
+    position: sticky;
+    top: 0;
+    max-height: 100vh;
+    overflow-y: auto;
+    padding-right: 20px;
+    width: 100%;
+}
+
 .doc-container
 {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
+    /*grid-template-columns: repeat(12, auto);*/
+    grid-template-columns: repeat( 12, minmax(50px, 1fr) );
     padding-left: 10%;
     padding-right: 10%;
+    max-width: 100%;
 }
 
 .sidenav
 {
-    grid-column: span 3;
-    padding-right: 20px;
+    grid-column: 1 / 4;
+    grid-row: 1;
     padding-top: 20px;
     background-color: #e0e0e0;
-    overflow-y: auto;
-    max-height: 100vh;
     padding-top: 40px;
 }
 
@@ -138,14 +150,14 @@ footer
 
 .doc-content
 {
-    grid-column: span 9;
+    grid-column: 4 / 13;
     padding-left: 20px;
     padding-top: 20px;
     padding-bottom: 20px;
     background-color: #ffffff;
 }
 
-@media screen and (max-width: 991px)
+@media screen and (max-width: 1199px)
 {
     .doc-container
     {
@@ -155,15 +167,14 @@ footer
 
     .sidenav
     {
-        grid-column: span 4;
-        padding-right: 20px;
+        grid-column: 1 / 4;
         padding-top: 20px;
         background-color: #e0e0e0;
     }
 
     .doc-content
     {
-        grid-column: span 8;
+        grid-column: 4 / 13;
         padding-left: 20px;
         padding-top: 20px;
         background-color: #ffffff;
@@ -206,7 +217,7 @@ footer
     border-bottom: 2px solid #666666;
     border-right: 2px solid #666666;
     color: #000000;
-    font-weight: bold;
+    overflow: hidden;
 }
 
 .subsection-link:hover
@@ -290,3 +301,4 @@ footer
 {
     visibility: hidden;
 }
+

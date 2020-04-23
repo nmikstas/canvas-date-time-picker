@@ -3,11 +3,11 @@ let scrollLink, scrollArray, subsections;
 let doScroll = () =>
 {
     //Scroll the navbar with the document.
-    let headerHeight = $(".header-class").outerHeight();
+    //let headerHeight = $(".header-class").outerHeight();
     let scrollLocation = $(this).scrollTop();
-    let containerPosition = $(".doc-container").offset().top;
-    let navPadding = (scrollLocation > containerPosition) ? scrollLocation : containerPosition;
-    $(".sidenav").css({marginTop: navPadding - headerHeight, left: 200}); 
+    //let containerPosition = $(".doc-container").offset().top;
+    //let navPadding = (scrollLocation > containerPosition) ? scrollLocation : containerPosition;
+    //$(".sidenav").css({marginTop: navPadding - headerHeight, left: 200}); 
     
     let index = 0;
     let latched = false;
@@ -160,3 +160,4 @@ let calcColumbus = () =>
     $("#columbus-month").text("October");
     $("#columbus-day").text(date.day);
 }
+                  

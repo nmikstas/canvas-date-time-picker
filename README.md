@@ -6,7 +6,7 @@ No React, no Bootstrap, no JQuery, no CSS.
 
 Detailed documentation will be written after the coding is done.  
 
-Last updated: 4/19/2020.  
+Last updated: 4/22/2020.  
 
 ## __Things that will be added:__
 - ***Done*** Fully customizeable date/time format string.
@@ -40,6 +40,7 @@ Last updated: 4/19/2020.
 - ***Done*** Enable/disable picker always open.
 - ***Done*** Date picker only.
 - ***Done*** Time picker only.
+- ***Done*** Utility functions.
 - API configuration calls.
 - Event listeners.
 

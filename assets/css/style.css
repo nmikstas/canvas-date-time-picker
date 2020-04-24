@@ -225,7 +225,6 @@ footer
     background-image: linear-gradient(to right, rgba(30, 47, 126, 1), rgba(109, 179, 242, 1));
     text-decoration: none;
     color: #ffffff;
-    font-weight: bold;
 }
 
 
@@ -252,7 +251,7 @@ footer
 {
     height: 5px;
     background-image: linear-gradient(to left, rgb(255, 255, 255, 0), rgba(30, 47, 126, .5));
-    width: 50%;
+    width: 100%;
 }
 
 
@@ -295,6 +294,20 @@ footer
     font-size: 20px;
     max-width: 400px;
     margin: 0 auto 20px auto;
+}
+
+.dtp-doc
+{
+    margin-top: 8px;
+    max-width: 400px;
+    padding-left: 2.0rem;
+    padding-right: 2.0rem;
+}
+
+.doc-pad
+{
+    margin-left: 2.0rem;
+    padding-left: 1.0rem;
 }
 
 #dtp17-tb

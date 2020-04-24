@@ -6,7 +6,7 @@ No React, no Bootstrap, no JQuery, no CSS.
 
 Detailed documentation will be written after the coding is done.  
 
-Last updated: 4/22/2020.  
+Last updated: 4/24/2020.  
 
 ## __Things that will be added:__
 - ***Done*** Fully customizeable date/time format string.
@@ -42,7 +42,7 @@ Last updated: 4/22/2020.
 - ***Done*** Time picker only.
 - ***Done*** Utility functions.
 - API configuration calls.
-- Event listeners.
+- Callback functions.
 
 # __API Function Calls__ #
 
@@ -155,6 +155,14 @@ setZIndex
 # __Callback Functions__ #
 ***Done*** dateTimeStringCb - Returns a string representation of the currently selected date.  
 ***Done*** dateTimeJSONCb - Returns a JSON object of the currently selected date. {isPicked, string, month, day, year, hour, milHour, minute, ampm, dayOfWeek, dayOfYear, weekOfYear}  
+***Done*** monthNextClickCb  
+***Done*** monthPrevClickCb  
+***Done*** yearNextClickCb  
+***Done*** yearPrevClickCb  
+***Done*** decadeNextClickCb  
+***Done*** decadePrevClickCb  
+***Done*** centuryNextClickCb  
+***Done*** centuryPrevClickCb 
 
 openCb  
 closeCb  
@@ -171,14 +179,6 @@ monthViewClickCb
 yearViewClickCb  
 decadeViewClickCb  
 centuryViewClickCb  
-monthNextClickCb  
-monthPrevClickCb  
-yearNextClickCb  
-yearPrevClickCb  
-decadeNextClickCb  
-decadePrevClickCb  
-centuryNextClickCb  
-centuryPrevClickCb  
 
 # __Utiltity Functions__ #
 

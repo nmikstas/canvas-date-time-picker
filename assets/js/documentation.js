@@ -2,13 +2,7 @@ let scrollLink, scrollArray, subsections;
 
 let doScroll = () =>
 {
-    //Scroll the navbar with the document.
-    //let headerHeight = $(".header-class").outerHeight();
-    let scrollLocation = $(this).scrollTop();
-    //let containerPosition = $(".doc-container").offset().top;
-    //let navPadding = (scrollLocation > containerPosition) ? scrollLocation : containerPosition;
-    //$(".sidenav").css({marginTop: navPadding - headerHeight, left: 200}); 
-    
+    let scrollLocation = $(this).scrollTop();    
     let index = 0;
     let latched = false;
 
@@ -160,4 +154,71 @@ let calcColumbus = () =>
     $("#columbus-month").text("October");
     $("#columbus-day").text(date.day);
 }
-                  
+
+//Listener for month view next button.
+let monthNextClickCb = (e) =>
+{
+    $("#oldYear1").text(e.oldYear);
+    $("#oldMonth1").text(e.oldMonth);
+    $("#newYear1").text(e.newYear);
+    $("#newMonth1").text(e.newMonth);
+}
+new CanvDTP(document.getElementById("monthNextClickCb"), {monthNextClickCb: monthNextClickCb});
+
+//Listener for month view previous button.
+let monthPrevClickCb = (e) =>
+{
+    $("#oldYear2").text(e.oldYear);
+    $("#oldMonth2").text(e.oldMonth);
+    $("#newYear2").text(e.newYear);
+    $("#newMonth2").text(e.newMonth);
+}
+new CanvDTP(document.getElementById("monthPrevClickCb"), {monthPrevClickCb: monthPrevClickCb});
+
+//Listener for year view next button.
+let yearNextClickCb = (e) =>
+{
+    $("#oldYear3").text(e.oldYear);
+    $("#newYear3").text(e.newYear);
+}
+new CanvDTP(document.getElementById("yearNextClickCb"), {yearNextClickCb: yearNextClickCb});
+
+//Listener for year view previous button.
+let yearPrevClickCb = (e) =>
+{
+    $("#oldYear4").text(e.oldYear);
+    $("#newYear4").text(e.newYear);
+}
+new CanvDTP(document.getElementById("yearPrevClickCb"), {yearPrevClickCb: yearPrevClickCb});
+
+//Listener for decade view next button.
+let decadeNextClickCb = (e) =>
+{
+    $("#oldDecade1").text(e.oldDecade);
+    $("#newDecade1").text(e.newDecade);
+}
+new CanvDTP(document.getElementById("decadeNextClickCb"), {decadeNextClickCb: decadeNextClickCb});
+
+//Listener for decade view previous button.
+let decadePrevClickCb = (e) =>
+{
+    $("#oldDecade2").text(e.oldDecade);
+    $("#newDecade2").text(e.newDecade);
+}
+new CanvDTP(document.getElementById("decadePrevClickCb"), {decadePrevClickCb: decadePrevClickCb});
+
+//Listener for century view next button.
+let centuryNextClickCb = (e) =>
+{
+    $("#oldCentury1").text(e.oldCentury);
+    $("#newCentury1").text(e.newCentury);
+}
+new CanvDTP(document.getElementById("centuryNextClickCb"), {centuryNextClickCb: centuryNextClickCb});
+
+//Listener for century view previous button.
+let centuryPrevClickCb = (e) =>
+{
+    $("#oldCentury2").text(e.oldCentury);
+    $("#newCentury2").text(e.newCentury);
+}
+new CanvDTP(document.getElementById("centuryPrevClickCb"), {centuryPrevClickCb: centuryPrevClickCb});

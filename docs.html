@@ -457,20 +457,266 @@
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection4r">monthNextClickCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that runs whenever a user clicks the "next" button in the month view of the calendar.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {monthNextClickCb: myCallback});
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+        {
+            oldMonth: number(1-12),
+            oldYear:  number,
+            newMonth: number(1-12),
+            newYear:  number
+        }
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span>Old Month: <span><span id="oldMonth1"></span><br>
+                            <span>Old Year: <span><span id="oldYear1"></span><br>
+                            <span>New Month: <span><span id="newMonth1"></span><br>
+                            <span>New Year: <span><span id="newYear1"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="monthNextClickCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+                
                 <div class="subsection-header" id="subsection4s">monthPrevClickCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that runs whenever a user clicks the "previous" button in the month view of the calendar.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {monthPrevClickCb: myCallback});
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+        {
+            oldMonth: number(1-12),
+            oldYear:  number,
+            newMonth: number(1-12),
+            newYear:  number
+        }
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span>Old Month: <span><span id="oldMonth2"></span><br>
+                            <span>Old Year: <span><span id="oldYear2"></span><br>
+                            <span>New Month: <span><span id="newMonth2"></span><br>
+                            <span>New Year: <span><span id="newYear2"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="monthPrevClickCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection4t">yearNextClickCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that runs whenever a user clicks the "next" button in the year view of the calendar.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {yearNextClickCb: myCallback});
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+        {
+            oldYear:  number,
+            newYear:  number
+        }
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span>Old Year: <span><span id="oldYear3"></span><br>
+                            <span>New Year: <span><span id="newYear3"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="yearNextClickCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection4u">yearPrevClickCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that runs whenever a user clicks the "previous" button in the year view of the calendar.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {yearPrevClickCb: myCallback});
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+        {
+            oldYear:  number,
+            newYear:  number
+        }
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span>Old Year: <span><span id="oldYear4"></span><br>
+                            <span>New Year: <span><span id="newYear4"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="yearPrevClickCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection4v">decadeNextClickCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that runs whenever a user clicks the "next" button in the decade view of the calendar.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {decadeNextClickCb: myCallback});
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+        {
+            oldDecade:  number,
+            newDecade:  number
+        }
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span>Old Decade: <span><span id="oldDecade1"></span><br>
+                            <span>New Decade: <span><span id="newDecade1"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="decadeNextClickCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection4w">decadePrevClickCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that runs whenever a user clicks the "previous" button in the decade view of the calendar.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {decadePrevClickCb: myCallback});
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+        {
+            oldDecade:  number,
+            newDecade:  number
+        }
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span>Old Decade: <span><span id="oldDecade2"></span><br>
+                            <span>New Decade: <span><span id="newDecade2"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="decadePrevClickCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
+
+
+
+
+
                 <div class="subsection-header" id="subsection4x">centuryNextClickCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that runs whenever a user clicks the "next" button in the century view of the calendar.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {centuryNextClickCb: myCallback});
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+        {
+            oldCentury:  number,
+            newCentury:  number
+        }
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span>Old Century: <span><span id="oldCentury1"></span><br>
+                            <span>New Century: <span><span id="newCentury1"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="centuryNextClickCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
+
+
+
+
+
                 <div class="subsection-header" id="subsection4y">centuryPrevClickCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that runs whenever a user clicks the "previous" button in the century view of the calendar.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {centuryPrevClickCb: myCallback});
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+        {
+            oldCentury:  number,
+            newCentury:  number
+        }
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span>Old Century: <span><span id="oldCentury2"></span><br>
+                            <span>New Century: <span><span id="newCentury2"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="centuryPrevClickCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
+
+
+
+
 
                 <div class="section-header" id="section5">Utility Functions</div>
                 <p>
@@ -485,11 +731,11 @@
 
                     Function Usage:
                     <pre>
-                        let easterDate = CanvDTP.getEaster(year);
+        let easterDate = CanvDTP.getEaster(year);
                     </pre>
                     <p>Return Value:</p>
                     <pre>
-                        { month: number(3 or 4), day: number(1-31) }
+        { month: number(3 or 4), day: number(1-31) }
                     </pre>
                     
                     <label>Enter an easter year:</label>
@@ -508,11 +754,11 @@
 
                     Function Usage:
                     <pre>
-                        let thanksgivingDate = CanvDTP.getThanksgiving(year);
+        let thanksgivingDate = CanvDTP.getThanksgiving(year);
                     </pre>
                     <p>Return Value:</p>
                     <pre>
-                        { month: 11, day: number(1-31) }
+        { month: 11, day: number(1-31) }
                     </pre>
                     
                     <label>Enter a thanksgiving year:</label>
@@ -531,11 +777,11 @@
 
                     Function Usage:
                     <pre>
-                        let mlkDate = CanvDTP.getMLK(year);
+        let mlkDate = CanvDTP.getMLK(year);
                     </pre>
                     <p>Return Value:</p>
                     <pre>
-                        { month: 1, day: number(1-31) }
+        { month: 1, day: number(1-31) }
                     </pre>
                     
                     <label>Enter a MLK year:</label>
@@ -554,11 +800,11 @@
 
                     Function Usage:
                     <pre>
-                        let mothersDate = CanvDTP.getMothers(year);
+        let mothersDate = CanvDTP.getMothers(year);
                     </pre>
                     <p>Return Value:</p>
                     <pre>
-                        { month: 5, day: number(1-31) }
+        { month: 5, day: number(1-31) }
                     </pre>
                     
                     <label>Enter a mother's day year:</label>
@@ -577,11 +823,11 @@
 
                     Function Usage:
                     <pre>
-                        let fatherssDate = CanvDTP.getFathers(year);
+        let fatherssDate = CanvDTP.getFathers(year);
                     </pre>
                     <p>Return Value:</p>
                     <pre>
-                        { month: 6, day: number(1-31) }
+        { month: 6, day: number(1-31) }
                     </pre>
                     
                     <label>Enter a father's day year:</label>
@@ -600,11 +846,11 @@
 
                     Function Usage:
                     <pre>
-                        let washingtonDate = CanvDTP.getWashington(year);
+        let washingtonDate = CanvDTP.getWashington(year);
                     </pre>
                     <p>Return Value:</p>
                     <pre>
-                        { month: 1, day: number(1-31) }
+        { month: 1, day: number(1-31) }
                     </pre>
                     
                     <label>Enter a Washington's birthdayday year:</label>
@@ -623,11 +869,11 @@
 
                     Function Usage:
                     <pre>
-                        let memorialDate = CanvDTP.getMemorial(year);
+        let memorialDate = CanvDTP.getMemorial(year);
                     </pre>
                     <p>Return Value:</p>
                     <pre>
-                        { month: 5, day: number(1-31) }
+        { month: 5, day: number(1-31) }
                     </pre>
                     
                     <label>Enter a memorial day year:</label>
@@ -646,11 +892,11 @@
 
                     Function Usage:
                     <pre>
-                        let laborDate = CanvDTP.getLabor(year);
+        let laborDate = CanvDTP.getLabor(year);
                     </pre>
                     <p>Return Value:</p>
                     <pre>
-                        { month: 9, day: number(1-31) }
+        { month: 9, day: number(1-31) }
                     </pre>
                     
                     <label>Enter a labor day year:</label>
@@ -669,11 +915,11 @@
 
                     Function Usage:
                     <pre>
-                        let columbusDate = CanvDTP.getColumbus(year);
+        let columbusDate = CanvDTP.getColumbus(year);
                     </pre>
                     <p>Return Value:</p>
                     <pre>
-                        { month: 10, day: number(1-31) }
+        { month: 10, day: number(1-31) }
                     </pre>
                     
                     <label>Enter a Columbus day year:</label>
@@ -692,11 +938,11 @@
 
                     Function Usage:
                     <pre>
-                        let independenceDate = CanvDTP.getIndependence;
+        let independenceDate = CanvDTP.getIndependence;
                     </pre>
                     <p>Return Value:</p>
                     <pre>
-                        { month: 7, day: 4 }
+        { month: 7, day: 4 }
                     </pre>
                 </p>
 
@@ -708,11 +954,11 @@
 
                     Function Usage:
                     <pre>
-                        let christmasDate = CanvDTP.getChristmas;
+        let christmasDate = CanvDTP.getChristmas;
                     </pre>
                     <p>Return Value:</p>
                     <pre>
-                        { month: 12, day: 25 }
+        { month: 12, day: 25 }
                     </pre>
                 </p>
 
@@ -724,11 +970,11 @@
 
                     Function Usage:
                     <pre>
-                        let newYearsDate = CanvDTP.getNewYears;
+        let newYearsDate = CanvDTP.getNewYears;
                     </pre>
                     <p>Return Value:</p>
                     <pre>
-                        { month: 1, day: 1 }
+        { month: 1, day: 1 }
                     </pre>
                 </p>
 
@@ -740,11 +986,11 @@
 
                     Function Usage:
                     <pre>
-                        let halloweenDate = CanvDTP.getHalloween;
+        let halloweenDate = CanvDTP.getHalloween;
                     </pre>
                     <p>Return Value:</p>
                     <pre>
-                        { month: 10, day: 31 }
+        { month: 10, day: 31 }
                     </pre>
                 </p>
 
@@ -756,11 +1002,11 @@
 
                     Function Usage:
                     <pre>
-                        let valentinesDate = CanvDTP.getValentines;
+        let valentinesDate = CanvDTP.getValentines;
                     </pre>
                     <p>Return Value:</p>
                     <pre>
-                        { month: 2, day: 14 }
+        { month: 2, day: 14 }
                     </pre>
                 </p>
 
@@ -772,11 +1018,11 @@
 
                     Function Usage:
                     <pre>
-                        let stPatricksDate = CanvDTP.getStPatricks;
+        let stPatricksDate = CanvDTP.getStPatricks;
                     </pre>
                     <p>Return Value:</p>
                     <pre>
-                        { month: 3, day: 17 }
+        { month: 3, day: 17 }
                     </pre>
                 </p>
 
@@ -788,11 +1034,11 @@
 
                     Function Usage:
                     <pre>
-                        let veteransDate = CanvDTP.getVeterans;
+        let veteransDate = CanvDTP.getVeterans;
                     </pre>
                     <p>Return Value:</p>
                     <pre>
-                        { month: 11, day: 11 }
+        { month: 11, day: 11 }
                     </pre>
                 </p>
 

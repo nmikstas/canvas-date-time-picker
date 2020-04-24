@@ -125,8 +125,31 @@ class CanvDTP
         {
             /******************************** Callback Functions *********************************/
 
-            dateTimeStringCb    = null,                //Callback function - returns selected time string.
-            dateTimeJSONCb      = null,                //Callback function - returns selected time JSON object.
+            dateTimeStringCb    = null, //Returns selected time string.
+            dateTimeJSONCb      = null, //Returns selected time JSON object.
+            openCb              = null,
+            closeCb             = null,
+            hourChangeCb        = null,
+            minuteChangeCb      = null,
+            ampmChangeCb        = null,
+            TimeClickCb         = null,
+            dateClickCb         = null,
+            dayClickCb          = null,
+            monthClickCb        = null,
+            yearClickCb         = null,
+            decadeClickCb       = null,
+            monthViewClickCb    = null,
+            yearViewClickCb     = null,
+            decadeViewClickCb   = null,
+            centuryViewClickCb  = null,
+            monthNextClickCb    = null,
+            monthPrevClickCb    = null,
+            yearNextClickCb     = null,
+            yearPrevClickCb     = null,
+            decadeNextClickCb   = null,
+            decadePrevClickCb   = null,
+            centuryNextClickCb  = null,
+            centuryPrevClickCb  = null,
 
             /***************************** Configuration Parameters ******************************/
 
@@ -257,7 +280,30 @@ class CanvDTP
         this.bannerScale         = bannerScale;
         this.dateTimeStringCb    = dateTimeStringCb;
         this.dateTimeJSONCb      = dateTimeJSONCb;
-        this.dateTimeFormat      = dateTimeFormat,
+        this.openCb              = openCb;
+        this.closeCb             = closeCb;
+        this.hourChangeCb        = hourChangeCb;
+        this.minuteChangeCb      = minuteChangeCb;
+        this.ampmChangeCb        = ampmChangeCb;
+        this.TimeClickCb         = TimeClickCb;
+        this.dateClickCb         = dateClickCb;
+        this.dayClickCb          = dayClickCb;
+        this.monthClickCb        = monthClickCb;
+        this.yearClickCb         = yearClickCb;
+        this.decadeClickCb       = decadeClickCb;
+        this.monthViewClickCb    = monthViewClickCb;
+        this.yearViewClickCb     = yearViewClickCb;
+        this.decadeViewClickCb   = decadeViewClickCb;
+        this.centuryViewClickCb  = centuryViewClickCb;
+        this.monthNextClickCb    = monthNextClickCb;
+        this.monthPrevClickCb    = monthPrevClickCb;
+        this.yearNextClickCb     = yearNextClickCb;
+        this.yearPrevClickCb     = yearPrevClickCb;
+        this.decadeNextClickCb   = decadeNextClickCb;
+        this.decadePrevClickCb   = decadePrevClickCb;
+        this.centuryNextClickCb  = centuryNextClickCb;
+        this.centuryPrevClickCb  = centuryPrevClickCb;
+        this.dateTimeFormat      = dateTimeFormat;
         this.pickerType          = pickerType;
         this.isAnimated          = isAnimated;
         this.maxPixelWidth       = maxPixelWidth;
@@ -4553,6 +4599,7 @@ class CanvDTP
             }
             else
             {
+                let oldMonth, oldYear, newMonth, newYear;
                 switch(this.calView)
                 {
                     case CanvDTP.CAL_MONTH:
@@ -4592,6 +4639,8 @@ class CanvDTP
                                 break;
 
                             case CanvDTP.SEL_PREVIOUS:
+                                oldMonth = this.tempMonth;
+                                oldYear  = this.tempYear;
                                 this.tempMonth--;
 
                                 if(this.tempMonth <= 0)
@@ -4601,9 +4650,19 @@ class CanvDTP
                                 }
                                 this.updateMonth = true;
                                 this.bodyDraw();
+                                newMonth = this.tempMonth;
+                                newYear  = this.tempYear;
+
+                                if(this.monthPrevClickCb)
+                                {
+                                    this.monthPrevClickCb({oldMonth: oldMonth, oldYear: oldYear,
+                                        newMonth: newMonth, newYear: newYear});
+                                }
                                 break;
 
                             case CanvDTP.SEL_NEXT:
+                                oldMonth = this.tempMonth;
+                                oldYear  = this.tempYear; 
                                 this.tempMonth++;
 
                                 if(this.tempMonth >= 13)
@@ -4613,6 +4672,14 @@ class CanvDTP
                                 }
                                 this.updateMonth = true;
                                 this.bodyDraw();
+                                newMonth = this.tempMonth;
+                                newYear  = this.tempYear;
+
+                                if(this.monthNextClickCb)
+                                {
+                                    this.monthNextClickCb({oldMonth: oldMonth, oldYear: oldYear,
+                                        newMonth: newMonth, newYear: newYear});
+                                }
                                 break;
 
                             case CanvDTP.SEL_TIME:
@@ -4643,15 +4710,27 @@ class CanvDTP
                                 break;
 
                             case CanvDTP.SEL_PREVIOUS:
+                                oldYear = this.tempYear;
                                 this.tempYear--;
                                 this.updateYear = true;
                                 this.bodyDraw();
+                                newYear = this.tempYear;
+                                if(this.yearPrevClickCb)
+                                {
+                                    this.yearPrevClickCb({oldYear: oldYear, newYear: newYear});
+                                }
                                 break;
 
                             case CanvDTP.SEL_NEXT:
+                                oldYear = this.tempYear;
                                 this.tempYear++;
                                 this.updateYear = true;
                                 this.bodyDraw();
+                                newYear = this.tempYear;
+                                if(this.yearNextClickCb)
+                                {
+                                    this.yearNextClickCb({oldYear: oldYear, newYear: newYear});
+                                }
                                 break;
 
                             case CanvDTP.SEL_TIME:
@@ -4682,15 +4761,27 @@ class CanvDTP
                                 break;
 
                             case CanvDTP.SEL_PREVIOUS:
+                                oldYear = parseInt(this.tempYear / 10) * 10;
                                 this.tempYear -= 10;
                                 this.updateDecade = true;
                                 this.bodyDraw();
+                                newYear = parseInt(this.tempYear / 10) * 10;
+                                if(this.decadePrevClickCb)
+                                {
+                                    this.decadePrevClickCb({oldDecade: oldYear, newDecade: newYear});
+                                }
                                 break;
 
                             case CanvDTP.SEL_NEXT:
+                                oldYear = parseInt(this.tempYear / 10) * 10;
                                 this.tempYear += 10;
                                 this.updateDecade = true;
                                 this.bodyDraw();
+                                newYear = parseInt(this.tempYear / 10) * 10;
+                                if(this.decadeNextClickCb)
+                                {
+                                    this.decadeNextClickCb({oldDecade: oldYear, newDecade: newYear});
+                                }
                                 break;
 
                             case CanvDTP.SEL_TIME:
@@ -4720,13 +4811,25 @@ class CanvDTP
                                 break;
 
                             case CanvDTP.SEL_PREVIOUS:
+                                oldYear = parseInt(this.tempYear / 100) * 100;
                                 this.tempYear -= 100;
                                 this.bodyDraw();
+                                newYear = parseInt(this.tempYear / 100) * 100;
+                                if(this.centuryPrevClickCb)
+                                {
+                                    this.centuryPrevClickCb({oldCentury: oldYear, newCentury: newYear});
+                                }
                                 break;
 
                             case CanvDTP.SEL_NEXT:
+                                oldYear = parseInt(this.tempYear / 100) * 100;
                                 this.tempYear += 100;
                                 this.bodyDraw();
+                                newYear = parseInt(this.tempYear / 100) * 100;
+                                if(this.centuryNextClickCb)
+                                {
+                                    this.centuryNextClickCb({oldCentury: oldYear, newCentury: newYear});
+                                }
                                 break;
 
                             case CanvDTP.SEL_TIME:

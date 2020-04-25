@@ -224,29 +224,341 @@
        
             <section class="doc-content">
                 <div class="section-header" id="section1">Introduction</div>
+                <p>
+                    The canvas date/time picker is a stand-alone file that uses canvas elements for rendering. The picker is written in plain Javascript
+                    and does not rely on any external dependencies such as CSS, Bootstrap, jQuery or React.  The source code uses ES6 functionality so
+                    the source may have to be transpiled to work on older browsers.
+                    <br><br>
+                    Instantiating a basic canvas date/time picker requires only a single line of Javascript.  The picker has dozens of configuration options,
+                    API function calls and callbacks.
+                    <br><br>
+                    For a basic date/time picker, only a div element id needs to be passed to the constructor.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        &ltdiv id="my-dtp"&gt&lt/div&gt
+        &ltscript src="pathToSource/canvasDateTimePicker.js"&gt&lt/script&gt
+        &ltscript&gt new CanvDTP(document.getElementById("my-dtp")); &lt/script&gt
+                    </pre>
+                </p>
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <h5 class="text-center">Basic Date/Time Picker</h5>
+                        <div id="intro-dtp" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="section-header" id="section2">Parameters</div>
                 <div class="subsection-header" id="subsection2a">Collapsibility</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    The ability to collapse the body of the picker can be disabled on initialization. The collapsability cannot be changed
+                    after instantiation. The canvas is collapsible by default.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {isCollapsible: false});
+                    </pre>
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <h5 class="text-center">Not Collapsible, Above Textbox</h5>
+                            <div id="dtp1" class="dtp-format"></div>
+                        </div>
+                        <div class="col-md-3">
+                            <h5 class="text-center">Not Collapsible, Below Textbox</h5>
+                            <div id="dtp2" class="dtp-format"></div>
+                        </div>
+                        <div class="col-md-3">
+                            <h5 class="text-center">Not Collapsible, No Textbox</h5>
+                            <div id="dtp3-hidden" class="dtp-format"></div>
+                        </div>
+                    </div>
+                    The above picker with no textbox is hiding the textbox with CSS. See the textbox formatting subsection under Miscellaneous fro details.
+                </p>
+
                 <div class="subsection-header" id="subsection2b">Open Orientation</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    The picker body can be placed in one of rour Orientations with respect to the textbox: lower left(default), lower right,
+                    upper left or upper right. Constants are provided with the picker class: CanvDTP.POS_BOTLEFT, CanvDTP.POS_BOTRIGHT,
+                    CanvDTP.POS_TOPLEFT, CanvDTP.POS_TOPRIGHT().
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {bodyPosition: CanvDTP.POS_BOTRIGHT});
+                    </pre>
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <h5 class="text-center">Opens From<br>Bottom Right</h5>
+                            <div id="dtp4" class="dtp-format"></div>
+                        </div>
+                        <div class="col-md-3">
+                            <h5 class="text-center">Opens From<br>Top Left</h5>
+                            <div id="dtp5" class="dtp-format"></div>
+                        </div>
+                        <div class="col-md-3">
+                            <h5 class="text-center">Opend From<br>Top Right</h5>
+                            <div id="dtp6" class="dtp-format"></div>
+                        </div>
+                    </div>
+                </p>
+
                 <div class="subsection-header" id="subsection2c">Maximum Width</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    The maximum width in pixels of the picker body can be specified. The picker body will never exceed the width of the textbox and icon.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {maxPixelWidth: number});
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <h5 class="text-center">250 Pixels Max Width</h5>
+                        <div id="dtp7" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection2d">Animation</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    The expanding and collapsing animations of the picker body can be disabled.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {isAnimated: false});
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <h5 class="text-center">Open/Close Animation Disabled</h5>
+                        <div id="dtp11" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection2e">Date Only, Time Only</div>
                 <div class="divider-bottom"></div>
+                <p> 
+                    By default, the picker is both for date and time.  Class constants can be used to set the picker to time only or date only.
+                    The constants available are: CanvDTP.PICK_BOTH, CanvDTP.PICK_DATE and CanvDTP.PICK_TIME.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {pickerType: CanvDTP.PICK_DATE});
+        new CanvDTP(document.getElementById("myDTPid"), {pickerType: CanvDTP.PICK_TIME});
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <h5 class="text-center">Time Picker Only</h5>
+                        <div id="dtp14" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-5">
+                        <h5 class="text-center">Date Picker Only</h5>
+                        <div id="dtp13" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection2f">Custom Date/Time String</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    The date and time format of the picker is fully customizeable with a format string.  The following list shows all
+                    the specialized character sequences and how they affect the string:
+                    <br><br>
+                    M    = No zero pad month.       ***Can append ordinal***<br>
+                    MM   = Zero padded month.  <br>
+                    MMM  = Abbreviated month name.  <br>
+                    MMMM = Full month name.  <br><br>
+
+                    D    = No zero pad day.         ***Can append ordinal***  <br>
+                    DD   = Zero padded day.  <br>
+                    DDD  = No zero pad day of year. ***Can append ordinal***  <br>
+                    DDDD = Zero padded day of year.  <br><br>
+
+                    W    = No zero pad week of year. ***Can append ordinal***  <br>
+                    WW   = Zero padded week of year.  <br><br>
+
+                    d    = Day of week (0 - 6, Sunday through Saturday).  <br>
+                    dd   = Abbreviated day of week (Su, Mo, Tu, We, Th, Fr, Sa).  <br>
+                    ddd  = Abbreviated day of week (Sun, Mon, Tue, Wed, Thu, Fri, Sat).  <br>
+                    dddd = Full day of week.  <br><br>
+
+                    Y    = 4 digit year.  <br>
+                    YY   = 2 digit year.  <br>
+                    YYYY = 4 digit year.  <br><br>
+
+                    H    = No zero pad military hour.  <br>
+                    HH   = Zero padded military hour.  <br><br>
+
+                    h    = No zero pad standard hour.  <br>
+                    hh   = Zero padded standard hour.  <br><br>
+
+                    m    = No zero pad minute.  <br>
+                    mm   = Zero padded minute.   <br><br>
+
+                    a    = am/pm.  <br>
+                    p    = am/pm.  <br><br>
+
+                    A    = AM/PM.  <br>
+                    P    = AM/PM.  <br><br>
+
+                    o    = Ordinal. Add st, nd, rd, th to end of non-zero padded day, month, day of year and/or week of year.  <br>
+                    []   = escaped characters.<br><br>
+
+                    <b>Date/time format string example:</b><br>
+                    "dddd, MMMM Do YYYY h:mm a. DDDo [Day of the Year], Wo [Week of the Year]"  <br>
+                    <b>Displays as:</b><br>
+                    Sunday, April 5th 2020 8:38 pm. 96th Day of the Year, 15th Week of the Year<br>
+                    <br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {dateTimeFormat: string});
+                    </pre>
+                </p>
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <h5 class="text-center">Custom Date/Time Format String</h5>
+                        <div id="dtp18" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection2g">Font Styles</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    All the fonts on the calendar are controlled from a single parameter.  By default, the font is "Arial".  The font
+                    string can changed to any supported font on the device rendering the picker.  The following are examples of web safe
+                    fonts that can be used: "Times New Roman", "Arial Black", "Comic Sans MS" and "Lucida Console".
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {fontStyle: string});
+                    </pre>
+                </p>
+
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-3">
+                        <h5 class="text-center">Arial Black Font</h5>
+                        <div id="dtp19" class="dtp-format"></div>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="text-center">Comic Sans MS Font</h5>
+                        <div id="dtp20" class="dtp-format"></div>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="text-center">Lucinda Console Font</h5>
+                        <div id="dtp21" class="dtp-format"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection2h">Auto Pick</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    When the picker is opened for the first time, by default the picker will try to pick todays date and time. The
+                    auto-picking functionality can be disabled so no date is picked until the user selects one.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {autoPick: false});
+                    </pre>
+                </p>
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <h5 class="text-center">Auto-Pick Disabled</h5>
+                        <div id="dtp22" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection2i">Icon Display</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    The calendar icon to the right of the textbox can be removed.  If it is removed, the user will have to click on the textbox
+                    to open the picker and click off the picker to close it again.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {calendarIcon: false});
+                    </pre>
+                </p>
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <h5 class="text-center">Calendar Icon Disabled</h5>
+                        <div id="dtp23" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection2j">Text Colors</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    The text colors can be customized.  The day of month header is a special case and has its own styling parameters.
+                    There are five parameters assiciated with text color:
+                    <br><br>
+                    <b>textMainColorn</b> - The normal color of the majority of the text.<br>
+                    <b>textMainColorh</b> - The hover color of the majority of the text.<br>
+                    <b>textAltColorn</b> - The normal color of alternate text. This is text, for example, on the month view but is outside the range of the
+                    current month.<br>
+                    <b>textAltColorh</b> - The hover color of alternate text.<br>
+                    <b>rangeBkColor</b> - The background color of date ranges beyond the user specified minimum and maximum.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            textMainColorn: "color string",
+            textMainColorh: "color string",
+            textAltColorn:  "color string",
+            textAltColorh:  "color string",
+            rangeBkColor:   "color string"
+        });
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <h5 class="text-center">Custom Text Colors</h5>
+                        <div id="dtp24" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection2k">Top Date View</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    The date portion of the picker has four layers of views: month view, year view, decade view and century view.
+                    By default, all four layers are enabled.  The top layer can be set by parameters.  Class constants are available
+                    to set the top view: CanvDTP.CAL_CENTURY, CanvDTP.CAL_DECADE, CanvDTP.CAL_YEAR, CanvDTP.CAL_MONTH.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {topView: CanvDTP.CAL_DECADE});
+        new CanvDTP(document.getElementById("myDTPid"), {topView: CanvDTP.CAL_YEAR});
+        new CanvDTP(document.getElementById("myDTPid"), {topView: CanvDTP.CAL_MONTH});
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-3">
+                        <h5 class="text-center">Month, Year<br>and Decade Views</h5>
+                        <div id="dtp25" class="dtp-format"></div>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="text-center">Month and<br>Year Views</h5>
+                        <div id="dtp26" class="dtp-format"></div>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="text-center">Month Only<br>View</h5>
+                        <div id="dtp27" class="dtp-format"></div>
+                    </div>
+                </div>
+
+
+
+
                 <div class="subsection-header" id="subsection2l">Date Ranges</div>
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection2m">Default Date</div>
@@ -643,11 +955,6 @@
                     </div>
                 </div>
 
-
-
-
-
-
                 <div class="subsection-header" id="subsection4x">centuryNextClickCb</div>
                 <div class="divider-bottom"></div>
                 <p>
@@ -678,11 +985,6 @@
                     </div>
                 </div>
 
-
-
-
-
-
                 <div class="subsection-header" id="subsection4y">centuryPrevClickCb</div>
                 <div class="divider-bottom"></div>
                 <p>
@@ -712,11 +1014,6 @@
                         <div id="centuryPrevClickCb" class="dtp-doc"></div>
                     </div>
                 </div>
-
-
-
-
-
 
                 <div class="section-header" id="section5">Utility Functions</div>
                 <p>

@@ -222,3 +222,70 @@ let centuryPrevClickCb = (e) =>
     $("#newCentury2").text(e.newCentury);
 }
 new CanvDTP(document.getElementById("centuryPrevClickCb"), {centuryPrevClickCb: centuryPrevClickCb});
+
+
+
+//Intro DTP.
+new CanvDTP(document.getElementById("intro-dtp"));
+
+//Not collapsible, top.
+new CanvDTP(document.getElementById("dtp1"), {bodyPosition: CanvDTP.POS_TOPRIGHT, isCollapsible: false, zIndex: 0});
+
+//Not collapsible bottom.
+new CanvDTP(document.getElementById("dtp2"), {bodyPosition: CanvDTP.POS_BOTRIGHT, isCollapsible: false, zIndex: 0});
+
+//Not collapsible, not textbox.
+new CanvDTP(document.getElementById("dtp3-hidden"), {bodyPosition: CanvDTP.POS_TOPRIGHT, isCollapsible: false, zIndex: 0});
+
+//Bottom right picker.
+new CanvDTP(document.getElementById("dtp4"), {bodyPosition: CanvDTP.POS_BOTRIGHT});
+
+//Top left picker.
+new CanvDTP(document.getElementById("dtp5"), {bodyPosition: CanvDTP.POS_TOPLEFT});
+
+//Top right picker.
+new CanvDTP(document.getElementById("dtp6"), {bodyPosition: CanvDTP.POS_TOPRIGHT});
+
+//250 pixels max.
+new CanvDTP(document.getElementById("dtp7"), {maxPixelWidth: 250});
+
+//No animation.
+new CanvDTP(document.getElementById("dtp11"), {isAnimated: false});
+
+//Date picker only.
+new CanvDTP(document.getElementById("dtp13"), {pickerType: CanvDTP.PICK_DATE});
+
+//Time picker only.
+new CanvDTP(document.getElementById("dtp14"), {pickerType: CanvDTP.PICK_TIME});
+
+//Custom date/time string.
+new CanvDTP(document.getElementById("dtp18"), {dateTimeFormat: "dddd, MMMM Do YYYY, h:mm A"});
+
+//Arial black font style.
+new CanvDTP(document.getElementById("dtp19"), {fontStyle: "Arial Black", bannerScale: .70, yearScale: .55});
+
+//Comic Sans font style.
+new CanvDTP(document.getElementById("dtp20"), {fontStyle: "Comic Sans MS", bannerScale: .70, yearScale: .55});
+
+//Lucinda Console font style.
+new CanvDTP(document.getElementById("dtp21"), {fontStyle: "Lucida Console", bannerScale: .70, yearScale: .55});
+
+//Auto pick disabled.
+new CanvDTP(document.getElementById("dtp22"), {autoPick: false});
+
+//No calendar icon.
+new CanvDTP(document.getElementById("dtp23"), {calendarIcon: false});
+
+//Alternate text colors.
+new CanvDTP(document.getElementById("dtp24"), {textMainColorn: "#0000ff", textMainColorh: "#00ffff",
+    textAltColorn: "#ff0000", textAltColorh: "#ffff00"});
+
+//Month, year and decade views.
+new CanvDTP(document.getElementById("dtp25"), {topView: CanvDTP.CAL_DECADE});
+
+//Month, and year views.
+new CanvDTP(document.getElementById("dtp26"), {topView: CanvDTP.CAL_YEAR});
+
+//Month only view.
+new CanvDTP(document.getElementById("dtp27"), {topView: CanvDTP.CAL_MONTH});
+

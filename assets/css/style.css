@@ -310,8 +310,9 @@ footer
     padding-left: 1.0rem;
 }
 
-#dtp17-tb
+#dtp17-tb, #dtp3-hidden-tb
 {
     visibility: hidden;
 }
+
 

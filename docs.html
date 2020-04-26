@@ -59,6 +59,19 @@
 
     <!--Main content body-->
     <div id="page-body">
+        <img id="january" width="0" height="0" src="./assets/img/january.png">
+        <img id="february" width="0" height="0" src="./assets/img/february.png">
+        <img id="march" width="0" height="0" src="./assets/img/march.png">
+        <img id="april" width="0" height="0" src="./assets/img/april.png">
+        <img id="may" width="0" height="0" src="./assets/img/may.png">
+        <img id="june" width="0" height="0" src="./assets/img/june.png">
+        <img id="july" width="0" height="0" src="./assets/img/july.png">
+        <img id="august" width="0" height="0" src="./assets/img/august.png">
+        <img id="september" width="0" height="0" src="./assets/img/september.png">
+        <img id="october" width="0" height="0" src="./assets/img/october.png">
+        <img id="november" width="0" height="0" src="./assets/img/november.png">
+        <img id="december" width="0" height="0" src="./assets/img/december.png">
+        
         <div class="doc-container">
             <section class="sidenav">
                 <div class="sticky">
@@ -556,17 +569,271 @@
                     </div>
                 </div>
 
-
-
-
                 <div class="subsection-header" id="subsection2l">Date Ranges</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    The first date and last date a picker can traverse can optionally be set. If a first or last date is given,
+                    a month, day and year must be supplied.  Class constants are available for the dates: CanvDTP.JANUARY,
+                    CanvDTP.FEBRUARY, CanvDTP.MARCH, CanvDTP.APRIL, CanvDTP.MAY, CanvDTP.JUNE, CanvDTP.JULY, CanvDTP.AUGUST,
+                    CanvDTP.SEPTEMBER, CanvDTP.OCTOBER, CanvDTP.NOVEMBER, CanvDTP.DECEMBER.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            firstDate:
+            {
+                month: number(1-12),
+                day:   number(1-31),
+                year:  number
+            },
+            lasttDate:
+            {
+                month: number(1-12),
+                day:   number(1-31),
+                year:  number
+            }
+        });
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <h5 class="text-center">Date Range 1/1/2000 - 12/31/2030</h5>
+                        <div id="dtp28" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection2m">Default Date</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    By default, today's date is initially picked when the picker opens.  This can be changed to any date. It should be noted that if
+                    the initial date is not available due to exclustsion or being outside the configured date ranges, the picker will open without
+                    selecting an initial date. The image should be an HTML element on the page.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            initDate:
+            {
+                month: number(1-12),
+                day:   number(1-31),
+                year:  number
+            }
+        });
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <h5 class="text-center">Default Date 12/25/1980</h5>
+                        <div id="dtp29" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection2n">Custom Background Images</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Background images can be selected for each of the twelve months. The array of images should have a length
+                    of 12. If a particular month should not have an image, set its array element to null. The image should be
+                    an HTML element on the page.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            monthImages:
+            [
+                {image: document.getElementById("myPicElement"), opacity: number(0.0-1.0)},
+                {image: document.getElementById("myPicElement"), opacity: number(0.0-1.0)},
+                {image: document.getElementById("myPicElement"), opacity: number(0.0-1.0)},
+                {image: document.getElementById("myPicElement"), opacity: number(0.0-1.0)},
+                {image: document.getElementById("myPicElement"), opacity: number(0.0-1.0)},
+                {image: document.getElementById("myPicElement"), opacity: number(0.0-1.0)},
+                {image: document.getElementById("myPicElement"), opacity: number(0.0-1.0)},
+                {image: document.getElementById("myPicElement"), opacity: number(0.0-1.0)},
+                {image: document.getElementById("myPicElement"), opacity: number(0.0-1.0)},
+                {image: document.getElementById("myPicElement"), opacity: number(0.0-1.0)},
+                {image: document.getElementById("myPicElement"), opacity: number(0.0-1.0)},
+                {image: document.getElementById("myPicElement"), opacity: number(0.0-1.0)},
+            ]
+        });
+                    </pre>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <h5 class="text-center">Month Background Images</h5>
+                            <div id="dtp30" class="dtp-doc"></div>
+                        </div>
+                    </div>
+                </p>
+
                 <div class="subsection-header" id="subsection2o">Excluded, Spotlighted and Whitelisted Days</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Days can be excluded from being picked.  Days can also just be spotlighted. A whitelist can also be
+                    created to exempt days that would otherwise be excluded or spotlighted.
+                    <br><br>
+                    The <span class="monospace">dayExcludeArray</span> elements have the following structure:
+                    <pre>
+        {
+            days: [array of numbers(1-31)],
+            daysOfWeek: [array of numbers(CanvDTP.SUNDAY-CanvDTP.SATURDAY)],
+            months: [array of numbers(CanvDTP.JANUARY-CanvDTP.DECEMBER)],
+            years: [arrays of numbers],
+            excluded: boolean,
+            color: "color string",
+            info: "string"
+        }
+                    </pre>
+                </p>
+                <p>
+                    The days, daysOfWeek, months and years parameters must be in arrays even if it is only one item.  All those values are optional.
+                    If one of those values is not given, the picker will assume that all values for that particular parameter are selected. For example,
+                    if the year parameter is not provided, the picker will assume the exclusion applies to all years. The excluded parameter tells
+                    the picker if the data is for an exclusion or a spotlight.  An excluded day cannot be picked by the user where a spotlighted day can.
+                    The color parameter should be a valid color string ("#00ff00", for example). The color indicates the background color of the
+                    excluded/spotlighted day. The string parameter is an optional parameter that displays a given string when the user hovers over
+                    the excluded/spotlighted day.
+                </p>
+                <p>
+                    The <span class="monospace">dayWhiteArray</span> elements have the following structure:
+                    <pre>
+        {
+            days: [array of numbers(1-31)],
+            daysOfWeek: [array of numbers(CanvDTP.SUNDAY-CanvDTP.SATURDAY)],
+            months: [array of numbers(CanvDTP.JANUARY-CanvDTP.DECEMBER)],
+            years: [arrays of numbers],
+            type: number(CanvDTP.WHITE_BOTH, CanvDTP.WHITE_SPTLT, CanvDTP.WHITE_BLOCK, CanvDTP.WHITE_NONE)
+        }
+                    </pre>
+                </p>
+                <p>
+                    The days, daysOfWeek, months and years in the above object have the same functionality as in the exclusions array.  The
+                    only difference is that this object reverses the exclusions/spotlights from above.  The type parameter tells the picker
+                    which things to whitelist: exclusions, spotlights, both or neither.
+                </p>
+                    
+
+
+                <br><br>
+                <p>Examples:</p>
+                <div class="border mr-4"><p>
+                    <pre>
+        //Exclude all days for all months and years. Whitelist the weekends.
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            dayExcludeArray: 
+            [
+                {
+                    excluded: true,
+                    color: "#ff000080",
+                    info: "All Weekdays Excluded"
+                }
+            ],
+            dayWhiteArray:
+            [
+                {
+                    daysOfWeek: [CanvDTP.SATURDAY, CanvDTP.SUNDAY], 
+                    type: CanvDTP.WHITE_BLOCK
+                }
+            ]
+        });
+                    </pre>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <h5 class="text-center">All Days Excluded, Weekends Whitelisted</h5>
+                            <div id="dtp33" class="dtp-doc"></div>
+                        </div>
+                    </div>
+                </p></div>
+                <br><br>
+                <div class="border mr-4"><p>
+                    <pre>
+        //Weekends spotlighted
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            dayExcludeArray: 
+            [
+                {
+                    daysOfWeek: [CanvDTP.SATURDAY, CanvDTP.SUNDAY], 
+                    color: "#0000ff50"
+                }
+            ]
+        });
+                    </pre>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <h5 class="text-center">Weekends Spotlighted</h5>
+                            <div id="dtp34" class="dtp-doc"></div>
+                        </div>
+                    </div>
+                </p></div>
+                <br><br>
+                <div class="border mr-4"><p>
+                    <pre>
+        //1/1/2020, 12/31/2021 Excluded.
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            dayExcludeArray: 
+            [
+                {
+                    days: [1],
+                    months: [1],
+                    years: [2020],
+                    excluded: true,
+                    color: "#ff0000",
+                    info: "New Year's Excluded"
+                },
+                {
+                    days: [31],
+                    months: [12],
+                    years: [2021],
+                    excluded: true,
+                    color: "#ff0000",
+                    info: "Date Excluded"
+                },
+            ]
+        });
+                    </pre>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <h5 class="text-center">1/1/2020, 12/31/2021 Excluded</h5>
+                            <div id="dtp35" class="dtp-doc"></div>
+                        </div>
+                    </div>
+                </p></div>
+                <br><br>
+                <div class="border mr-4"><p>
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            dayExcludeArray: 
+            [
+                {
+                    daysOfWeek: [CanvDTP.MONDAY, CanvDTP.WEDNESDAY],
+                    color: "#00ff00",
+                    info: "Spotlighted Day"
+                }
+            ],
+            dayWhiteArray:
+            [
+                {   
+                    months: [CanvDTP.FEBRUARY], 
+                    type: CanvDTP.WHITE_SPTLT
+                }
+            ]
+        });
+                    </pre>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <h5 class="text-center">Mondays and Wednesdays Spotlighted Except in Februarys</h5>
+                            <div id="dtp36" class="dtp-doc"></div>
+                        </div>
+                    </div>
+                </p></div>
+
+
+
+
                 <div class="subsection-header" id="subsection2p">Spotlighted and Whitelisted Months</div>
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection2q">Spotlighted and Whitelisted Years</div>
@@ -595,10 +862,41 @@
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection22">Text Scaling Styling</div>
                 <div class="divider-bottom"></div>
+
+
+
+
+
+
+
+
                 <div class="subsection-header" id="subsection23">Body Canvas Z-index</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    The z-index of the body canvas can be changed if its overlap properties need to modified.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {zIndex: number});
+                    </pre>
+                </p>
+               
                 <div class="subsection-header" id="subsection24">Debug Mode</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    A special debugging mode can be activated to ensure the text alignment is set up properly.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {debug: true});
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <h5 class="text-center">Debug Enabled</h5>
+                        <div id="dtp31" class="dtp-doc"></div>
+                    </div>
+                </div>
 
                 <div class="section-header" id="section3">API Functions</div>
                 <div class="subsection-header" id="subsection3a">getDateTimeString</div>

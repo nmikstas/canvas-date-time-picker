@@ -315,4 +315,9 @@ footer
     visibility: hidden;
 }
 
+.monospace
+{
+    font-family: "Courier New";
+}
+
 

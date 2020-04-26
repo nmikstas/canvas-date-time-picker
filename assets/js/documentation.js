@@ -289,3 +289,116 @@ new CanvDTP(document.getElementById("dtp26"), {topView: CanvDTP.CAL_YEAR});
 //Month only view.
 new CanvDTP(document.getElementById("dtp27"), {topView: CanvDTP.CAL_MONTH});
 
+//First date Jan 1, 2000, Last date Dec 31, 2030.
+new CanvDTP(document.getElementById("dtp28"), {firstDate: {month: CanvDTP.JANUARY, day: 1, year: 2000},
+    lastDate: {month: CanvDTP.DECEMBER, day: 31, year: 2030}});
+
+//Default date Date Dec 25, 1980.
+new CanvDTP(document.getElementById("dtp29"), {initDate: {month: CanvDTP.DECEMBER, day: 25, year: 1980}});
+
+//Custom Month Background Images.
+new CanvDTP(document.getElementById("dtp30"),
+{
+    monthImages:
+    [
+        {image: document.getElementById("january"), opacity: 0.4},
+        {image: document.getElementById("february"), opacity: 0.4},
+        {image: document.getElementById("march"), opacity: 0.4},
+        {image: document.getElementById("april"), opacity: 0.4},
+        {image: document.getElementById("may"), opacity: 0.4},
+        {image: document.getElementById("june"), opacity: 0.4},
+        {image: document.getElementById("july"), opacity: 0.4},
+        {image: document.getElementById("august"), opacity: 0.4},
+        {image: document.getElementById("september"), opacity: 0.4},
+        {image: document.getElementById("october"), opacity: 0.4},
+        {image: document.getElementById("november"), opacity: 0.4},
+        {image: document.getElementById("december"), opacity: 0.4},
+    ]
+});
+
+//Debug enabled.
+new CanvDTP(document.getElementById("dtp31"), {debug: true});
+
+//Modified z-index.
+new CanvDTP(document.getElementById("dtp32"), {zIndex: 0});
+
+//Month Days Excluded, Weekends Whitelisted.
+new CanvDTP(document.getElementById("dtp33"),
+{
+    dayExcludeArray: 
+    [
+        {
+            excluded: true,
+            color: "#ff000080",
+            info: "All Weekdays Excluded"
+        }
+    ],
+    dayWhiteArray:
+    [
+        {   //Whitelist the weekends in May from exclusion.
+            daysOfWeek: [CanvDTP.SATURDAY, CanvDTP.SUNDAY], 
+            type: CanvDTP.WHITE_BLOCK
+        }
+    ]
+});
+
+//Weekends spotlighted.
+new CanvDTP(document.getElementById("dtp34"),
+{
+    dayExcludeArray: 
+    [
+        {
+            daysOfWeek: [CanvDTP.SATURDAY, CanvDTP.SUNDAY], 
+            color: "#0000ff50"
+        }
+    ]
+});
+
+//1/1/2020, 12/31/2021 Excluded.
+new CanvDTP(document.getElementById("dtp35"),
+{
+    dayExcludeArray: 
+    [
+        {
+            days: [1],
+            months: [1],
+            years: [2020],
+            excluded: true,
+            color: "#ff0000",
+            info: "New Year's Excluded"
+        },
+        {
+            days: [31],
+            months: [12],
+            years: [2021],
+            excluded: true,
+            color: "#ff0000",
+            info: "Date Excluded"
+        },
+    ]
+});
+
+//Mondays and Wednesdays Spotlighted Except in Februarys.
+new CanvDTP(document.getElementById("dtp36"),
+{
+    dayExcludeArray: 
+    [
+        {
+           
+            daysOfWeek: [CanvDTP.MONDAY, CanvDTP.WEDNESDAY],
+            color: "#00ff00",
+            info: "Spotlighted Day"
+        }
+    ],
+    dayWhiteArray:
+    [
+        {   
+            months: [CanvDTP.FEBRUARY], 
+            type: CanvDTP.WHITE_SPTLT
+        }
+    ]
+});
+
+
+
+

@@ -443,6 +443,9 @@ new CanvDTP(document.getElementById("dtp39"),
     ]
 });
 
+//Today's date indicator disabled.
+new CanvDTP(document.getElementById("dtp40"), {todaysDate: false});
+
 
 
 

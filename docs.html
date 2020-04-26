@@ -711,9 +711,6 @@
                     only difference is that this object reverses the exclusions/spotlights from above.  The type parameter tells the picker
                     which things to whitelist: exclusions, spotlights, both or neither.
                 </p>
-                    
-
-
                 <br><br>
                 <p>Examples:</p>
                 <div class="border mr-4"><p>
@@ -830,12 +827,131 @@
                         </div>
                     </div>
                 </p></div>
-
-
-
-
                 <div class="subsection-header" id="subsection2p">Spotlighted and Whitelisted Months</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Months can be spotlighted. A whitelist can also be created to exempt months that would otherwise be spotlighted.
+                    <br><br>
+                    The <span class="monospace">monthSpotlightArray</span> elements have the following structure:
+                    <pre>
+        {
+            months: [array of numbers(CanvDTP.JANUARY-CanvDTP.DECEMBER)],
+            years: [arrays of numbers],
+            color: "color string",
+            info: "string"
+        }
+                    </pre>
+                </p>
+                <p>
+                    The months and years parameters must be in arrays even if it is only one item.  Those values are optional.
+                    If one of those values is not given, the picker will assume that all values for that particular parameter are selected. For example,
+                    if the year parameter is not provided, the picker will assume the spotlight applies to all years.
+                    The color parameter should be a valid color string ("#00ff00", for example). The color indicates the background color of the
+                    spotlighted month. The string parameter is an optional parameter that displays a given string when the user hovers over
+                    spotlighted month.
+                </p>
+                <p>
+                    The <span class="monospace">monthWhiteArray</span> elements have the following structure:
+                    <pre>
+        {
+            months: [array of numbers(CanvDTP.JANUARY-CanvDTP.DECEMBER)],
+            years: [arrays of numbers]
+        }
+                    </pre>
+                </p>
+                <p>
+                    The months and years in the above object have the same functionality as in the spotlight array.  The
+                    only difference is that this object reverses the spotlights from above.
+                </p>
+                <br><br>
+                <p>Examples:</p>
+                <div class="border mr-4">
+                    <p>
+                        <pre>
+        //All Months Spotlighted, January Whitelisted
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            monthSpotlightArray: 
+            [
+                {
+                    color: "#00ff00",
+                    info: "Spotlighted Month"
+                }
+            ],
+            monthWhiteArray:
+            [
+                {   
+                    months: [CanvDTP.JANUARY], 
+                }
+            ]
+        });
+                        </pre>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h5 class="text-center">All Months Spotlighted, January Whitelisted</h5>
+                                <div id="dtp37" class="dtp-doc"></div>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+                <br><br>
+                <div class="border mr-4">
+                    <p>
+                        <pre>
+        //January, March in 2020 Spotlighted.
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            monthSpotlightArray: 
+            [
+                {
+                    months: [CanvDTP.JANUARY, CanvDTP.MARCH],
+                    years: [2020],
+                    color: "#00ffff",
+                    info: "Another Spotlighted Month"
+                }
+            ]
+        });
+                        </pre>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h5 class="text-center">January, March in 2020 Spotlighted</h5>
+                                <div id="dtp38" class="dtp-doc"></div>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+                <br><br>
+                <div class="border mr-4">
+                    <p>
+                        <pre>
+        //July Spotlighted in All Years.
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            monthSpotlightArray: 
+            [
+                {
+                    months: [CanvDTP.JULY],
+                    color: "#0000ff80",
+                    info: "July"
+                }
+            ]
+        });
+                        </pre>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h5 class="text-center">July Spotlighted in All Years</h5>
+                                <div id="dtp39" class="dtp-doc"></div>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+
+
+
+
+
+
+
                 <div class="subsection-header" id="subsection2q">Spotlighted and Whitelisted Years</div>
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection2r">Calendar Icon Styling</div>

@@ -384,7 +384,6 @@ new CanvDTP(document.getElementById("dtp36"),
     dayExcludeArray: 
     [
         {
-           
             daysOfWeek: [CanvDTP.MONDAY, CanvDTP.WEDNESDAY],
             color: "#00ff00",
             info: "Spotlighted Day"
@@ -395,6 +394,51 @@ new CanvDTP(document.getElementById("dtp36"),
         {   
             months: [CanvDTP.FEBRUARY], 
             type: CanvDTP.WHITE_SPTLT
+        }
+    ]
+});
+
+//All Months Spotlighted, January Whitelisted
+new CanvDTP(document.getElementById("dtp37"),
+{
+    monthSpotlightArray: 
+    [
+        {
+            color: "#00ff00",
+            info: "Spotlighted Month"
+        }
+    ],
+    monthWhiteArray:
+    [
+        {   
+            months: [CanvDTP.JANUARY], 
+        }
+    ]
+});
+
+//January, March in 2020 Spotlighted.
+new CanvDTP(document.getElementById("dtp38"),
+{
+    monthSpotlightArray: 
+    [
+        {
+            months: [CanvDTP.JANUARY, CanvDTP.MARCH],
+            years: [2020],
+            color: "#00ffff",
+            info: "Another Spotlighted Month"
+        }
+    ]
+});
+
+//July Spotlighted in All Years.
+new CanvDTP(document.getElementById("dtp39"),
+{
+    monthSpotlightArray: 
+    [
+        {
+            months: [CanvDTP.JULY],
+            color: "#0000ff80",
+            info: "July"
         }
     ]
 });

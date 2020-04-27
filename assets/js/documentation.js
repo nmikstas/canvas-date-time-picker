@@ -446,6 +446,106 @@ new CanvDTP(document.getElementById("dtp39"),
 //Today's date indicator disabled.
 new CanvDTP(document.getElementById("dtp40"), {todaysDate: false});
 
+//Years 2010 - 2029 Spotlighted.
+new CanvDTP(document.getElementById("dtp41"),
+{
+    yearSpotlightArray: 
+    [
+        {
+            years: [2010, 2011,  2012,  2013,  2014,  2015,  2016,  2017,  2018,  2019,
+                    2020, 2021,  2022,  2023,  2024,  2025,  2026,  2027,  2028,  2029],
+            color: "#ff00ff",
+            info: "Spotlighted Years"
+        }
+    ]
+});
 
+//All Years Spotlighted, 2010 - 2029 Whitelisted.
+new CanvDTP(document.getElementById("dtp42"),
+{
+    yearSpotlightArray: 
+    [
+        {
+            color: "#ffff00",
+            info: "More Spotlighted Years"
+        }
+    ],
+    yearWhiteArray:
+    [
+        {
+            years: [2010, 2011,  2012,  2013,  2014,  2015,  2016,  2017,  2018,  2019,
+                    2020, 2021,  2022,  2023,  2024,  2025,  2026,  2027,  2028,  2029],
+        }
+    ]
+});
 
+//Custom Calendar Icon Parameters.
+new CanvDTP(document.getElementById("dtp43"),
+{
+    iBorderColorn: "#0000ff", iFillColorn: "#c000c0", iCalColorn: "#00ff00", iBorderColorh: "#ff0000",
+    iFillColorh: "#30ff30", iCalColorh: "#ff00ff", iBorderRadius: 0, iBorderWeight: .10,
+    iXPadding: .15, iYPadding: .15, iLineWidth: .001
+});
 
+//Custom Body Canvas Parameters.
+new CanvDTP(document.getElementById("dtp44"),
+{
+    bBorderColor: "#0000ff", bFillColor: "#d0d0fff0", bBorderRadius: 0.5,
+    bBorderWeight: .001, bXPadding: .15, bYPadding: .40, bLineWidth: .2
+});
+
+//Custom Info Text Parameters.
+new CanvDTP(document.getElementById("dtp45"),
+{
+    infoPointerSize: "75px",
+    infoBackColor: "#c0c000",
+    infoTextColor: "#ff0000",
+    infoPadding: "2px, 5px",
+    infoWidth: "150px",
+    infoBorderRadius: "10px 10px 0px 0px",
+    dayExcludeArray: 
+    [
+        {
+            daysOfWeek: [CanvDTP.SATURDAY, CanvDTP.SUNDAY], 
+            color: "#0000ff80",
+            info: "Weekend Days Spotlighted"
+        }
+    ]
+});
+
+//Custom Selectable Items Parameters.
+new CanvDTP(document.getElementById("dtp46"),
+{
+    selectBorderColor: "#ff0000", selectFillColor: "#80000040", selectRadius: .50, selectWeight: .01
+});
+
+//Custom Previous/Next Parameters.
+new CanvDTP(document.getElementById("dtp47"), {prevNextXPad: 0, prevNextYPad: .35});
+
+//Custom Clock Graphic Parameters.
+new CanvDTP(document.getElementById("dtp48"), {clockPad: .20, clockWeight: .15});
+
+//Custom Calendar Graphic Parameters.
+new CanvDTP(document.getElementById("dtp49"), {calXPadding: .001, calYPadding: .20, calLineWidth: .015});
+
+//Custom Days of Week Header Parameters.
+new CanvDTP(document.getElementById("dtp50"), {headerColor: "#ffff00", headerScale: .40});
+
+//Custom Currently Selected Day Parameters.
+new CanvDTP(document.getElementById("dtp51"),
+{
+    currentBorderColor: "#ff0000", currentFillColor: "#d0000080", currentRadius: .50, currentWeight: .10
+});
+
+//Custom Today's Date Parameters.
+new CanvDTP(document.getElementById("dtp52"), {nowColor: "#0000ff", nowWeight: .30});
+
+//Custom Increment/Decrement Parameters.
+new CanvDTP(document.getElementById("dtp53"), {incXPad: .40, incYPad: .40, incWeight: .10});
+
+//Custom Text Scale Parameters.
+new CanvDTP(document.getElementById("dtp54"), 
+{
+    bannerScale: .50, dayScale: .30, monthScale: .30, yearScale: .30, decadeScale: .20,
+    timeScale: .30, timeAmPmScale: .30, minuteScale: .30, hourScale: .30
+});

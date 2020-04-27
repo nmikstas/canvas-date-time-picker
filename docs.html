@@ -964,38 +964,519 @@
                     </p>
                 </div>
 
-
-
-
-
-
-
                 <div class="subsection-header" id="subsection2q">Spotlighted and Whitelisted Years</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Years can be spotlighted. A whitelist can also be created to exempt years that would otherwise be spotlighted.
+                    <br><br>
+                    The <span class="monospace">yearSpotlightArray</span> elements have the following structure:
+                    <pre>
+        {
+            years: [arrays of numbers],
+            color: "color string",
+            info: "string"
+        }
+                    </pre>
+                </p>
+                <p>
+                    The years parameter must be in arrays even if it is only one item.  Its value is optional.
+                    If the value is not given, the picker will assume that all years are selected.
+                    The color parameter should be a valid color string ("#00ff00", for example). The color indicates the background color of the
+                    spotlighted year. The string parameter is an optional parameter that displays a given string when the user hovers over
+                    spotlighted year.
+                </p>
+                <p>
+                    The <span class="monospace">yearWhiteArray</span> elements have the following structure:
+                    <pre>
+        {
+            years: [arrays of numbers]
+        }
+                    </pre>
+                </p>
+                <p>
+                    The years in the above object have the same functionality as in the spotlight array.  The
+                    only difference is that this object reverses the spotlights from above.
+                </p>
+                <br><br>
+                <p>Examples:</p>
+                <div class="border mr-4">
+                    <p>
+                        <pre>
+        //Years 2010 - 2029 Spotlighted.
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            yearSpotlightArray: 
+            [
+                {
+                    years: [2010, 2011,  2012,  2013,  2014,  2015,  2016,  2017,  2018,  2019,
+                            2020, 2021,  2022,  2023,  2024,  2025,  2026,  2027,  2028,  2029],
+                    color: "#ff00ff",
+                    info: "Spotlighted Years"
+                }
+            ]
+        });
+                        </pre>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h5 class="text-center">Years 2010 - 2029 Spotlighted</h5>
+                                <div id="dtp41" class="dtp-doc"></div>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+                <br><br>
+                <div class="border mr-4">
+                    <p>
+                        <pre>
+        //All Years Spotlighted, 2010 - 2029 Whitelisted.
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            yearSpotlightArray: 
+            [
+                {
+                    color: "#ffff00",
+                    info: "More Spotlighted Years"
+                }
+            ],
+            yearWhiteArray:
+            [
+                {
+                    years: [2010, 2011,  2012,  2013,  2014,  2015,  2016,  2017,  2018,  2019,
+                            2020, 2021,  2022,  2023,  2024,  2025,  2026,  2027,  2028,  2029],
+                }
+            ]
+        });
+                        </pre>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h5 class="text-center">All Years Spotlighted, 2010 - 2029 Whitelisted</h5>
+                                <div id="dtp42" class="dtp-doc"></div>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+                
                 <div class="subsection-header" id="subsection2r">Calendar Icon Styling</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    The calendar icon to the right of the textbox has 11 parameters that control its appearance. They are fully
+                    configurable. The following is a list of those parameters:<br><br>
+                    iBorderColorn: "color string" - Border color when icon not hovered.<br>
+                    iFillColorn: "color string" - Background color when icon not hovered.<br>
+                    iCalColorn: "color string" - color of calendar graphic when icon not hovered.<br>
+                    iBorderColorh: "color string" - Border color when icon hovered.<br>
+                    iFillColorh:  "color string" - Background color when icon hovered.<br>
+                    iCalColorh: "color string" - color of calendar graphic when icon hovered.<br>
+                    iBorderRadius: number(0.0 - 1.0) - Corner radius fraction. 0.50 is fully rounded borders.<br>
+                    iBorderWeight: number(0.0 - 1.0) - Border thickness as a fraction of total icon height.<br>
+                    iXPadding: number(0.0 - 1.0) - Left and right icon padding as a fraction of total icon width.<br>
+                    iYPadding: number(0.0 - 1.0) - top and bottom icon padding as a fraction of total icon height.<br>
+                    iLineWidth: number(0.0 - 1.0) - Calendar icon line weight as a fraction of total icon height.
+                </p>
+                    <br><br>
+                    <p>Example:</p>
+                <div class="border mr-4">
+                    <p>
+                        <pre>
+        //Custom Calendar Icon Parameters.
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            iBorderColorn: "#0000ff",
+            iFillColorn: "#c000c0",
+            iCalColorn: "#00ff00",
+            iBorderColorh: "#ff0000",
+            iFillColorh: "#30ff30",
+            iCalColorh: "#ff00ff",
+            iBorderRadius: 0,
+            iBorderWeight: .10,
+            iXPadding: .15,
+            iYPadding: .15,
+            iLineWidth: .001
+        });
+                        </pre>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h5 class="text-center">Custom Calendar Icon Styling</h5>
+                                <div id="dtp43" class="dtp-doc"></div>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+
                 <div class="subsection-header" id="subsection2s">Body Canvas Styling</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    The body canvas has 6 parameters that control its appearance. They are fully
+                    configurable. The following is a list of those parameters:<br><br>
+                    bBorderColor: "color string" - Border color.<br>
+                    bFillColor: "color string" - Background color.<br>
+                    bBorderRadius: number(0.0 - 1.0) - Corner radius fraction. 0.50 is fully rounded borders.<br>
+                    bBorderWeight: number(0.0 - 1.0) - Border thickness as a fraction of total body height.<br>
+                    bXPadding: number(0.0 - 1.0) - Left and right body padding as a fraction of total body width.<br>
+                    bYPadding: number(0.0 - 1.0) - top and bottom body padding as a fraction of total body height.
+                </p>
+                    <br><br>
+                    <p>Example:</p>
+                <div class="border mr-4">
+                    <p>
+                        <pre>
+        //Custom Body Canvas Parameters.
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            bBorderColor: "#0000ff",
+            bFillColor: "#d0d0fff0",
+            bBorderRadius: 0.5,
+            bBorderWeight: .001,
+            bXPadding: .15,
+            bYPadding: .40,
+            bLineWidth: .2
+        });
+                        </pre>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h5 class="text-center">Custom Body Canvas Styling</h5>
+                                <div id="dtp44" class="dtp-doc"></div>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+
                 <div class="subsection-header" id="subsection2t">Info Text Styling</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    There are 6 parameters that control the info text styling.  The info text appears over excluded/whitelisted
+                    items on a mouse hover. The following is a list of those parameters:<br><br>
+                    infoPointerSize: "string" - Sets the CSS style, usually in pixels. "10px", for example.
+                    infoBackColor: "color string" - Background color.<br>
+                    infoTextColor: "color string" - Text color.<br>
+                    infoPadding: "string" - Sets the CSS pagging values. "2px, 5px", for example
+                    infoWidth: "string" - Sets the CSS width of the info text box.
+                    infoBorderRadius: - Sets the CSS border radius. "10px", for example.
+                </p>
+                    <br><br>
+                    <p>Example:</p>
+                <div class="border mr-4">
+                    <p>
+                        <pre>
+        //Custom Info Text Parameters.
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            infoPointerSize: "75px",
+            infoBackColor: "#c0c000",
+            infoTextColor: "#ff0000",
+            infoPadding: "2px, 5px",
+            infoWidth: "150px",
+            infoBorderRadius: "10px 10px 0px 0px",
+
+            dayExcludeArray: 
+            [
+                {
+                    daysOfWeek: [CanvDTP.SATURDAY, CanvDTP.SUNDAY], 
+                    color: "#0000ff80",
+                    info: "Weekend Days Spotlighted"
+                }
+            ]
+        });
+                        </pre>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h5 class="text-center">Custom Info Text Styling</h5>
+                                <div id="dtp45" class="dtp-doc"></div>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+
                 <div class="subsection-header" id="subsection2u">Selectable Items Styling</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    There are 4 parameters that control the selectable items styling.
+                    The following is a list of those parameters:<br><br>
+                    selectBorderColor: "color string" - Border color.<br>
+                    selectFillColor "color string" - Background color.<br>
+                    selectRadius: number(0.0 - 1.0) - Corner radius fraction. 0.50 is fully rounded borders.<br>
+                    selectWeight: number(0.0 - 1.0) - Border thickness as a fraction of total body height.
+                </p>
+                    <br><br>
+                    <p>Example:</p>
+                <div class="border mr-4">
+                    <p>
+                        <pre>
+        //Custom Selectable Items Parameters.
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            selectBorderColor: "#ff0000",
+            selectFillColor: "#80000040",
+            selectRadius: .50,
+            selectWeight: .01
+        });
+                        </pre>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h5 class="text-center">Custom Selectable Item Styling</h5>
+                                <div id="dtp46" class="dtp-doc"></div>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+
                 <div class="subsection-header" id="subsection2v">Previous/Next Styling</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    There are 2 parameters that control the Previous/Next styling.
+                    The following is a list of those parameters:<br><br>
+                    prevNextXPad: number(0.0 - 1.0) - Left and right padding as a fraction of total width.<br>
+                    prevNextYPad: number(0.0 - 1.0) - top and bottom padding as a fraction of total height.
+                </p>
+                    <br><br>
+                    <p>Example:</p>
+                <div class="border mr-4">
+                    <p>
+                        <pre>
+        //Custom Previous/Next Parameters.
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            prevNextXPad: 0,
+            prevNextYPad: .35
+        });
+                        </pre>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h5 class="text-center">Custom Previous / Next Styling</h5>
+                                <div id="dtp47" class="dtp-doc"></div>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+
                 <div class="subsection-header" id="subsection2w">Clock Graphic Styling</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    There are 2 parameters that control the Clock Graphic styling.
+                    The following is a list of those parameters:<br><br>
+                    clockPad:  number(0.0 - 1.0) - padding as a fraction of total width.<br>
+                    clockWeight:  number(0.0 - 1.0) - Line thickness as a fraction of total body height.
+                </p>
+                    <br><br>
+                    <p>Example:</p>
+                <div class="border mr-4">
+                    <p>
+                        <pre>
+        //Custom Clock Graphic Parameters.
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            clockPad: .20,
+            clockWeight: .15
+        });
+                        </pre>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h5 class="text-center">Custom Clock Graphic Styling</h5>
+                                <div id="dtp48" class="dtp-doc"></div>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+
                 <div class="subsection-header" id="subsection2x">Calendar Graphic Styling</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    There are 3 parameters that control the Calendar Graphic styling on the time view.
+                    The following is a list of those parameters:<br><br>
+                    calXPadding: number(0.0 - 1.0) - Left and right padding as a fraction of total width.<br>
+                    calYPadding: number(0.0 - 1.0) - top and bottom padding as a fraction of total height.<br>
+                    calLineWidth: number(0.0 - 1.0) - Line weight as a fraction of total icon height.
+                </p>
+                    <br><br>
+                    <p>Example:</p>
+                <div class="border mr-4">
+                    <p>
+                        <pre>
+        //Custom Calendar Graphic Parameters.
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            calXPadding: .001,
+            calYPadding: .20,
+            calLineWidth: .015
+        });
+                        </pre>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h5 class="text-center">Custom Calendar Graphic Styling</h5>
+                                <div id="dtp49" class="dtp-doc"></div>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+
                 <div class="subsection-header" id="subsection2y">Days of Week Header Styling</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    There are 2 parameters that control the Days of Week Header styling.
+                    The following is a list of those parameters:<br><br>
+                    headerColor: "color string" - Text color.<br>
+                    headerScale: number(0.0 - 1.0) - Total space taken by the header text.
+                </p>
+                    <br><br>
+                    <p>Example:</p>
+                <div class="border mr-4">
+                    <p>
+                        <pre>
+        //Custom Days of Week Header Parameters.
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            headerColor: "#ffff00",
+            headerScale: .40
+        });
+                        </pre>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h5 class="text-center">Custom Days of Week Header Styling</h5>
+                                <div id="dtp50" class="dtp-doc"></div>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+
                 <div class="subsection-header" id="subsection2z">Currently Selected Day Styling</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    There are 4 parameters that control the Currently Selected Day styling.
+                    The following is a list of those parameters:<br><br>
+                    currentBorderColor: "color string" - Border color.<br>
+                    currentFillColor: "color string" - Background color.<br>
+                    currentRadius: number(0.0 - 1.0) - Corner radius fraction. 0.50 is fully rounded borders.<br>
+                    currentWeight: number(0.0 - 1.0) - Border thickness as a fraction of total body height.
+                </p>
+                    <br><br>
+                    <p>Example:</p>
+                <div class="border mr-4">
+                    <p>
+                        <pre>
+        //Custom Currently Selected Day Parameters.
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            currentBorderColor: "#ff0000",
+            currentFillColor: "#d0000080",
+            currentRadius: .50,
+            currentWeight: .10
+        });
+                        </pre>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h5 class="text-center">Custom Currently Selected Day Styling</h5>
+                                <div id="dtp51" class="dtp-doc"></div>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+
                 <div class="subsection-header" id="subsection20">Today's Date Styling</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    There are 2 parameters that control the Currently Today's Date styling.
+                    The following is a list of those parameters:<br><br>
+                    nowColor: "color string" - Graphic color.<br>
+                    nowWeight: number(0.0 - 1.0) - Graphic size as a fraction of total body height.
+                </p>
+                    <br><br>
+                    <p>Example:</p>
+                <div class="border mr-4">
+                    <p>
+                        <pre>
+        //Custom Today's Date Parameters.
+        new CanvDTP(document.getElementById("myDTPid"),
+        {
+            nowColor: "#0000ff",
+            nowWeight: .30
+        });
+                        </pre>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h5 class="text-center">Custom Today's Date Styling</h5>
+                                <div id="dtp52" class="dtp-doc"></div>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+
                 <div class="subsection-header" id="subsection21">Increment/Decrement Time Styling</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    There are 3 parameters that control the Increment/Decrement Time styling.
+                    The following is a list of those parameters:<br><br>
+                    incXPad: number(0.0 - 1.0) - Left and right padding as a fraction of total width.<br>
+                    incYPad: number(0.0 - 1.0) - top and bottom padding as a fraction of total height.<br>
+                    incWeight: number(0.0 - 1.0) - Line weight as a fraction of total height.
+                </p>
+                    <br><br>
+                    <p>Example:</p>
+                <div class="border mr-4">
+                    <p>
+                        <pre>
+        //Custom Increment/Decrement Parameters.
+        new CanvDTP(document.getElementById("myDTPid"), 
+        {
+            incXPad: .40,
+            incYPad: .40,
+            incWeight: .10
+        });
+                        </pre>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h5 class="text-center">Custom Increment / Decrement Time Styling</h5>
+                                <div id="dtp53" class="dtp-doc"></div>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+
                 <div class="subsection-header" id="subsection22">Text Scaling Styling</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    There are 9 parameters that control the Text Scaling styling.
+                    The following is a list of those parameters:<br><br>
+                    bannerScale: number(0.0 - 1.0) - Banner at top of date views.<br>
+                    dayScale: number(0.0 - 1.0) - Day numbers in month view.<br>
+                    monthScale: number(0.0 - 1.0) - Month names in year view.<br>
+                    yearScale: number(0.0 - 1.0) - Years numbers in decade view.<br>
+                    decadeScale: number(0.0 - 1.0) - Decade ranges in century view.<br>
+                    timeScale: number(0.0 - 1.0) - Time hour and minute.<br>
+                    timeAmPmScale: number(0.0 - 1.0) - AP/PM text.<br>
+                    minuteScale: number(0.0 - 1.0) - Minute numbers in minute view.<br>
+                    hourScale: number(0.0 - 1.0) - Hour numbers in hour view.<br>
+                </p>
+                    <br><br>
+                    <p>Example:</p>
+                <div class="border mr-4">
+                    <p>
+                        <pre>
+        //Custom Text Scale Parameters.
+        new CanvDTP(document.getElementById("myDTPid"), 
+        {
+            bannerScale: .50,
+            dayScale: .30,
+            monthScale: .30,
+            yearScale: .30,
+            decadeScale: .20,
+            timeScale: .30,
+            timeAmPmScale: .30,
+            minuteScale: .30,
+            hourScale: .30
+        });
+                        </pre>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h5 class="text-center">Custom Text Scaling Styling</h5>
+                                <div id="dtp54" class="dtp-doc"></div>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+
+
+
+
 
 
 

@@ -1474,17 +1474,6 @@
                     </p>
                 </div>
 
-
-
-
-
-
-
-
-
-
-
-
                 <div class="subsection-header" id="subsection23">Body Canvas Z-index</div>
                 <div class="divider-bottom"></div>
                 <p>
@@ -1516,10 +1505,119 @@
                 <div class="section-header" id="section3">API Functions</div>
                 <div class="subsection-header" id="subsection3a">getDateTimeString</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Get the currently selected date and time string. Returns a string.
+                    <br><br>
+                    Usage:
+                </p>
+                <pre>
+        let myVar = myDTP.getDateTimeString();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="getDateTimeString()">Get Date/Time String</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp55" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Date/Time String Value</h4>
+                            <span>Date-Time String: </span><span id="date-time-span1"></span><br>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection3b">getDateTimeJSON</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Get the date and time data for the currenctly selected date and time. The call returns the
+                    following data:
+                    <br><br>
+                    isPicked: boolean - Indicates if something is even selected.<br>
+                    string: "string" - String version of the date and time.<br>
+                    month: number(1-2) - picked month of year.<br>
+                    day: number(1-31) - picked day of month.<br>
+                    year: number - picked year<br>
+                    hour: number(1-12) - Standard time picked hour<br>
+                    milHour: number(0-23) - Military time picked hour<br>
+                    minute: number(0-59) - Picked minute.
+                    ampm: "string" - "AM" or "PM".<br>
+                    dayOfWeek: number(0-6) - Picked day of week(0 = Sunday).<br>
+                    dayOfYear: number(1-356) - picked day of year.
+                    weekOfYear: number(1-54) - picked week of year.
+                    <br><br>
+                    Usage:
+                </p>
+                <pre>
+        let myVar = myDTP.getDateTimeJSON();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="getDateTimeJSON()">Get JSON Date/Time Values</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp56" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>JSON Return Values</h4>
+                            <span>Is Picked: </span><span id="json-picked-span1"></span><br>
+                            <span>String: </span><span id="json-string-span1"></span><br>
+                            <span>Month: </span><span id="json-month-span1"></span><br>
+                            <span>Day: </span><span id="json-day-span1"></span><br>
+                            <span>Year: </span><span id="json-year-span1"></span><br>
+                            <span>Day Of Week: </span><span id="json-day-of-week-span1"></span><br>
+                            <span>Day Of Year: </span><span id="json-day-of-year-span1"></span><br>
+                            <span>Week Of Year: </span><span id="json-week-of-year-span1"></span><br>
+                            <span>Hour: </span><span id="json-hour-span1"></span><br>
+                            <span>Military Hour: </span><span id="json-mil-hour-span1"></span><br>
+                            <span>Minute: </span><span id="json-minute-span1"></span><br>
+                            <span>AM/PM: </span><span id="json-am-pm-span1"></span><br>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="subsection-header" id="subsection3c">set/getPickerType</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    setPickerType - Set the picker as time only, date only or both date and time.<br>
+                    getPickerType - Get the current picker type.<br>
+                    The class provides constants for the picker type: CanvDTP.PICK_BOTH, CanvDTP.PICK_DATE, CanvDTP.PICK_TIME.
+                    <br><br>
+                    Usage:
+                </p>
+                <pre>
+        myDTP.setPickerType(CanvDTP.PICK_BOTH);
+        myDTP.setPickerType(CanvDTP.PICK_DATE);
+        myDTP.setPickerType(CanvDTP.PICK_TIME);
+        let myVar = myDTP.getPickerType();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setPickerTypeB()">Set Picker Date and Time</button>
+                    <button class="btn btn-primary m-2" onclick="setPickerTypeD()">Set Picker Date Only</button>
+                    <button class="btn btn-primary m-2" onclick="setPickerTypeT()">Set Picker Time Only</button>
+                    <button class="btn btn-primary m-2" onclick="getPickerType()">get Picker Type</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp57" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Picker Type</h4>
+                            <span>Type: </span><span id="ptype1"></span><br>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
                 <div class="subsection-header" id="subsection3d">set/getDayExcludeArray</div>
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection3e">clearDayExcludeArray</div>

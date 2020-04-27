@@ -549,3 +549,65 @@ new CanvDTP(document.getElementById("dtp54"),
     bannerScale: .50, dayScale: .30, monthScale: .30, yearScale: .30, decadeScale: .20,
     timeScale: .30, timeAmPmScale: .30, minuteScale: .30, hourScale: .30
 });
+
+//getDateTimeString
+let canDTP1 = new CanvDTP(document.getElementById("dtp55"), {isCollapsible: false});
+
+let dateTimeSpan1 = document.getElementById("date-time-span1");
+
+let getDateTimeString = () =>
+{
+    let data = canDTP1.getDateTimeString();
+    dateTimeSpan1.innerHTML = data;
+}
+
+//getDateTimeJSON
+let canDTP2 = new CanvDTP(document.getElementById("dtp56"), {isCollapsible: false});
+
+let jsonPickedSpan1     = document.getElementById("json-picked-span1");
+let jsonStringSpan1     = document.getElementById("json-string-span1");
+let jsonMonthSpan1      = document.getElementById("json-month-span1");
+let jsonDaySpan1        = document.getElementById("json-day-span1");
+let jsonYearSpan1       = document.getElementById("json-year-span1");
+let jsonHourSpan1       = document.getElementById("json-hour-span1");
+let jsonMilHourSpan1    = document.getElementById("json-mil-hour-span1");
+let jsonMinuteSpan1     = document.getElementById("json-minute-span1");
+let jsonIsAMSpan1       = document.getElementById("json-am-pm-span1");
+let jsonDayOfWeekSpan1  = document.getElementById("json-day-of-week-span1");
+let jsonDayOfYearSpan1  = document.getElementById("json-day-of-year-span1");
+let jsonWeekOfYearSpan1 = document.getElementById("json-week-of-year-span1");
+
+let getDateTimeJSON = () =>
+{
+    let json = canDTP2.getDateTimeJSON();
+
+    jsonPickedSpan1.innerHTML     = json.isPicked;
+    jsonStringSpan1.innerHTML     = json.string;
+    jsonMonthSpan1.innerHTML      = json.month;
+    jsonDaySpan1.innerHTML        = json.day;
+    jsonYearSpan1.innerHTML       = json.year;
+    jsonHourSpan1.innerHTML       = json.hour;
+    jsonMilHourSpan1.innerHTML    = json.milHour;
+    jsonMinuteSpan1.innerHTML     = json.minute;
+    jsonIsAMSpan1.innerHTML       = json.ampm;
+    jsonDayOfWeekSpan1.innerHTML  = json.dayOfWeek;
+    jsonDayOfYearSpan1.innerHTML  = json.dayOfYear;
+    jsonWeekOfYearSpan1.innerHTML = json.weekOfYear;
+}
+
+//get/set picker type.
+let canDTP3 = new CanvDTP(document.getElementById("dtp57"), {isCollapsible: false});
+
+let ptype1 = document.getElementById("ptype1");
+
+let setPickerTypeB = () => canDTP3.setPickerType(CanvDTP.PICK_BOTH);
+let setPickerTypeD = () => canDTP3.setPickerType(CanvDTP.PICK_DATE);
+let setPickerTypeT = () => canDTP3.setPickerType(CanvDTP.PICK_TIME);
+
+let getPickerType = () =>
+{
+    let ptype = canDTP3.getPickerType();
+    if(ptype === CanvDTP.PICK_BOTH) ptype1.innerHTML = "Both Date and Time";
+    if(ptype === CanvDTP.PICK_TIME) ptype1.innerHTML = "Time Only";
+    if(ptype === CanvDTP.PICK_DATE) ptype1.innerHTML = "Date Only";
+}

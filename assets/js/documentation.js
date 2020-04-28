@@ -662,3 +662,104 @@ let getExcludedDays = () =>
 {
     exclusions1.innerText = JSON.stringify(canDTP4.getDayExcludeArray());
 }
+
+//dateTimeStringCb.
+let dateTimeSpan        = document.getElementById("date-time-span");
+let jsonPickedSpan      = document.getElementById("json-picked-span");
+let jsonStringSpan      = document.getElementById("json-string-span");
+let jsonMonthSpan       = document.getElementById("json-month-span");
+let jsonDaySpan         = document.getElementById("json-day-span");
+let jsonYearSpan        = document.getElementById("json-year-span");
+let jsonHourSpan        = document.getElementById("json-hour-span");
+let jsonMilHourSpan     = document.getElementById("json-mil-hour-span");
+let jsonMinuteSpan      = document.getElementById("json-minute-span");
+let jsonIsAMSpan        = document.getElementById("json-am-pm-span");
+let jsonDayOfWeekSpan   = document.getElementById("json-day-of-week-span");
+let jsonDayOfYearSpan   = document.getElementById("json-day-of-year-span");
+let jsonWeekOfYearSpan  = document.getElementById("json-week-of-year-span");
+
+let showDateTimeJSON = (dateTimeJSON) =>
+{
+    jsonPickedSpan.innerHTML     = dateTimeJSON.isPicked;
+    jsonStringSpan.innerHTML     = dateTimeJSON.string;
+    jsonMonthSpan.innerHTML      = dateTimeJSON.month;
+    jsonDaySpan.innerHTML        = dateTimeJSON.day;
+    jsonYearSpan.innerHTML       = dateTimeJSON.year;
+    jsonHourSpan.innerHTML       = dateTimeJSON.hour;
+    jsonMilHourSpan.innerHTML    = dateTimeJSON.milHour;
+    jsonMinuteSpan.innerHTML     = dateTimeJSON.minute;
+    jsonIsAMSpan.innerHTML       = dateTimeJSON.ampm;
+    jsonDayOfWeekSpan.innerHTML  = dateTimeJSON.dayOfWeek;
+    jsonDayOfYearSpan.innerHTML  = dateTimeJSON.dayOfYear;
+    jsonWeekOfYearSpan.innerHTML = dateTimeJSON.weekOfYear;
+}
+
+new CanvDTP(document.getElementById("dateTimeJSONCb"), {dateTimeJSONCb: showDateTimeJSON});
+
+//dateTimeStringCb
+let showDateTimeString = (dateTimeString) => dateTimeSpan.innerHTML = dateTimeString;
+new CanvDTP(document.getElementById("ateTimeStringCb"), {dateTimeStringCb: showDateTimeString});
+
+//openCb
+let openCb = () =>
+{
+    console.log("Opened!");
+    document.getElementById("openCb-span").innerHTML = "Opened!";
+}
+new CanvDTP(document.getElementById("openCb"), {openCb: openCb});
+
+//closeCb
+let closeCb = () =>
+{
+    console.log("Closed!");
+    document.getElementById("closeCb-span").innerHTML = "Closed!";
+}
+new CanvDTP(document.getElementById("closeCb"), {closeCb: closeCb});
+
+//hourChangeCb
+let oldMilHourSpan1 = document.getElementById("oldMilHour-span1");
+let oldHourSpan1    = document.getElementById("oldHour-span1");
+let oldMinSpan1     = document.getElementById("oldMin-span1");
+let oldIsAmSpan1    = document.getElementById("oldIsAm-span1");
+let newMilHourSpan1 = document.getElementById("newMilHour-span1");
+let newHourSpan1    = document.getElementById("newHour-span1");
+let newMinSpan1     = document.getElementById("newMin-span1");
+let newIsAmSpan1    = document.getElementById("newIsAm-span1");
+
+let hourChangeCb = (data) =>
+{
+    oldMilHourSpan1.innerHTML = data.oldMilHour;
+    oldHourSpan1.innerHTML = data.oldHour;
+    oldMinSpan1.innerHTML = data.oldMin;
+    oldIsAmSpan1.innerHTML = data.oldIsAm;
+    newMilHourSpan1.innerHTML = data.newMilHour;
+    newHourSpan1.innerHTML = data.newHour;
+    newMinSpan1.innerHTML = data.newMin;
+    newIsAmSpan1.innerHTML = data.newIsAm;
+}
+new CanvDTP(document.getElementById("hourChangeCb"), {hourChangeCb: hourChangeCb});
+
+//minuteChangeCb
+let oldMilHourSpan2 = document.getElementById("oldMilHour-span2");
+let oldHourSpan2    = document.getElementById("oldHour-span2");
+let oldMinSpan2     = document.getElementById("oldMin-span2");
+let oldIsAmSpan2    = document.getElementById("oldIsAm-span2");
+let newMilHourSpan2 = document.getElementById("newMilHour-span2");
+let newHourSpan2    = document.getElementById("newHour-span2");
+let newMinSpan2     = document.getElementById("newMin-span2");
+let newIsAmSpan2    = document.getElementById("newIsAm-span2");
+
+let minuteChangeCb = (data) =>
+{
+    oldMilHourSpan2.innerHTML = data.oldMilHour;
+    oldHourSpan2.innerHTML = data.oldHour;
+    oldMinSpan2.innerHTML = data.oldMin;
+    oldIsAmSpan2.innerHTML = data.oldIsAm;
+    newMilHourSpan2.innerHTML = data.newMilHour;
+    newHourSpan2.innerHTML = data.newHour;
+    newMinSpan2.innerHTML = data.newMin;
+    newIsAmSpan2.innerHTML = data.newIsAm;
+}
+new CanvDTP(document.getElementById("minuteChangeCb"), {minuteChangeCb: minuteChangeCb});
+
+

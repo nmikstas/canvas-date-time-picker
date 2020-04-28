@@ -192,7 +192,6 @@
                         <a href="#subsection4g" class="subsection-link scroll-link">ampmChangeCb</a>
                         <a href="#subsection4h" class="subsection-link scroll-link">TimeClickCb</a>
                         <a href="#subsection4i" class="subsection-link scroll-link">dateClickCb</a>
-                        <a href="#subsection4j" class="subsection-link scroll-link">dayClickCb</a>
                         <a href="#subsection4k" class="subsection-link scroll-link">monthClickCb</a>
                         <a href="#subsection4l" class="subsection-link scroll-link">yearClickCb</a>
                         <a href="#subsection4m" class="subsection-link scroll-link">decadeClickCb</a>
@@ -1533,22 +1532,24 @@
                 <p>
                     Get the date and time data for the currenctly selected date and time. The call returns the
                     following data:
-                    <br><br>
-                    isPicked: boolean - Indicates if something is even selected.<br>
-                    string: "string" - String version of the date and time.<br>
-                    month: number(1-2) - picked month of year.<br>
-                    day: number(1-31) - picked day of month.<br>
-                    year: number - picked year<br>
-                    hour: number(1-12) - Standard time picked hour<br>
-                    milHour: number(0-23) - Military time picked hour<br>
-                    minute: number(0-59) - Picked minute.
-                    ampm: "string" - "AM" or "PM".<br>
-                    dayOfWeek: number(0-6) - Picked day of week(0 = Sunday).<br>
-                    dayOfYear: number(1-356) - picked day of year.
-                    weekOfYear: number(1-54) - picked week of year.
-                    <br><br>
-                    Usage:
                 </p>
+                <pre>
+        {
+            isPicked: boolean - Indicates if something is even selected.
+            string: "string" - String version of the date and time.
+            month: number(1-2) - picked month of year.
+            day: number(1-31) - picked day of month.
+            year: number - picked year.
+            hour: number(1-12) - Standard time picked hour.
+            milHour: number(0-23) - Military time picked hour.
+            minute: number(0-59) - Picked minute.
+            ampm: "string" - "AM" or "PM".
+            dayOfWeek: number(0-6) - Picked day of week(0 = Sunday).
+            dayOfYear: number(1-356) - picked day of year.
+            weekOfYear: number(1-54) - picked week of year.
+        }
+                </pre>   
+                <p>Usage:</p>
                 <pre>
         let myVar = myDTP.getDateTimeJSON();
                 </pre>
@@ -1800,23 +1801,217 @@
                 <div class="section-header" id="section4">Callback Functions</div>
                 <div class="subsection-header" id="subsection4a">dateTimeStringCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that is called whenever the selected date changes. Returns the date/time string.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {dateTimeStringCb: myCallback});
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5 doc-pad border">
+                        <h2>Event Listener</h2>
+                        <span id="date-time-span"></span><br>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="ateTimeStringCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection4b">dateTimeJSONCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that is called whenever the selected date changes.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {dateTimeJSONCb: myCallback});
+                    </pre>
+                    <p>Return Value:</p>
+                    <pre>
+        {
+            isPicked: boolean - Indicates if something is even selected.
+            string: "string" - String version of the date and time.
+            month: number(1-2) - picked month of year.
+            day: number(1-31) - picked day of month.
+            year: number - picked year.
+            hour: number(1-12) - Standard time picked hour.
+            milHour: number(0-23) - Military time picked hour.
+            minute: number(0-59) - Picked minute.
+            ampm: "string" - "AM" or "PM".
+            dayOfWeek: number(0-6) - Picked day of week(0 = Sunday).
+            dayOfYear: number(1-356) - picked day of year.
+            weekOfYear: number(1-54) - picked week of year.
+        }
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span>Is Picked: </span><span id="json-picked-span"></span><br>
+                            <span>String: </span><span id="json-string-span"></span><br>
+                            <span>Month: </span><span id="json-month-span"></span><br>
+                            <span>Day: </span><span id="json-day-span"></span><br>
+                            <span>Year: </span><span id="json-year-span"></span><br>
+                            <span>Day Of Week: </span><span id="json-day-of-week-span"></span><br>
+                            <span>Day Of Year: </span><span id="json-day-of-year-span"></span><br>
+                            <span>Week Of Year: </span><span id="json-week-of-year-span"></span><br>
+                            <span>Hour: </span><span id="json-hour-span"></span><br>
+                            <span>Military Hour: </span><span id="json-mil-hour-span"></span><br>
+                            <span>Minute: </span><span id="json-minute-span"></span><br>
+                            <span>AM/PM: </span><span id="json-am-pm-span"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="dateTimeJSONCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection4c">openCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that is called whenever the body canvas is opened. Returns no data.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {openCb: myCallback});
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span id="openCb-span"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="openCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection4d">closeCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that is called whenever the body canvas is closed. Returns no data.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {closeCb: myCallback});
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span id="closeCb-span"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="closeCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection4e">hourChangeCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that is called whenever the hour changes.
+                </p>
+                <br><br>
+                <p>Instantiation:</p>
+                <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {hourChangeCb: myCallback});
+                </pre>
+                <p>Return Value:</p>
+                <pre>
+        {
+            oldMilHour: number(0-23),
+            oldHour:    number(1-12),
+            oldMin:     number(0-59),
+            oldIsAm:    boolean,
+            newMilHour: number(0-23),
+            newHour:    number(1-12),
+            newMin:     number(0-59),
+            newIsAm:    boolean
+        }
+                </pre>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span>oldMilHour: </span><span id="oldMilHour-span1"></span><br>
+                            <span>oldHour: </span><span id="oldHour-span1"></span><br>
+                            <span>oldMin: </span><span id="oldMin-span1"></span><br>
+                            <span>oldIsAm: </span><span id="oldIsAm-span1"></span><br>
+                            <span>newMilHour: </span><span id="newMilHour-span1"></span><br>
+                            <span>newHour: </span><span id="newHour-span1"></span><br>
+                            <span>newMin: </span><span id="newMin-span1"></span><br>
+                            <span>newIsAm: </span><span id="newIsAm-span1"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="hourChangeCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection4f">minuteChangeCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that is called whenever the minute changes.
+                </p>
+                <br><br>
+                <p>Instantiation:</p>
+                <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {minuteChangeCb: myCallback});
+                </pre>
+                <p>Return Value:</p>
+                <pre>
+        {
+            oldMilHour: number(0-23),
+            oldHour:    number(1-12),
+            oldMin:     number(0-59),
+            oldIsAm:    boolean,
+            newMilHour: number(0-23),
+            newHour:    number(1-12),
+            newMin:     number(0-59),
+            newIsAm:    boolean
+        }
+                </pre>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span>oldMilHour: </span><span id="oldMilHour-span2"></span><br>
+                            <span>oldHour: </span><span id="oldHour-span2"></span><br>
+                            <span>oldMin: </span><span id="oldMin-span2"></span><br>
+                            <span>oldIsAm: </span><span id="oldIsAm-span2"></span><br>
+                            <span>newMilHour: </span><span id="newMilHour-span2"></span><br>
+                            <span>newHour: </span><span id="newHour-span2"></span><br>
+                            <span>newMin: </span><span id="newMin-span2"></span><br>
+                            <span>newIsAm: </span><span id="newIsAm-span2"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="minuteChangeCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection4g">ampmChangeCb</div>
                 <div class="divider-bottom"></div>
+
+
+
+
+
+
+
+
+
+
                 <div class="subsection-header" id="subsection4h">TimeClickCb</div>
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection4i">dateClickCb</div>
-                <div class="divider-bottom"></div>
-                <div class="subsection-header" id="subsection4j">dayClickCb</div>
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection4k">monthClickCb</div>
                 <div class="divider-bottom"></div>

@@ -2521,6 +2521,8 @@ class CanvDTP
                 this.updateYear   = true;
                 this.updateDecade = true;
                 clearInterval(this.bodyAnimTimer);
+
+                if(this.closeCb && this.isCollapsible)this.closeCb();
                 break;
 
             case CanvDTP.BODY_COLLAPSING:
@@ -2546,6 +2548,8 @@ class CanvDTP
                 }
 
                 clearInterval(this.bodyAnimTimer);
+
+                if(this.openCb && this.isCollapsible)this.openCb();
                 break;
 
             case CanvDTP.BODY_EXPANDING:
@@ -4503,6 +4507,7 @@ class CanvDTP
         {
             if(this.dateTime === CanvDTP.CAL_TIME)
             {
+                let oldMilHour, oldHour, oldMin, oldIsAm, newMilHour, newHour, newMin, newIsAm
                 switch(this.timeView)
                 {
                     case CanvDTP.CAL_MIN_HOUR:
@@ -4514,37 +4519,181 @@ class CanvDTP
                                 break;
 
                             case CanvDTP.SEL_HINC1:
+                                oldMilHour = this.milHour;
+                                oldHour = this.hour;
+                                oldMin = this.minute;
+                                oldIsAm = this.isAM;
                                 this.incHour();
+                                newMilHour = this.milHour;
+                                newHour = this.hour;
+                                newMin = this.minute;
+                                newIsAm = this.isAM;
+                                if(this.hourChangeCb)
+                                {
+                                    this.hourChangeCb
+                                    (
+                                        {
+                                            oldMilHour: oldMilHour,
+                                            oldHour:    oldHour,
+                                            oldMin:     oldMin,
+                                            oldIsAm:    oldIsAm,
+                                            newMilHour: newMilHour,
+                                            newHour:    newHour,
+                                            newMin:     newMin,
+                                            newIsAm:    newIsAm
+                                        }
+                                    );
+                                }
                                 this.textBoxDateTime();
                                 this.bodyDraw();
                                 break;
 
                             case CanvDTP.SEL_HDEC1:
+                                oldMilHour = this.milHour;
+                                oldHour = this.hour;
+                                oldMin = this.minute;
+                                oldIsAm = this.isAM;
                                 this.decHour();
+                                newMilHour = this.milHour;
+                                newHour = this.hour;
+                                newMin = this.minute;
+                                newIsAm = this.isAM;
+                                if(this.hourChangeCb)
+                                {
+                                    this.hourChangeCb
+                                    (
+                                        {
+                                            oldMilHour: oldMilHour,
+                                            oldHour:    oldHour,
+                                            oldMin:     oldMin,
+                                            oldIsAm:    oldIsAm,
+                                            newMilHour: newMilHour,
+                                            newHour:    newHour,
+                                            newMin:     newMin,
+                                            newIsAm:    newIsAm
+                                        }
+                                    );
+                                }
                                 this.textBoxDateTime();
                                 this.bodyDraw();
                                 break;
 
                             case CanvDTP.SEL_MINC1:
+                                oldMilHour = this.milHour;
+                                oldHour = this.hour;
+                                oldMin = this.minute;
+                                oldIsAm = this.isAM;
                                 this.incMinute(1);
+                                newMilHour = this.milHour;
+                                newHour = this.hour;
+                                newMin = this.minute;
+                                newIsAm = this.isAM;
+                                if(this.minuteChangeCb)
+                                {
+                                    this.minuteChangeCb
+                                    (
+                                        {
+                                            oldMilHour: oldMilHour,
+                                            oldHour:    oldHour,
+                                            oldMin:     oldMin,
+                                            oldIsAm:    oldIsAm,
+                                            newMilHour: newMilHour,
+                                            newHour:    newHour,
+                                            newMin:     newMin,
+                                            newIsAm:    newIsAm
+                                        }
+                                    );
+                                }
                                 this.textBoxDateTime();
                                 this.bodyDraw();
                                 break;
 
                             case CanvDTP.SEL_MDEC1:
+                                oldMilHour = this.milHour;
+                                oldHour = this.hour;
+                                oldMin = this.minute;
+                                oldIsAm = this.isAM;
                                 this.decMinute(1);
+                                newMilHour = this.milHour;
+                                newHour = this.hour;
+                                newMin = this.minute;
+                                newIsAm = this.isAM;
+                                if(this.minuteChangeCb)
+                                {
+                                    this.minuteChangeCb
+                                    (
+                                        {
+                                            oldMilHour: oldMilHour,
+                                            oldHour:    oldHour,
+                                            oldMin:     oldMin,
+                                            oldIsAm:    oldIsAm,
+                                            newMilHour: newMilHour,
+                                            newHour:    newHour,
+                                            newMin:     newMin,
+                                            newIsAm:    newIsAm
+                                        }
+                                    );
+                                }
                                 this.textBoxDateTime();
                                 this.bodyDraw();
                                 break;
 
                             case CanvDTP.SEL_MINC10:
+                                oldMilHour = this.milHour;
+                                oldHour = this.hour;
+                                oldMin = this.minute;
+                                oldIsAm = this.isAM;
                                 this.incMinute(10);
+                                newMilHour = this.milHour;
+                                newHour = this.hour;
+                                newMin = this.minute;
+                                newIsAm = this.isAM;
+                                if(this.minuteChangeCb)
+                                {
+                                    this.minuteChangeCb
+                                    (
+                                        {
+                                            oldMilHour: oldMilHour,
+                                            oldHour:    oldHour,
+                                            oldMin:     oldMin,
+                                            oldIsAm:    oldIsAm,
+                                            newMilHour: newMilHour,
+                                            newHour:    newHour,
+                                            newMin:     newMin,
+                                            newIsAm:    newIsAm
+                                        }
+                                    );
+                                }
                                 this.textBoxDateTime();
                                 this.bodyDraw();
                                 break;
 
                             case CanvDTP.SEL_MDEC10:
+                                oldMilHour = this.milHour;
+                                oldHour = this.hour;
+                                oldMin = this.minute;
+                                oldIsAm = this.isAM;
                                 this.decMinute(10);
+                                newMilHour = this.milHour;
+                                newHour = this.hour;
+                                newMin = this.minute;
+                                newIsAm = this.isAM;
+                                if(this.minuteChangeCb)
+                                {
+                                    this.minuteChangeCb
+                                    (
+                                        {
+                                            oldMilHour: oldMilHour,
+                                            oldHour:    oldHour,
+                                            oldMin:     oldMin,
+                                            oldIsAm:    oldIsAm,
+                                            newMilHour: newMilHour,
+                                            newHour:    newHour,
+                                            newMin:     newMin,
+                                            newIsAm:    newIsAm
+                                        }
+                                    );
+                                }
                                 this.textBoxDateTime();
                                 this.bodyDraw();
                                 break;

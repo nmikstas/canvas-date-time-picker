@@ -1790,12 +1790,137 @@
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection3zz">set/getIncDecParams</div>
                 <div class="divider-bottom"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
                 <div class="subsection-header" id="subsection300">set/getScales</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    The text scale values are between 0 and 1.0. They represent the fraction of the text height with respect to their
+                    corresponding cointainer heights.<br>
+                    setScales- Set the text scale values.<br>
+                    getScales - Get the text scale values.
+                    <br><br>
+                    The following object is passed as a parameter to the setScales function and returned from the getScales function:
+                </p>
+                <pre>
+        {
+            bannerScale:   View banner,
+            dayScale:      Days of Month,
+            monthScale:    Month Text,
+            yearScale:     Year Text,
+            decadeScale:   Decade Text,
+            timeScale:     Time view Text,            
+            timeAmPmScale: AM/PM text,
+            minuteScale:   Minute view Text,
+            hourScale:     Hour view Text
+        }
+                </pre>
+                <p>Examples:</p>
+                <pre>
+        //Set default scales.
+        myDTP.setScales
+        (
+            {
+                bannerScale   = .80,
+                dayScale      = .60,
+                monthScale    = .60,
+                yearScale     = .60,
+                decadeScale   = .50,
+                timeScale     = .80,
+                timeAmPmScale = .60,
+                minuteScale   = .80,
+                hourScale     = .80
+            }
+        );
+
+        //Set custom scales.
+        myDTP.setScales
+        (
+            {
+                bannerScale   = .50,
+                dayScale      = .30,
+                monthScale    = .30,
+                yearScale     = .30,
+                decadeScale   = .20,
+                timeScale     = .50,
+                timeAmPmScale = .30,
+                minuteScale   = .50,
+                hourScale     = .50
+            }
+        );
+
+        //Get scales.
+        let myScales = myDTP.getScales();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setDefaultScales()">Set Default Scales</button>
+                    <button class="btn btn-primary m-2" onclick="setCustomScales()">Set Custom Scales</button>
+                    <button class="btn btn-primary m-2" onclick="getScales()">Get Scales</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp60" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Scale Return Values</h4>
+                            <span id="scales1"></span><br>
+                        </div>
+                    </div>
+                </div>
                 <div class="subsection-header" id="subsection311">set/getZIndex</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    setZIndex - Set body canvas z-index value.<br>
+                    getZIndex - Returns body canvas z-index value.
+                    <br><br>
+                    Examples:
+                </p>
+                <pre>
+        myDTP.setZIndex(0);
+        myDTP.setZIndex(1);
+        let zIndex = myDTP.getZIndex();
+                </pre>
                 <div class="subsection-header" id="subsection322">set/getDebug</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    setDebug - Enable/disable debug mode.<br>
+                    getDebug - Returns boolean debug value.
+                    <br><br>
+                    Examples:
+                </p>
+                <pre>
+        myDTP.setDebug(true);
+        myDTP.setDebug(false);
+        let isDebug = myDTP.getDebug();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="toggleDebug()">Toggle Debug Mode</button>
+                    <button class="btn btn-primary m-2" onclick="getDebug()">Get Debug Mode</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp59" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Debug Value</h4>
+                            <span>Debug: </span><span id="debug1"></span><br>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="section-header" id="section4">Callback Functions</div>
                 <div class="subsection-header" id="subsection4a">dateTimeStringCb</div>
@@ -2804,7 +2929,7 @@
                     Example CSS that will turn the textbox background red with a font size of 50px:
                 </p>
                 <pre>
-        .myDTP-tb
+        #myDTP-tb
         {
             background-color: #ff0000;
             font-size: 50px;

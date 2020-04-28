@@ -5395,4 +5395,43 @@ class CanvDTP
     {
         return [...this.dayExcludeArray];
     }
+
+    setDebug(isDebug)
+    {
+        this.debug = isDebug;
+        this.bodyDraw();
+    }
+
+    getDebug()
+    {
+        return this.debug;
+    }
+
+    setScales(scales)
+    {
+        if(scales.hasOwnProperty("bannerScale")) this.bannerScale = scales.bannerScale;
+        if(scales.hasOwnProperty("dayScale")) this.dayScale = scales.dayScale;
+        if(scales.hasOwnProperty("monthScale")) this.monthScale = scales.monthScale;
+        if(scales.hasOwnProperty("yearScale")) this.yearScale = scales.yearScale;
+        if(scales.hasOwnProperty("decadeScale")) this.decadeScale = scales.decadeScale;
+        if(scales.hasOwnProperty("timeScale")) this.timeScale = scales.timeScale;
+        if(scales.hasOwnProperty("timeAmPmScale")) this.timeAmPmScale = scales.timeAmPmScale;
+        if(scales.hasOwnProperty("minuteScale")) this.minuteScale = scales.minuteScale;
+        if(scales.hasOwnProperty("hourScale")) this.hourScale = scales.hourScale;        
+    }
+
+    getScales()
+    {
+        return {
+            bannerScale:   this.bannerScale,
+            dayScale:      this.dayScale,
+            monthScale:    this.monthScale,
+            yearScale:     this.yearScale,
+            decadeScale:   this.decadeScale,
+            timeScale:     this.timeScale,
+            timeAmPmScale: this.timeAmPmScale,
+            minuteScale:   this.minuteScale,
+            hourScale:     this.hourScale
+        }
+    }
 }

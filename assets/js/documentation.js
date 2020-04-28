@@ -660,7 +660,7 @@ let setExcludeWeekends = () =>
 
 let getExcludedDays = () =>
 {
-    exclusions1.innerText = JSON.stringify(canDTP4.getDayExcludeArray());
+    exclusions1.innerText = JSON.stringify(canDTP4.getDayExcludeArray(), null, 1);
 }
 
 //dateTimeStringCb.
@@ -840,4 +840,62 @@ new CanvDTP(document.getElementById("centuryViewClickCb"), {centuryViewClickCb: 
 
 //Textbox picker.
 new CanvDTP(document.getElementById("textbox-dtp"));
+
+//Get/set debug.
+let canDTP5 = new CanvDTP(document.getElementById("dtp59"), {isCollapsible: false});
+let toggleDebug = () =>
+{
+    let isDebug = canDTP5.getDebug();
+    if(isDebug) canDTP5.setDebug(false);
+    else canDTP5.setDebug(true);
+}
+
+let getDebug = () =>
+{
+    document.getElementById("debug1").innerHTML = canDTP5.getDebug();
+}
+
+//Get/set scales.
+let canDTP6 = new CanvDTP(document.getElementById("dtp60"), {isCollapsible: false});
+let setDefaultScales = () =>
+{
+    canDTP6.setScales
+    (
+        {
+            bannerScale:   .80,
+            dayScale:      .60,
+            monthScale:    .60,
+            yearScale:     .60,
+            decadeScale:   .50,
+            timeScale:     .80,
+            timeAmPmScale: .60,
+            minuteScale:   .80,
+            hourScale:     .80
+        }
+    );
+}
+
+let setCustomScales = () =>
+{
+    canDTP6.setScales
+    (
+        {
+            bannerScale:   .50,
+            dayScale:      .30,
+            monthScale:    .30,
+            yearScale:     .30,
+            decadeScale:   .20,
+            timeScale:     .50,
+            timeAmPmScale: .30,
+            minuteScale:   .50,
+            hourScale:     .50
+        }
+    );
+}
+
+let getScales = () =>
+{
+    document.getElementById("scales1").innerText = JSON.stringify(canDTP6.getScales(), null, 1);
+}
+
 

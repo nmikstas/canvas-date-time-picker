@@ -611,3 +611,54 @@ let getPickerType = () =>
     if(ptype === CanvDTP.PICK_TIME) ptype1.innerHTML = "Time Only";
     if(ptype === CanvDTP.PICK_DATE) ptype1.innerHTML = "Date Only";
 }
+
+//Get/set day exclusions.
+let canDTP4 = new CanvDTP(document.getElementById("dtp58"),
+{
+    isCollapsible: false,
+    dayExcludeArray: 
+    [
+        {
+            daysOfWeek: [CanvDTP.MONDAY, CanvDTP.TUESDAY, CanvDTP.WEDNESDAY, CanvDTP.THURSDAY, CanvDTP.FRIDAY],
+            excluded: true,
+            color: "#ff000080",
+            info: "All Weekdays Excluded"
+        }
+    ]
+});
+
+let exclusions1 = document.getElementById("exclusions1");
+
+let SetExcludeWeekdays = () => 
+{  
+    canDTP4.setDayExcludeArray
+    (
+        [
+            {
+                daysOfWeek: [CanvDTP.MONDAY, CanvDTP.TUESDAY, CanvDTP.WEDNESDAY, CanvDTP.THURSDAY, CanvDTP.FRIDAY],
+                excluded: true,
+                color: "#ff000080",
+                info: "All Weekdays Excluded"
+            }
+        ]
+    );
+}
+let setExcludeWeekends = () =>
+{
+    canDTP4.setDayExcludeArray
+    (
+        [
+            {
+                daysOfWeek: [CanvDTP.SUNDAY, CanvDTP.SATURDAY],
+                excluded: true,
+                color: "#ff000080",
+                info: "All Weekends Excluded"
+            }
+        ]
+    );
+}
+
+let getExcludedDays = () =>
+{
+    exclusions1.innerText = JSON.stringify(canDTP4.getDayExcludeArray());
+}

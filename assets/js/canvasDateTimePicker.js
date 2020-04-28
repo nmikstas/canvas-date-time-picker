@@ -2380,7 +2380,7 @@ class CanvDTP
         if(this.pickedType === CanvDTP.SEL_VIEW && this.calView <= this.topView) return;
 
         //Indicate something can be picked.
-        this.isPicked   = true;
+        this.isPicked = true;
 
         //Get additional info for days of month.
         if(i < CanvDTP.NUM_DAYS)
@@ -5084,5 +5084,56 @@ class CanvDTP
     getPickerType()
     {
         return this.pickerType;
+    }
+
+    setDayExcludeArray(arrData)
+    {
+        let todaysIndex = -1;
+        let todayExcluded = false;
+
+        this.dayExcludeArray = [...arrData];
+        this.monthExclude();
+        
+        //Try to find the currently selected date in the current month being displayed.
+        for(let i = 0; i < this.dayArray.length; i++)
+        {
+            if
+            (
+                this.year  === this.dayArray[i].year &&
+                this.month === this.dayArray[i].month &&
+                this.day   === this.dayArray[i].day
+            )
+            {
+                todaysIndex = i;
+            }
+        }
+
+        //Check if current date is blocked.
+        if(todaysIndex >= 0 && this.monthSpecial[todaysIndex].excluded) todayExcluded = true;
+
+        //Delete the current date if no auto pick or date is blocked.
+        if(todayExcluded)
+        {
+            this.month         = undefined;
+            this.day           = undefined;
+            this.year          = undefined;
+            this.dayOfWeek     = undefined;
+            this.dayOfYear     = undefined;
+            this.isLeapYear    = undefined;
+            this.isFirstPicked = false;
+            this.autoPick      = false;
+            this.dtpText.value = "";
+        }
+        else
+        {
+            this.isFirstPicked = true;
+        }
+
+        this.bodyDraw();
+    }
+
+    getDayExcludeArray()
+    {
+        return [...this.dayExcludeArray];
     }
 }

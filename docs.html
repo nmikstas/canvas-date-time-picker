@@ -1582,10 +1582,10 @@
                 <div class="divider-bottom"></div>
                 <p>
                     setPickerType - Set the picker as time only, date only or both date and time.<br>
-                    getPickerType - Get the current picker type.<br>
+                    getPickerType - Returns the current picker type.<br>
                     The class provides constants for the picker type: CanvDTP.PICK_BOTH, CanvDTP.PICK_DATE, CanvDTP.PICK_TIME.
                     <br><br>
-                    Usage:
+                    Examples:
                 </p>
                 <pre>
         myDTP.setPickerType(CanvDTP.PICK_BOTH);
@@ -1611,15 +1611,69 @@
                     </div>
                 </div>
 
-
-
-
-
-
-
-
                 <div class="subsection-header" id="subsection3d">set/getDayExcludeArray</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    setDayExcludeArray - Sets the contents of the day exclusion array. Replaces any existing data.
+                    getDayExcludeArray - Returns a copy of the entire contents of the day exclusion array.
+                    <br><br>
+                    Examples:
+                </p>
+                <pre>
+        //Exclude all weekdays.
+        myDTP.setDayExcludeArray
+        (
+            [
+                {
+                    daysOfWeek: 
+                    [
+                        CanvDTP.MONDAY, CanvDTP.TUESDAY, CanvDTP.WEDNESDAY,
+                        CanvDTP.THURSDAY, CanvDTP.FRIDAY
+                    ],
+                    excluded: true,
+                    color: "#ff000080",
+                    info: "All Weekdays Excluded"
+                }
+            ]
+        );
+
+        //Exclude all weekends.
+        myDTP.setDayExcludeArray
+        (
+            [
+                {
+                    daysOfWeek: [CanvDTP.SUNDAY, CanvDTP.SATURDAY],
+                    excluded: true,
+                    color: "#ff000080",
+                    info: "All Weekends Excluded"
+                }
+            ]
+        );
+
+        //Get exclusion array.
+        let data = myDTP.getDayExcludeArray();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="SetExcludeWeekdays()">Set Weekdays Excluded</button>
+                    <button class="btn btn-primary m-2" onclick="setExcludeWeekends()">Set Weekends Excluded</button>
+                    <button class="btn btn-primary m-2" onclick="getExcludedDays()">Get Exclusions</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp58" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Day Exclusions Array</h4>
+                            <span>Exclusion Array: </span><span id="exclusions1"></span><br>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
                 <div class="subsection-header" id="subsection3e">clearDayExcludeArray</div>
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection3f">pushDayExcludeArray</div>

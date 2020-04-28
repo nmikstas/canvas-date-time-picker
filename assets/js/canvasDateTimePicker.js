@@ -5417,7 +5417,8 @@ class CanvDTP
         if(scales.hasOwnProperty("timeScale")) this.timeScale = scales.timeScale;
         if(scales.hasOwnProperty("timeAmPmScale")) this.timeAmPmScale = scales.timeAmPmScale;
         if(scales.hasOwnProperty("minuteScale")) this.minuteScale = scales.minuteScale;
-        if(scales.hasOwnProperty("hourScale")) this.hourScale = scales.hourScale;        
+        if(scales.hasOwnProperty("hourScale")) this.hourScale = scales.hourScale;
+        this.bodyDraw();      
     }
 
     getScales()
@@ -5432,6 +5433,53 @@ class CanvDTP
             timeAmPmScale: this.timeAmPmScale,
             minuteScale:   this.minuteScale,
             hourScale:     this.hourScale
+        }
+    }
+
+    setPrevNextParams(params)
+    {
+        if(params.hasOwnProperty("prevNextXPad")) this.prevNextXPad = params.prevNextXPad;
+        if(params.hasOwnProperty("prevNextYPad")) this.prevNextYPad = params.prevNextYPad;
+        this.bodyDraw();  
+    }
+    
+    getPrevNextParams()
+    {
+        return {
+            prevNextXPad: this.prevNextXPad,
+            prevNextYPad: this.prevNextYPad
+        }
+    }
+
+    setIncDecParams(params)
+    {
+        if(params.hasOwnProperty("incXPad")) this.incXPad = params.incXPad;
+        if(params.hasOwnProperty("incYPad")) this.incYPad = params.incYPad;
+        if(params.hasOwnProperty("incWeight")) this.incWeight = params.incWeight;
+        this.bodyDraw();  
+    }
+    
+    getIncDecParams()
+    {
+        return {
+            incXPad:   this.incXPad,
+            incYPad:   this.incYPad,
+            incWeight: this.incWeight
+        }
+    }
+    
+    setTodaysDateParams(params)
+    {
+        if(params.hasOwnProperty("nowColor")) this.nowColor = params.nowColor;
+        if(params.hasOwnProperty("nowWeight")) this.nowWeight = params.nowWeight;
+        this.bodyDraw();  
+    }
+    
+    getTodaysDateParams()
+    {
+        return {
+            nowColor:  this.nowColor,
+            nowWeight: this.nowWeight
         }
     }
 }

@@ -898,4 +898,93 @@ let getScales = () =>
     document.getElementById("scales1").innerText = JSON.stringify(canDTP6.getScales(), null, 1);
 }
 
+//Get/set previous/next.
+let canDTP7 = new CanvDTP(document.getElementById("dtp61"), {isCollapsible: false});
+let setDefaultPrevNext = () =>
+{
+    canDTP7.setPrevNextParams
+    (
+        {
+            prevNextXPad: .20,
+            prevNextYPad: .25
+        }
+    );
+}
+
+let setCustomPrevNext = () =>
+{
+    canDTP7.setPrevNextParams
+    (
+        {
+            prevNextXPad: .01,
+            prevNextYPad: .40
+        }
+    );
+}
+
+let getPrevNext = () =>
+{
+    document.getElementById("prev-next1").innerText = JSON.stringify(canDTP7.getPrevNextParams(), null, 1);
+}
+
+//Get/set inc/dec.
+let canDTP8 = new CanvDTP(document.getElementById("dtp62"), {isCollapsible: false});
+let setDefaultIncDec = () =>
+{
+    canDTP8.setIncDecParams
+    (
+        {
+            incXPad:   .25,
+            incYPad:   .10,
+            incWeight: .25
+        }
+    );
+}
+
+let setCustomIncDec = () =>
+{
+    canDTP8.setIncDecParams
+    (
+        {
+            incXPad:   .40,
+            incYPad:   .40,
+            incWeight: .40,
+        }
+    );
+}
+
+let getIncDec = () =>
+{
+    document.getElementById("inc-dec1").innerText = JSON.stringify(canDTP8.getIncDecParams(), null, 1);
+}
+
+//Get/set today's date.
+let canDTP9 = new CanvDTP(document.getElementById("dtp63"), {isCollapsible: false});
+let setDefaultTodaysDate = () =>
+{
+    canDTP9.setTodaysDateParams
+    (
+        {
+            nowColor:  "#000000",
+            nowWeight: .20
+        }
+    );
+}
+
+let setCustomTodaysDate = () =>
+{
+    canDTP9.setTodaysDateParams
+    (
+        {
+            nowColor:  "#00ffff",
+            nowWeight: .35
+        }
+    );
+}
+
+let getTodaysDate = () =>
+{
+    document.getElementById("todays-date1").innerText = JSON.stringify(canDTP9.getTodaysDateParams(), null, 1);
+}
+
 

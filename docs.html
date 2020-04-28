@@ -1760,6 +1760,7 @@
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection3kk">set/getTodaysDate</div>
                 <div class="divider-bottom"></div>
+
                 <div class="subsection-header" id="subsection3ll">set/getTopView</div>
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection3mm">set/getCalendarIcon</div>
@@ -1776,20 +1777,74 @@
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection3ss">set/getSelectableParams</div>
                 <div class="divider-bottom"></div>
+
+
+                
+
+
                 <div class="subsection-header" id="subsection3tt">set/getPrevNextParams</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    The previous/next values are between 0 and 1.0. They represent the fraction of the padding with respect to their
+                    corresponding cointainer heights.<br>
+                    setPrevNextParams - Set the parameters of the next/previous graphics.<br>
+                    getPrevNextParams - Get the parameters of the next/previous graphics.
+                    <br><br>
+                    The following object is passed as a parameter to the setPrevNextParams function and returned from the getPrevNextParams function:
+                </p>
+                <pre>
+        {
+            prevNextXPad: X padding,
+            prevNextYPad: Y padding
+        }
+                </pre>
+                <p>Examples:</p>
+                <pre>
+        //Set default previous/next values.
+        myDTP.setPrevNextParams
+        (
+            {
+                prevNextXPad: .20,
+                prevNextYPad: .25
+            }
+        );
+
+        //Set custom previous/next values.
+        myDTP.setPrevNextParams
+        (
+            {
+                prevNextXPad: .01,
+                prevNextYPad: .35
+            }
+        );
+
+        //Get previous/next values.
+        let myScales = myDTP.getPrevNextParams();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setDefaultPrevNext()">Set Default Values</button>
+                    <button class="btn btn-primary m-2" onclick="setCustomPrevNext()">Set Custom Values</button>
+                    <button class="btn btn-primary m-2" onclick="getPrevNext()">Get Values</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp61" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Prev/Next Return Values</h4>
+                            <span id="prev-next1"></span><br>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection3uu">set/getClockParams</div>
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection3vv">set/getCalendarParams</div>
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection3ww">set/getWeekHeaderParams</div>
                 <div class="divider-bottom"></div>
-                <div class="subsection-header" id="subsection3xx">set/getSelectedParams</div>
-                <div class="divider-bottom"></div>
-                <div class="subsection-header" id="subsection3yy">set/getTodaysDateParams</div>
-                <div class="divider-bottom"></div>
-                <div class="subsection-header" id="subsection3zz">set/getIncDecParams</div>
-                <div class="divider-bottom"></div>
+
 
 
 
@@ -1804,6 +1859,138 @@
 
 
                 
+                <div class="subsection-header" id="subsection3xx">set/getSelectedParams</div>
+                <div class="divider-bottom"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+                <div class="subsection-header" id="subsection3yy">set/getTodaysDateParams</div>
+                <div class="divider-bottom"></div>
+                <p>
+                    The today's date color is a color string. The weight sets the size of the graphics. the weight represents the fraction of the padding
+                    with respect to their corresponding cointainer heights.<br>
+                    setTodaysDateParams - Set the parameters of the today's date graphics.<br>
+                    getTodaysDateParams - Get the parameters of the today's date graphics.
+                    <br><br>
+                    The following object is passed as a parameter to the setTodaysDateParams function and returned from the getTodaysDateParams function:
+                </p>
+                <pre>
+        {
+            nowColor:   Graphic color,
+            nowWeight:  Graphic size
+        }
+                </pre>
+                <p>Examples:</p>
+                <pre>
+        //Set default today's date values.
+        myDTP.setTodaysDateParams
+        (
+            {
+                nowColor  = "#000000",
+                nowWeight = .20
+            }
+        );
+
+        //Set custom today's date values.
+        myDTP.setTodaysDateParams
+        (
+            {
+                nowColor  = "#00ffff",
+                nowWeight = .35
+            }
+        );
+
+        //Get today's date values.
+        let myScales = myDTP.getTodaysDateParams();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setDefaultTodaysDate()">Set Default Values</button>
+                    <button class="btn btn-primary m-2" onclick="setCustomTodaysDate()">Set Custom Values</button>
+                    <button class="btn btn-primary m-2" onclick="getTodaysDate()">Get Values</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp63" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Today's Date Values</h4>
+                            <span id="todays-date1"></span><br>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection-header" id="subsection3zz">set/getIncDecParams</div>
+                <div class="divider-bottom"></div>
+                <p>
+                    The increment/decrement values are between 0 and 1.0. They represent the fraction of the padding with respect to their
+                    corresponding cointainer heights.<br>
+                    setIncDecParams - Set the parameters of the increment/decrement graphics.<br>
+                    getIncDecParams - Get the parameters of the increment/decrement graphics.
+                    <br><br>
+                    The following object is passed as a parameter to the setIncDecParams function and returned from the getIncDecParams function:
+                </p>
+                <pre>
+        {
+            incXPad:   X padding,
+            incYPad:   Y padding,
+            incWeight: Line thickness
+        }
+                </pre>
+                <p>Examples:</p>
+                <pre>
+        //Set default increment/decrement values.
+        myDTP.setIncDecParams
+        (
+            {
+                incXPad:   .25,
+                incYPad:   .10,
+                incWeight: .25 
+            }
+        );
+
+        //Set custom increment/decrement values.
+        myDTP.setIncDecParams
+        (
+            {
+                incXPad:   .40,
+                incYPad:   .40,
+                incWeight: .40 
+            }
+        );
+
+        //Get increment/decrement values.
+        let myScales = myDTP.getIncDecParams();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setDefaultIncDec()">Set Default Values</button>
+                    <button class="btn btn-primary m-2" onclick="setCustomIncDec()">Set Custom Values</button>
+                    <button class="btn btn-primary m-2" onclick="getIncDec()">Get Values</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp62" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Inc/Dec Return Values</h4>
+                            <span id="inc-dec1"></span><br>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection300">set/getScales</div>
                 <div class="divider-bottom"></div>
                 <p>
@@ -1880,6 +2067,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="subsection-header" id="subsection311">set/getZIndex</div>
                 <div class="divider-bottom"></div>
                 <p>

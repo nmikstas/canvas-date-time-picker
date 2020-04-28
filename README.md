@@ -4,9 +4,11 @@ A date/time picker that uses plain Javascript and the canvas API.
 The goal is to make a date/time picker consisting of a single class needing no other files.
 No React, no Bootstrap, no JQuery, no CSS.  
 
-Detailed documentation will be written after the coding is done.  
+Overview: https://nmikstas.github.io/canvas-date-time-picker/  
+Documentation: https://nmikstas.github.io/canvas-date-time-picker/docs.html  
 
-Last updated: 4/24/2020.  
+
+Last updated: 4/27/2020.  
 
 ## __Things that will be added:__
 - ***Done*** Fully customizeable date/time format string.
@@ -41,18 +43,61 @@ Last updated: 4/24/2020.
 - ***Done*** Date picker only.
 - ***Done*** Time picker only.
 - ***Done*** Utility functions.
+- ***Done*** Callback functions.
 - API configuration calls.
-- Callback functions.
+
+# __Callback Functions__ #
+***Done*** dateTimeStringCb - Returns a string representation of the currently selected date.  
+***Done*** dateTimeJSONCb - Returns a JSON object of the currently selected date. {isPicked, string, month, day, year, hour, milHour, minute, ampm, dayOfWeek, dayOfYear, weekOfYear}  
+***Done*** monthNextClickCb  
+***Done*** monthPrevClickCb  
+***Done*** yearNextClickCb  
+***Done*** yearPrevClickCb  
+***Done*** decadeNextClickCb  
+***Done*** decadePrevClickCb  
+***Done*** centuryNextClickCb  
+***Done*** centuryPrevClickCb 
+***Done*** openCb  
+***Done*** closeCb  
+***Done*** hourChangeCb  
+***Done*** minuteChangeCb  
+***Done*** ampmChangeCb  
+***Done*** TimeClickCb  
+***Done*** dateClickCb  
+***Done*** monthClickCb  
+***Done*** yearClickCb  
+***Done*** decadeClickCb  
+***Done*** yearViewClickCb  
+***Done*** decadeViewClickCb  
+***Done*** centuryViewClickCb  
+
+# __Utiltity Functions__ #
+The utility functions return the month and day of a floating holiday for a given year. The fixed holidays return the month and day of the holiday without the need to supply a year.  
+
+***Done*** getEaster - Requires a year.  
+***Done*** getThanksgiving - Requires a year.  
+***Done*** getMLK - Requires a year.  
+***Done*** getMothers - Requires a year.  
+***Done*** getFathers - Requires a year.  
+***Done*** getWashington - Requires a year.  
+***Done*** getMemorial - Requires a year.  
+***Done*** getLabor - Requires a year.  
+***Done*** getColumbus - Requires a year.  
+***Done*** getIndependence - Returns July 4th.  
+***Done*** getChristmas - Returns December 25th.  
+***Done*** getNewYears - Returns January 1st.  
+***Done*** getHalloween - Returns October 31st.  
+***Done*** getValentines - Returns February 14th.  
+***Done*** getStPatricks - Returns March 17th.  
+***Done*** getVeterans - Returns November 11th.  
 
 # __API Function Calls__ #
-
 ***Done*** getDateTimeString - Returns a string representation of the currently selected date.  
-***Done*** getDateTimeJSON - Returns a JSON object of the currently selected date {isPicked, string, month, day, year, hour, milHour, minute, ampm, dayOfWeek, dayOfYear, weekOfYear}.  
+***Done*** getDateTimeJSON - Returns a JSON object of the currently selected date 
 ***Done*** getPickerType - Returns the picker type (both date and time, date only, time only).  
 ***Done*** setPickerType - Sets the picker type  (both date and time, date only, time only).  
-
-getDayExcludeArray  
-setDayExcludeArray  
+***Done*** getDayExcludeArray  
+***Done*** setDayExcludeArray  
 clearDayExcludeArray  
 pushDayExcludeArray  
 delDayExcludeElement  
@@ -151,55 +196,6 @@ getScales
 setScales  
 getZIndex  
 setZIndex  
-
-# __Callback Functions__ #
-***Done*** dateTimeStringCb - Returns a string representation of the currently selected date.  
-***Done*** dateTimeJSONCb - Returns a JSON object of the currently selected date. {isPicked, string, month, day, year, hour, milHour, minute, ampm, dayOfWeek, dayOfYear, weekOfYear}  
-***Done*** monthNextClickCb  
-***Done*** monthPrevClickCb  
-***Done*** yearNextClickCb  
-***Done*** yearPrevClickCb  
-***Done*** decadeNextClickCb  
-***Done*** decadePrevClickCb  
-***Done*** centuryNextClickCb  
-***Done*** centuryPrevClickCb 
-
-openCb  
-closeCb  
-hourChangeCb  
-minuteChangeCb  
-ampmChangeCb  
-TimeClickCb  
-dateClickCb  
-dayClickCb  
-monthClickCb  
-yearClickCb  
-decadeClickCb  
-monthViewClickCb  
-yearViewClickCb  
-decadeViewClickCb  
-centuryViewClickCb  
-
-# __Utiltity Functions__ #
-
-The utility functions return the month and day of a floating holiday for a given year. The fixed holidays return the month and day of the holiday without the need to supply a year.  
-
-***Done*** getEaster - Requires a year.  
-***Done*** getThanksgiving - Requires a year.  
-***Done*** getMLK - Requires a year.  
-***Done*** getMothers - Requires a year.  
-***Done*** getFathers - Requires a year.  
-***Done*** getWashington - Requires a year.  
-***Done*** getMemorial - Requires a year.  
-***Done*** getLabor - Requires a year.  
-***Done*** getColumbus - Requires a year.  
-***Done*** getIndependence - Returns July 4th.  
-***Done*** getChristmas - Returns December 25th.  
-***Done*** getNewYears - Returns January 1st.  
-***Done*** getHalloween - Returns October 31st.  
-***Done*** getValentines - Returns February 14th.  
-***Done*** getStPatricks - Returns March 17th.  
-***Done*** getVeterans - Returns November 11th.  
 
 # __These are some quick notes on the functionality of the date/time fomat string:__  
 M    = No zero pad month.       ***Can append ordinal***  

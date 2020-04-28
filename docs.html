@@ -195,7 +195,6 @@
                         <a href="#subsection4k" class="subsection-link scroll-link">monthClickCb</a>
                         <a href="#subsection4l" class="subsection-link scroll-link">yearClickCb</a>
                         <a href="#subsection4m" class="subsection-link scroll-link">decadeClickCb</a>
-                        <a href="#subsection4n" class="subsection-link scroll-link">monthViewClickCb</a>
                         <a href="#subsection4o" class="subsection-link scroll-link">yearViewClickCb</a>
                         <a href="#subsection4p" class="subsection-link scroll-link">decadeViewClickCb</a>
                         <a href="#subsection4q" class="subsection-link scroll-link">centuryViewClickCb</a>
@@ -1831,17 +1830,17 @@
                     <p>Return Value:</p>
                     <pre>
         {
-            isPicked: boolean - Indicates if something is even selected.
-            string: "string" - String version of the date and time.
-            month: number(1-2) - picked month of year.
-            day: number(1-31) - picked day of month.
-            year: number - picked year.
-            hour: number(1-12) - Standard time picked hour.
-            milHour: number(0-23) - Military time picked hour.
-            minute: number(0-59) - Picked minute.
-            ampm: "string" - "AM" or "PM".
-            dayOfWeek: number(0-6) - Picked day of week(0 = Sunday).
-            dayOfYear: number(1-356) - picked day of year.
+            isPicked:   boolean - Indicates if something is even selected.
+            string:     "string" - String version of the date and time.
+            month:      number(1-2) - picked month of year.
+            day:        number(1-31) - picked day of month.
+            year:       number - picked year.
+            hour:       number(1-12) - Standard time picked hour.
+            milHour:    number(0-23) - Military time picked hour.
+            minute:     number(0-59) - Picked minute.
+            ampm:       "string" - "AM" or "PM".
+            dayOfWeek:  number(0-6) - Picked day of week(0 = Sunday).
+            dayOfYear:  number(1-356) - picked day of year.
             weekOfYear: number(1-54) - picked week of year.
         }
                     </pre>
@@ -1999,34 +1998,230 @@
 
                 <div class="subsection-header" id="subsection4g">ampmChangeCb</div>
                 <div class="divider-bottom"></div>
-
-
-
-
-
-
-
-
-
+                <p>
+                    Callback function that is called whenever the AM/PM toggles.
+                </p>
+                <br><br>
+                <p>Instantiation:</p>
+                <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {ampmChangeCb: myCallback});
+                </pre>
+                <p>Return Value:</p>
+                <pre>
+        {
+            oldMilHour: number(0-23),
+            oldHour:    number(1-12),
+            oldMin:     number(0-59),
+            oldIsAm:    boolean,
+            newMilHour: number(0-23),
+            newHour:    number(1-12),
+            newMin:     number(0-59),
+            newIsAm:    boolean
+        }
+                </pre>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span>oldMilHour: </span><span id="oldMilHour-span3"></span><br>
+                            <span>oldHour: </span><span id="oldHour-span3"></span><br>
+                            <span>oldMin: </span><span id="oldMin-span3"></span><br>
+                            <span>oldIsAm: </span><span id="oldIsAm-span3"></span><br>
+                            <span>newMilHour: </span><span id="newMilHour-span3"></span><br>
+                            <span>newHour: </span><span id="newHour-span3"></span><br>
+                            <span>newMin: </span><span id="newMin-span3"></span><br>
+                            <span>newIsAm: </span><span id="newIsAm-span3"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="ampmChangeCb" class="dtp-doc"></div>
+                    </div>
+                </div>
 
                 <div class="subsection-header" id="subsection4h">TimeClickCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that is called whenever the time view is shown. Returns no data.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {TimeClickCb: myCallback});
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span id="TimeClickCb-span"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="TimeClickCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection4i">dateClickCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that is called whenever the date view is shown. Returns no data.
+                    <br><br>
+                    Instantiation:
+                    <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {dateClickCb: myCallback});
+                    </pre>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span id="dateClickCb-span"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="dateClickCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection4k">monthClickCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that is called whenever a month is clicked in the year view.
+                </p>
+                <br><br>
+                <p>Instantiation:</p>
+                <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {monthClickCb: myCallback});
+                </pre>
+                <p>Return Value:</p>
+                <pre>
+        {
+            month: number(1-12),
+            year:  number
+        }
+                </pre>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span>month: </span><span id="month-span1"></span><br>
+                            <span>year: </span><span id="year-span1"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="monthClickCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection4l">yearClickCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that is called whenever a year is clicked in the decade view. Returns the year clicked.
+                </p>
+                <br><br>
+                <p>Instantiation:</p>
+                <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {yearClickCb: myCallback});
+                </pre>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span>year: </span><span id="year-span2"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="yearClickCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection4m">decadeClickCb</div>
                 <div class="divider-bottom"></div>
-                <div class="subsection-header" id="subsection4n">monthViewClickCb</div>
-                <div class="divider-bottom"></div>
+                <p>
+                    Callback function that is called whenever a decade is clicked in the century view. Returns the decade clicked.
+                </p>
+                <br><br>
+                <p>Instantiation:</p>
+                <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {decadeClickCb: myCallback});
+                </pre>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span>decade: </span><span id="decade-span1"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="decadeClickCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection4o">yearViewClickCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that is called whenever the year banner is clicked from the month view. Returns the year.
+                </p>
+                <br><br>
+                <p>Instantiation:</p>
+                <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {yearViewClickCb: myCallback});
+                </pre>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span>year: </span><span id="year-span5"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="yearViewClickCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection4p">decadeViewClickCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that is called whenever the decade banner is clicked from the year view. Returns the decade.
+                </p>
+                <br><br>
+                <p>Instantiation:</p>
+                <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {decadeViewClickCb: myCallback});
+                </pre>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span>decade: </span><span id="decade-span5"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="decadeViewClickCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection4q">centuryViewClickCb</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Callback function that is called whenever the century banner is clicked from the decade view. Returns the century.
+                </p>
+                <br><br>
+                <p>Instantiation:</p>
+                <pre>
+        new CanvDTP(document.getElementById("myDTPid"), {centuryViewClickCb: myCallback});
+                </pre>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="doc-pad border">
+                            <h2>Event Listener</h2>
+                            <span>century: </span><span id="century-span5"></span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="centuryViewClickCb" class="dtp-doc"></div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection4r">monthNextClickCb</div>
                 <div class="divider-bottom"></div>
                 <p>
@@ -2602,7 +2797,27 @@
                 <div class="section-header" id="section6">Miscellaneous</div>
                 <div class="subsection-header" id="subsection6a">Textbox Formatting</div>
                 <div class="divider-bottom"></div>
-                <div style="height: 1000px;"></div>
+                <p>
+                    The textbox can be accessed through CSS. The ID of the textbox will always be the id of the date/time picker with "-tb" appended.
+                    For example, if the date/time picker has an ID of "myDTP" then the textbox will have an ID of "myDTP-tb".
+                    <br><br>
+                    Example CSS that will turn the textbox background red with a font size of 50px:
+                </p>
+                <pre>
+        .myDTP-tb
+        {
+            background-color: #ff0000;
+            font-size: 50px;
+        }
+                </pre>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">                            
+                        <div id="textbox-dtp"></div>
+                    </div>
+                </div>
+
+                <div style="height: 800px;"></div>
                 <div class="subsection-header" id="end"></div>
             </section>
         </div>

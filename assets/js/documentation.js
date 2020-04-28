@@ -762,4 +762,82 @@ let minuteChangeCb = (data) =>
 }
 new CanvDTP(document.getElementById("minuteChangeCb"), {minuteChangeCb: minuteChangeCb});
 
+//ampmChangeCb
+let oldMilHourSpan3 = document.getElementById("oldMilHour-span3");
+let oldHourSpan3    = document.getElementById("oldHour-span3");
+let oldMinSpan3     = document.getElementById("oldMin-span3");
+let oldIsAmSpan3    = document.getElementById("oldIsAm-span3");
+let newMilHourSpan3 = document.getElementById("newMilHour-span3");
+let newHourSpan3    = document.getElementById("newHour-span3");
+let newMinSpan3     = document.getElementById("newMin-span3");
+let newIsAmSpan3    = document.getElementById("newIsAm-span3");
+
+let ampmChangeCb = (data) =>
+{
+    oldMilHourSpan3.innerHTML = data.oldMilHour;
+    oldHourSpan3.innerHTML = data.oldHour;
+    oldMinSpan3.innerHTML = data.oldMin;
+    oldIsAmSpan3.innerHTML = data.oldIsAm;
+    newMilHourSpan3.innerHTML = data.newMilHour;
+    newHourSpan3.innerHTML = data.newHour;
+    newMinSpan3.innerHTML = data.newMin;
+    newIsAmSpan3.innerHTML = data.newIsAm;
+}
+new CanvDTP(document.getElementById("ampmChangeCb"), {ampmChangeCb: ampmChangeCb});
+
+//TimeClickCb
+let TimeClickCb = () =>
+{
+    console.log("Time View!");
+    document.getElementById("TimeClickCb-span").innerHTML = "Time View!";
+}
+new CanvDTP(document.getElementById("TimeClickCb"), {TimeClickCb: TimeClickCb});
+
+//dateClickCb
+let dateClickCb = () =>
+{
+    console.log("Date View!");
+    document.getElementById("dateClickCb-span").innerHTML = "Date View!";
+}
+new CanvDTP(document.getElementById("dateClickCb"), {dateClickCb: dateClickCb});
+
+//monthClickCb
+let monthSpan1 = document.getElementById("month-span1");
+let yearSpan1  = document.getElementById("year-span1");
+
+let monthClickCb = (data) =>
+{
+    monthSpan1.innerHTML = data.month;
+    yearSpan1.innerHTML = data.year;
+    
+}
+new CanvDTP(document.getElementById("monthClickCb"), {monthClickCb: monthClickCb});
+
+//yearClickCb
+let yearSpan2  = document.getElementById("year-span2");
+let yearClickCb = (data) => yearSpan2.innerHTML = data;
+new CanvDTP(document.getElementById("yearClickCb"), {yearClickCb: yearClickCb});
+
+//decadeClickCb
+let decadeSpan1  = document.getElementById("decade-span1");
+let decadeClickCb = (data) => decadeSpan1.innerHTML = data;
+new CanvDTP(document.getElementById("decadeClickCb"), {decadeClickCb: decadeClickCb});
+
+//yearViewClickCb
+let yearSpan5  = document.getElementById("year-span5");
+let yearViewClickCb = (data) => yearSpan5.innerHTML = data;
+new CanvDTP(document.getElementById("yearViewClickCb"), {yearViewClickCb: yearViewClickCb});
+
+//decadeViewClickCb
+let decadeSpan5  = document.getElementById("decade-span5");
+let decadeViewClickCb = (data) => decadeSpan5.innerHTML = data;
+new CanvDTP(document.getElementById("decadeViewClickCb"), {decadeViewClickCb: decadeViewClickCb});
+
+//centuryViewClickCb
+let centurySpan5  = document.getElementById("century-span5");
+let centuryViewClickCb = (data) => centurySpan5.innerHTML = data;
+new CanvDTP(document.getElementById("centuryViewClickCb"), {centuryViewClickCb: centuryViewClickCb});
+
+//Textbox picker.
+new CanvDTP(document.getElementById("textbox-dtp"));
 

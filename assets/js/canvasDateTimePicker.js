@@ -4515,6 +4515,7 @@ class CanvDTP
                         {
                             case CanvDTP.SEL_DATE:
                                 this.dateTime = CanvDTP.CAL_DATE;
+                                if(this.dateClickCb) this.dateClickCb();
                                 this.bodyDraw();
                                 break;
 
@@ -4699,8 +4700,32 @@ class CanvDTP
                                 break;
 
                             case CanvDTP.SEL_AMPM:
+                                oldMilHour = this.milHour;
+                                oldHour = this.hour;
+                                oldMin = this.minute;
+                                oldIsAm = this.isAM;
                                 this.isAM ? this.milHour += 12 : this.milHour -= 12;
                                 this.isAM = this.isAM ? false : true;
+                                newMilHour = this.milHour;
+                                newHour = this.hour;
+                                newMin = this.minute;
+                                newIsAm = this.isAM;
+                                if(this.ampmChangeCb)
+                                {
+                                    this.ampmChangeCb
+                                    (
+                                        {
+                                            oldMilHour: oldMilHour,
+                                            oldHour:    oldHour,
+                                            oldMin:     oldMin,
+                                            oldIsAm:    oldIsAm,
+                                            newMilHour: newMilHour,
+                                            newHour:    newHour,
+                                            newMin:     newMin,
+                                            newIsAm:    newIsAm
+                                        }
+                                    );
+                                }
                                 this.textBoxDateTime();
                                 this.bodyDraw();
                                 break;
@@ -4718,29 +4743,101 @@ class CanvDTP
                         break;
 
                     case CanvDTP.CAL_MINUTE:
+                        oldMilHour = this.milHour;
+                        oldHour = this.hour;
+                        oldMin = this.minute;
+                        oldIsAm = this.isAM;
                         this.minute = this.tempMinute;
                         this.timeView = CanvDTP.CAL_MIN_HOUR;
+                        newMilHour = this.milHour;
+                        newHour = this.hour;
+                        newMin = this.minute;
+                        newIsAm = this.isAM;
+                        if(this.minuteChangeCb)
+                        {
+                            this.minuteChangeCb
+                            (
+                                {
+                                    oldMilHour: oldMilHour,
+                                    oldHour:    oldHour,
+                                    oldMin:     oldMin,
+                                    oldIsAm:    oldIsAm,
+                                    newMilHour: newMilHour,
+                                    newHour:    newHour,
+                                    newMin:     newMin,
+                                    newIsAm:    newIsAm
+                                }
+                            );
+                        }
                         this.textBoxDateTime();
                         this.bodyDraw();
                         break;
 
                     case CanvDTP.CAL_STD_HOUR:
+                        oldMilHour = this.milHour;
+                        oldHour = this.hour;
+                        oldMin = this.minute;
+                        oldIsAm = this.isAM;
                         this.hour = this.tempHour;
                         this.milHour = this.hour;
                         if(!this.isAM) this.milHour += 12;
                         if(this.milHour > 23) this.milHour = 0;
                         this.timeView = CanvDTP.CAL_MIN_HOUR;
+                        newMilHour = this.milHour;
+                        newHour = this.hour;
+                        newMin = this.minute;
+                        newIsAm = this.isAM;
+                        if(this.hourChangeCb)
+                        {
+                            this.hourChangeCb
+                            (
+                                {
+                                    oldMilHour: oldMilHour,
+                                    oldHour:    oldHour,
+                                    oldMin:     oldMin,
+                                    oldIsAm:    oldIsAm,
+                                    newMilHour: newMilHour,
+                                    newHour:    newHour,
+                                    newMin:     newMin,
+                                    newIsAm:    newIsAm
+                                }
+                            );
+                        }
                         this.textBoxDateTime();
                         this.bodyDraw();
                         break;
 
                     case CanvDTP.CAL_MIL_HOUR:
+                        oldMilHour = this.milHour;
+                        oldHour = this.hour;
+                        oldMin = this.minute;
+                        oldIsAm = this.isAM;
                         this.milHour = this.tempHour;
                         this.hour = this.milHour;
                         this.isAM = (this.milHour > 11) ? false : true; 
                         if(!this.hour) this.hour = 12;
                         if(this.hour > 12) this.hour -= 12;
                         this.timeView = CanvDTP.CAL_MIN_HOUR;
+                        newMilHour = this.milHour;
+                        newHour = this.hour;
+                        newMin = this.minute;
+                        newIsAm = this.isAM;
+                        if(this.hourChangeCb)
+                        {
+                            this.hourChangeCb
+                            (
+                                {
+                                    oldMilHour: oldMilHour,
+                                    oldHour:    oldHour,
+                                    oldMin:     oldMin,
+                                    oldIsAm:    oldIsAm,
+                                    newMilHour: newMilHour,
+                                    newHour:    newHour,
+                                    newMin:     newMin,
+                                    newIsAm:    newIsAm
+                                }
+                            );
+                        }
                         this.textBoxDateTime();
                         this.bodyDraw();
                         break;
@@ -4835,6 +4932,7 @@ class CanvDTP
                                 this.dateTime = CanvDTP.CAL_TIME;
                                 this.timeView = CanvDTP.CAL_MIN_HOUR;
                                 document.body.style.cursor = "default";
+                                if(this.TimeClickCb) this.TimeClickCb();
                                 this.bodyDraw();
                                 break;
 
@@ -4843,6 +4941,7 @@ class CanvDTP
                                 document.body.style.cursor = "default";
                                 this.updateYear = true;
                                 this.bodyDraw();
+                                if(this.yearViewClickCb) this.yearViewClickCb(this.tempYear);
                                 break;
                         }
                         break;
@@ -4856,6 +4955,10 @@ class CanvDTP
                                 document.body.style.cursor = "default";
                                 this.updateMonth = true;
                                 this.bodyDraw();
+                                if(this.monthClickCb)
+                                {
+                                    this.monthClickCb({month: this.tempMonth, year: this.tempYear});
+                                }
                                 break;
 
                             case CanvDTP.SEL_PREVIOUS:
@@ -4886,6 +4989,7 @@ class CanvDTP
                                 this.dateTime = CanvDTP.CAL_TIME;
                                 this.timeView = CanvDTP.CAL_MIN_HOUR;
                                 document.body.style.cursor = "default";
+                                if(this.TimeClickCb) this.TimeClickCb();
                                 this.bodyDraw();
                                 break;
 
@@ -4894,6 +4998,7 @@ class CanvDTP
                                 document.body.style.cursor = "default";
                                 this.updateDecade = true;
                                 this.bodyDraw();
+                                if(this.decadeViewClickCb) this.decadeViewClickCb(parseInt(this.tempYear / 10) * 10);
                                 break;
                         }
                         break;
@@ -4907,6 +5012,7 @@ class CanvDTP
                                 document.body.style.cursor = "default";
                                 this.updateYear = true;
                                 this.bodyDraw();
+                                if(this.yearClickCb) this.yearClickCb(this.tempYear);
                                 break;
 
                             case CanvDTP.SEL_PREVIOUS:
@@ -4938,12 +5044,14 @@ class CanvDTP
                                 this.timeView = CanvDTP.CAL_MIN_HOUR;
                                 document.body.style.cursor = "default";
                                 this.bodyDraw();
+                                if(this.TimeClickCb) this.TimeClickCb();
                                 break;
 
                             case CanvDTP.SEL_VIEW:
                                 this.calView = CanvDTP.CAL_CENTURY;
                                 document.body.style.cursor = "default";
                                 this.bodyDraw();
+                                if(this.centuryViewClickCb) this.centuryViewClickCb(parseInt(this.tempYear / 100) * 100);
                                 break;
                         }
                         break;
@@ -4957,6 +5065,7 @@ class CanvDTP
                                 document.body.style.cursor = "default";
                                 this.updateDecade = true;
                                 this.bodyDraw();
+                                if(this.decadeClickCb) this.decadeClickCb(parseInt(this.tempYear / 10) * 10);
                                 break;
 
                             case CanvDTP.SEL_PREVIOUS:
@@ -4985,6 +5094,7 @@ class CanvDTP
                                 this.dateTime = CanvDTP.CAL_TIME;
                                 this.timeView = CanvDTP.CAL_MIN_HOUR;
                                 document.body.style.cursor = "default";
+                                if(this.TimeClickCb) this.TimeClickCb();
                                 this.bodyDraw();
                                 break;
                         }

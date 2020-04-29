@@ -64,15 +64,3 @@ getFontStyle
 setFontStyle  
 getDateRanges  
 setDateRanges  
-getInitDate  
-setInitDate  
-getAutoPick  
-setAutoPick  
-getTodayIndicator  
-setTodayIndicator  
-getTodaysDate  
-setTodaysDate  
-getTopView  
-setTopView  
-getCalendarIcon  
-setCalendarIcon  

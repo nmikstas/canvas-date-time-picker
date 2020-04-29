@@ -1306,3 +1306,42 @@ let defaultTopView  = () => canDTP22.setTopView(CanvDTP.CAL_CENTURY);
 let customTopView   = () => canDTP22.setTopView(CanvDTP.CAL_MONTH);
 let getTopView      = () => document.getElementById("top-view1").innerText = canDTP22.getTopView();
 
+//Get/set today's date.
+let canDTP23 = new CanvDTP(document.getElementById("dtp77"), {isCollapsible: false});
+let defaultTodayDate = () => 
+{
+    let date = new Date();
+
+    canDTP23.setTodaysDate
+    (
+        {
+            day:   date.getDate(),
+            month: date.getMonth() + 1,
+            year:  date.getFullYear()
+        }
+    );
+}
+
+let customTodayDate  = () =>
+{
+    canDTP23.setTodaysDate
+    (
+        {
+            day:   1,
+            month: 1,
+            year:  2000
+        }
+    );
+}
+
+let getTodayDate = () => document.getElementById("today-date1").innerText = JSON.stringify(canDTP23.getTodaysDate(), null, 1);
+
+//Get/set date picker top view.
+let canDTP24 = new CanvDTP(document.getElementById("dtp78"), {isCollapsible: false});
+let enableTodayDate   = () => canDTP24.setTodayIndicator(true);
+let disableTodayDate  = () => canDTP24.setTodayIndicator(false);
+let getTodayIndicator = () => document.getElementById("today1").innerText = canDTP24.getTodayIndicator();
+
+
+
+

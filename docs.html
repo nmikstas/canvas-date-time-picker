@@ -158,8 +158,6 @@
                         <a href="#subsection3ee" class="subsection-link scroll-link">set/getIsMilitaryTime</a>
                         <a href="#subsection3ff" class="subsection-link scroll-link">set/getFontStyle</a>
                         <a href="#subsection3gg" class="subsection-link scroll-link">set/getDateRanges</a>
-                        <a href="#subsection3hh" class="subsection-link scroll-link">set/getInitDate</a>
-                        <a href="#subsection3ii" class="subsection-link scroll-link">set/getAutoPick</a>
                         <a href="#subsection3jj" class="subsection-link scroll-link">set/getTodayIndicator</a>
                         <a href="#subsection3kk" class="subsection-link scroll-link">set/getTodaysDate</a>
                         <a href="#subsection3ll" class="subsection-link scroll-link">set/getTopView</a>
@@ -1764,45 +1762,101 @@
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection3gg">set/getDateRanges</div>
                 <div class="divider-bottom"></div>
-                <div class="subsection-header" id="subsection3hh">set/getInitDate</div>
-                <div class="divider-bottom"></div>
-                <div class="subsection-header" id="subsection3ii">set/getAutoPick</div>
-                <div class="divider-bottom"></div>
+                
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <div class="subsection-header" id="subsection3jj">set/getTodayIndicator</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Hide or show the today's date indicator on the calendar.<br>
+                    setTodayIndicator - Set the visibility of the today's date indicator.<br>
+                    getTodayIndicator - Get the visibility of the today's date indicator.
+                </p>
+                <p>Examples:</p>
+                <pre>
+        //Set the visibility of the today's date indicator.
+        myDTP.setTodayIndicator(true);
+        myDTP.setTodayIndicator(false);
+        
+        //Get the visibility of the today's date indicator.
+        let myVar = myDTP.getTodayIndicator();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="enableTodayDate()">Show Today's Date Indicator</button>
+                    <button class="btn btn-primary m-2" onclick="disableTodayDate()">Hide Today's Date Indicator</button>
+                    <button class="btn btn-primary m-2" onclick="getTodayIndicator()">Get Today's Date Status</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp78" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Today's Date Visibility</h4>
+                            <span id="today1"></span><br>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection3kk">set/getTodaysDate</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    The setTodaysDate function can be used to set the current date on the calendar. This can be used to override the
+                    local date with a guaranteed accurate server date, for example. NOTE: This is not the same as the selected date.
+                    This is primarily for drawing today's date indicator on the calendar.
+                    setTodaysDate - Set today's date.
+                    getTodaysDate - Get today's date.
+                </p>
+                <p>Examples:</p>
+                <pre>
+        //Set today's date.
+        myDTP.setTodaysDate
+        (
+            {
+                day:   number(1-31),
+                month: number(1-12),
+                year:  number
+            }
+        );
 
+        //Get today's date.
+        let myVar = myDTP.getTodaysDate();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="defaultTodayDate()">Set Date to Now</button>
+                    <button class="btn btn-primary m-2" onclick="customTodayDate()">Set Date to 1/1/2000</button>
+                    <button class="btn btn-primary m-2" onclick="getTodayDate()">Get Today's Date</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp77" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Today's Date</h4>
+                            <span id="today-date1"></span><br>
+                        </div>
+                    </div>
+                </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                
                 <div class="subsection-header" id="subsection3ll">set/getTopView</div>
                 <div class="divider-bottom"></div>
                 <p>

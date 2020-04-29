@@ -2867,7 +2867,7 @@ class CanvDTP
             }
 
             //Draw selector for todays date.
-            if(isToday)
+            if(isToday && this.todaysDate)
             {
                 let angle1 = Math.atan((this.hitBounds[i].y2 - this.hitBounds[i].y1) / (this.hitBounds[i].x2 - this.hitBounds[i].x1));
                 let h = Math.hypot(this.hitBounds[i].x2 - this.hitBounds[i].x1, this.hitBounds[i].y2 - this.hitBounds[i].y1);
@@ -5705,4 +5705,32 @@ class CanvDTP
     }
 
     getTopView() {return this.topView;}
+
+    setTodaysDate(params)
+    {
+        if(params.hasOwnProperty("year") && params.hasOwnProperty("month") && params.hasOwnProperty("day"))
+        {
+            this.nowYear  = params.year;
+            this.nowMonth = params.month;
+            this.nowDay   = params.day;
+        }
+
+        this.bodyDraw();
+    }
+
+    getTodaysDate() 
+    {
+        return {
+            year:  this.nowYear,
+            month: this.nowMonth,
+            day:   this.nowDay
+        }
+    }
+
+    setTodayIndicator(params)
+    {
+        this.todaysDate = params;
+        this.bodyDraw();
+    }
+    getTodayIndicator() {return this.todaysDate;}
 }

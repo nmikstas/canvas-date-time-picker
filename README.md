@@ -7,7 +7,6 @@ No React, no Bootstrap, no JQuery, no CSS.
 Overview: https://nmikstas.github.io/canvas-date-time-picker/  
 Documentation: https://nmikstas.github.io/canvas-date-time-picker/docs.html  
 
-
 Last updated: 4/28/2020.  
 
 ## __API Function Calls to Add__ #
@@ -49,8 +48,6 @@ getMonthImageArray
 setMonthImageArray  
 getMonthImageElement  
 setMonthImageElement  
-getDebug  
-setDebug  
 getFontColors  
 setFontColors  
 getDateTimeFormat  
@@ -81,27 +78,4 @@ getCalendarIcon
 setCalendarIcon  
 getBodyPosition  
 setBodyPosition  
-getDayVertOffset  
-setDayVertOffset  
-getIconCanvasParams  
-setIconCanvasParams  
-getBodyCanvasParams  
-setBodyCanvasParams  
-getInfoTextParams  
-setInfoTextParams  
-getSelectableParams  
-setSelectableParams  
-getPrevNextParams  
-setPrevNextParams  
-getClockParams  
-setClockParams  
-getCalendarParams  
-setCalendarParams  
-getWeekHeaderParams  
-setWeekHeaderParams  
-getSelectedParams  
-setSelectedParams  
-getTodaysDateParams  
-setTodaysDateParams  
-getIncDecParams  
-setIncDecParams  
+

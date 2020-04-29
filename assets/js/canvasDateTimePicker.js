@@ -869,6 +869,8 @@ class CanvDTP
         this.ctxIcon.lineWidth = this.iconCanWidth * this.iBorderWeight;
         this.ctxIcon.strokeStyle = this.iBorderColor;
 
+        this.ctxIcon.clearRect(0, 0, this.iconCanWidth, this.iconCanWidth);
+
         this.ctxIcon.arc
         (
             this.iconCanWidth - (this.iconCanWidth * this.iBorderRadius) - borderPx / 2,
@@ -5482,4 +5484,183 @@ class CanvDTP
             nowWeight: this.nowWeight
         }
     }
+    
+    setSelectedParams(params)
+    {
+        if(params.hasOwnProperty("currentBorderColor")) this.currentBorderColor = params.currentBorderColor;
+        if(params.hasOwnProperty("currentFillColor")) this.currentFillColor = params.currentFillColor;
+        if(params.hasOwnProperty("currentRadius")) this.currentRadius = params.currentRadius;
+        if(params.hasOwnProperty("currentWeight")) this.currentWeight = params.currentWeight;
+        this.bodyDraw();  
+    }
+    
+    getSelectedParams()
+    {
+        return {
+            currentBorderColor: this.currentBorderColor,
+            currentFillColor:   this.currentFillColor,
+            currentRadius:      this.currentRadius,
+            currentWeight:      this.currentWeight
+        }
+    }
+
+    setWeekHeaderParams(params)
+    {
+        if(params.hasOwnProperty("headerColor")) this.headerColor = params.headerColor;
+        if(params.hasOwnProperty("headerScale")) this.headerScale = params.headerScale;
+        this.bodyDraw();  
+    }
+    
+    getWeekHeaderParams()
+    {
+        return {
+            headerColor: this.headerColor,
+            headerScale: this.headerScale
+        }
+    }
+
+    setCalendarParams(params)
+    {
+        if(params.hasOwnProperty("calXPadding")) this.calXPadding   = params.calXPadding;
+        if(params.hasOwnProperty("calYPadding")) this.calYPadding   = params.calYPadding;
+        if(params.hasOwnProperty("calLineWidth")) this.calLineWidth = params.calLineWidth;
+        this.bodyDraw();  
+    }
+    
+    getCalendarParams()
+    {
+        return {
+            calXPadding:  this.calXPadding,
+            calYPadding:  this.calYPadding,
+            calLineWidth: this.calLineWidth
+        }
+    }
+
+    setClockParams(params)
+    {
+        if(params.hasOwnProperty("clockPad")) this.clockPad       = params.clockPad;
+        if(params.hasOwnProperty("clockWeight")) this.clockWeight = params.clockWeight;
+        this.bodyDraw();  
+    }
+    
+    getClockParams()
+    {
+        return {
+            clockPad:    this.clockPad,
+            clockWeight: this.clockWeight
+        }
+    }
+    
+    setSelectableParams(params)
+    {
+        if(params.hasOwnProperty("selectBorderColor")) this.selectBorderColor = params.selectBorderColor;
+        if(params.hasOwnProperty("selectFillColor")) this.selectFillColor     = params.selectFillColor;
+        if(params.hasOwnProperty("selectRadius")) this.selectRadius           = params.selectRadius;
+        if(params.hasOwnProperty("selectWeight")) this.selectWeight           = params.selectWeight;
+        this.bodyDraw();  
+    }
+    
+    getSelectableParams()
+    {
+        return {
+            selectBorderColor: this.selectBorderColor,
+            selectFillColor:   this.selectFillColor,
+            selectRadius:      this.selectRadius,
+            selectWeight:      this.selectWeight
+        }
+    }
+    
+    setInfoTextParams(params)
+    {
+        if(params.hasOwnProperty("infoPointerSize")) this.infoPointerSize   = params.infoPointerSize;
+        if(params.hasOwnProperty("infoBackColor")) this.infoBackColor       = params.infoBackColor;
+        if(params.hasOwnProperty("infoTextColor")) this.infoTextColor       = params.infoTextColor;
+        if(params.hasOwnProperty("infoPadding")) this.infoPadding           = params.infoPadding;
+        if(params.hasOwnProperty("infoWidth")) this.infoWidth               = params.infoWidth;
+        if(params.hasOwnProperty("infoBorderRadius")) this.infoBorderRadius = params.infoBorderRadius;
+        this.infoText.style.backgroundColor = this.infoBackColor;
+        this.infoText.style.color           = this.infoTextColor;
+        this.infoText.style.borderRadius    = this.infoBorderRadius;
+        this.infoText.style.width           = this.infoWidth;
+        this.infoText.style.padding         = this.infoPadding;
+        this.infoText.style.bottom          = this.infoPointerSize;      
+        this.infoPoint.style.marginLeft     = "-" + this.infoPointerSize;
+        this.infoPoint.style.borderWidth    = this.infoPointerSize + " " + this.infoPointerSize + " 0px " + this.infoPointerSize;
+        this.infoPoint.style.borderColor    = this.infoBackColor + " transparent transparent transparent";
+    }
+    
+    getInfoTextParams()
+    {
+        return {
+            infoPointerSize:  this.infoPointerSize,
+            infoBackColor:    this.infoBackColor,
+            infoTextColor:    this.infoTextColor,
+            infoPadding:      this.infoPadding,
+            infoWidth:        this.infoWidth,
+            infoBorderRadius: this.infoBorderRadius
+        }
+    }
+    
+    setBodyCanvasParams(params)
+    {
+        if(params.hasOwnProperty("bBorderColor")) this.bBorderColor   = params.bBorderColor;
+        if(params.hasOwnProperty("bFillColor")) this.bFillColor       = params.bFillColor;
+        if(params.hasOwnProperty("bBorderRadius")) this.bBorderRadius = params.bBorderRadius;
+        if(params.hasOwnProperty("bBorderWeight")) this.bBorderWeight = params.bBorderWeight;
+        if(params.hasOwnProperty("bXPadding")) this.bXPadding         = params.bXPadding;
+        if(params.hasOwnProperty("bYPadding")) this.bYPadding         = params.bYPadding;
+        this.bodyDraw();
+    }
+    
+    getBodyCanvasParams()
+    {
+        return {
+            bBorderColor:  this.bBorderColor,
+            bFillColor:    this.bFillColor,
+            bBorderRadius: this.bBorderRadius,
+            bBorderWeight: this.bBorderWeight,
+            bXPadding:     this.bXPadding,
+            bYPadding:     this.bYPadding
+        }
+    }
+    
+    setIconCanvasParams(params)
+    {
+        if(params.hasOwnProperty("iBorderColorn")) this.iBorderColorn = params.iBorderColorn;
+        if(params.hasOwnProperty("iFillColorn")) this.iFillColorn     = params.iFillColorn;
+        if(params.hasOwnProperty("iCalColorn")) this.iCalColorn       = params.iCalColorn;
+        if(params.hasOwnProperty("iBorderColorh")) this.iBorderColorh = params.iBorderColorh;
+        if(params.hasOwnProperty("iFillColorh")) this.iFillColorh     = params.iFillColorh;
+        if(params.hasOwnProperty("iCalColorh")) this.iCalColorh       = params.iCalColorh;
+        if(params.hasOwnProperty("iBorderRadius")) this.iBorderRadius = params.iBorderRadius;
+        if(params.hasOwnProperty("iBorderWeight")) this.iBorderWeight = params.iBorderWeight;
+        if(params.hasOwnProperty("iXPadding")) this.iXPadding         = params.iXPadding;
+        if(params.hasOwnProperty("iYPadding")) this.iYPadding         = params.iYPadding;
+        if(params.hasOwnProperty("iLineWidth")) this.iLineWidth       = params.iLineWidth;
+        this.iBorderColor = this.iBorderColorn;
+        this.iFillColor   = this.iFillColorn;
+        this.iCalColor    = this.iCalColorn;
+        this.iconDraw();
+        this.resize();
+    }
+    
+    getIconCanvasParams()
+    {
+        return {
+            iBorderColorn: this.iBorderColorn,
+            iFillColorn:   this.iFillColorn,
+            iCalColorn:    this.iCalColorn,
+            iBorderColorh: this.iBorderColorh,
+            iFillColorh:   this.iFillColorh,
+            iCalColorh:    this.iCalColorh,
+            iBorderRadius: this.iBorderRadius,
+            iBorderWeight: this.iBorderWeight,
+            iXPadding:     this.iXPadding,
+            iYPadding:     this.iYPadding,
+            iLineWidth:    this.iLineWidth
+        }
+    }
+    
+    setDayVertOffset(params) {this.dayVertOffset = params;}
+    getDayVertOffset() {return this.dayVertOffset;}
 }

@@ -1700,6 +1700,7 @@
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection3q">delMonthSpotlightElement</div>
                 <div class="divider-bottom"></div>
+
                 <div class="subsection-header" id="subsection3r">getMonthSpotlightElement</div>
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection3s">set/getMonthWhiteArray</div>
@@ -1730,6 +1731,7 @@
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection35">delYearWhiteElement</div>
                 <div class="divider-bottom"></div>
+
                 <div class="subsection-header" id="subsection36">getYearWhiteElement</div>
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection37">set/getMonthImageArray</div>
@@ -1761,26 +1763,355 @@
                 <div class="subsection-header" id="subsection3kk">set/getTodaysDate</div>
                 <div class="divider-bottom"></div>
 
+                <!--
+                topView: CanvDTP.CAL_CENTURY
+                -->
                 <div class="subsection-header" id="subsection3ll">set/getTopView</div>
                 <div class="divider-bottom"></div>
+                <!--
+                calendarIcon: true
+                -->
                 <div class="subsection-header" id="subsection3mm">set/getCalendarIcon</div>
                 <div class="divider-bottom"></div>
+                <!--
+                bodyPosition: CanvDTP.POS_BOTLEFT
+                -->
                 <div class="subsection-header" id="subsection3nn">set/getBodyPosition</div>
                 <div class="divider-bottom"></div>
-                <div class="subsection-header" id="subsection3oo">set/getDayVertOffset</div>
-                <div class="divider-bottom"></div>
-                <div class="subsection-header" id="subsection3pp">set/getIconCanvasParams</div>
-                <div class="divider-bottom"></div>
-                <div class="subsection-header" id="subsection3qq">set/getBodyCanvasParams</div>
-                <div class="divider-bottom"></div>
-                <div class="subsection-header" id="subsection3rr">set/getInfoTextParams</div>
-                <div class="divider-bottom"></div>
-                <div class="subsection-header" id="subsection3ss">set/getSelectableParams</div>
-                <div class="divider-bottom"></div>
+
+
+
+
+
 
 
                 
 
+
+
+
+
+
+
+
+
+
+                <div class="subsection-header" id="subsection3oo">set/getDayVertOffset</div>
+                <div class="divider-bottom"></div>
+                <p>
+                    The day vertical offset parameter sets an adjustment for the days of the month. Some fonts may not be vertically centered.
+                    This adjustment can offset this. The dimension is a fraction based on the corresponding cointainer height.<br>
+                    setDayVertOffset - Set the vertical offset parameter.<br>
+                    getDayVertOffset - Get the vertical offset parameter.
+                </p>
+                <p>Examples:</p>
+                <pre>
+        //Set default icon canvas parameters.
+        myDTP.setDayVertOffset(.05);
+
+        //Set custom icon canvas parameters.
+        myDTP.setDayVertOffset(.20);
+
+        //Get icon canvas parameters.
+        let myVar = myDTP.getDayVertOffset();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setDefaultVertOffset()">Set Default Values</button>
+                    <button class="btn btn-primary m-2" onclick="setCustomVertOffset()">Set Custom Values</button>
+                    <button class="btn btn-primary m-2" onclick="getVertOffset()">Get Values</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp72" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Day Vertical Offset Value</h4>
+                            <span id="vert-offset1"></span><br>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection-header" id="subsection3pp">set/getIconCanvasParams</div>
+                <div class="divider-bottom"></div>
+                <p>
+                    The icon canvas parameters set the style of the icon canvas. It is composed of five dimension parameters
+                    and six color parameters. The dimensions are a fraction based on the corresponding cointainer height.<br>
+                    setIconCanvasParams - Set the parameters of the icon canvas.<br>
+                    getIconCanvasParams - Get the parameters of the icon canvas.
+                    <br><br>
+                    The following object is passed as a parameter to the setIconCanvasParams function and returned from the getIconCanvasParams function:
+                </p>
+                <pre>
+        {
+            iBorderColorn: Border color, not hovered,
+            iFillColorn:   Background color, not hovered,
+            iCalColorn:    Line color, not hovered,
+            iBorderColorh: Border color, hovered,
+            iFillColorh:   Background color, hovered,
+            iCalColorh:    Line color, hovered,
+            iBorderRadius: Border corner radius,
+            iBorderWeight: Border thickness,
+            iXPadding:     Left and right padding,
+            iYPadding:     Top and bottom padding,
+            iLineWidth:    Line thickness
+        }
+                </pre>
+                <p>Examples:</p>
+                <pre>
+        //Set default icon canvas parameters.
+        myDTP.setIconCanvasParams
+        (
+            {
+                iBorderColorn: "#a0a0a0",
+                iFillColorn:   "#d0d0d0",
+                iCalColorn:    "#000000",
+                iBorderColorh: "#202020",
+                iFillColorh:   "#808080",
+                iCalColorh:    "#ffffff",
+                iBorderRadius: .20,
+                iBorderWeight: .05,
+                iXPadding:     .20,
+                iYPadding:     .20,
+                iLineWidth:    .02
+            }
+        );
+
+        //Set custom icon canvas parameters.
+        myDTP.setIconCanvasParams
+        (
+            {
+                iBorderColorn: "#0000ff",
+                iFillColorn:   "#c000c0",
+                iCalColorn:    "#00ff00",
+                iBorderColorh: "#ff0000",
+                iFillColorh:   "#30ff30",
+                iCalColorh:    "#ff00ff",
+                iBorderRadius: .00,
+                iBorderWeight: .10,
+                iXPadding:     .10,
+                iYPadding:     .10,
+                iLineWidth:    .001
+            }
+        );
+
+        //Get icon canvas parameters.
+        let myVar = myDTP.getIconCanvasParams();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setDefaultIcon()">Set Default Values</button>
+                    <button class="btn btn-primary m-2" onclick="setCustomIcon()">Set Custom Values</button>
+                    <button class="btn btn-primary m-2" onclick="getIcon()">Get Values</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp71" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Icon Canvas Values</h4>
+                            <span id="icon1"></span><br>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection-header" id="subsection3qq">set/getBodyCanvasParams</div>
+                <div class="divider-bottom"></div>
+                <p>
+                    The body canvas parameters set the style of the body canvas. It is composed of four dimension parameters
+                    and two color parameters. The dimensions are a fraction based on the corresponding cointainer height.<br>
+                    setBodyCanvasParams - Set the parameters of the body canvas.<br>
+                    getBodyCanvasParams - Get the parameters of the body canvas.
+                    <br><br>
+                    The following object is passed as a parameter to the setBodyCanvasParams function and returned from the getBodyCanvasParams function:
+                </p>
+                <pre>
+        {
+            bBorderColor:  Border color,
+            bFillColor:    Background color,
+            bBorderRadius: Border corner radius,
+            bBorderWeight: Border Thickness,
+            bXPadding:     Left and right content padding,
+            bYPadding:     Top and bottom content padding
+        }
+                </pre>
+                <p>Examples:</p>
+                <pre>
+        //Set default body canvas parameters.
+        myDTP.setBodyCanvasParams
+        (
+            {
+                bBorderColor:  "#707070",
+                bFillColor:    "#e0e0e0",
+                bBorderRadius: .05,
+                bBorderWeight: .01,
+                bXPadding:     .10,
+                bYPadding:     .10
+            }
+        );
+
+        //Set custom body canvas parameters.
+        myDTP.setBodyCanvasParams
+        (
+            {
+                bBorderColor:  "#0000ff",
+                bFillColor:    "#000050",
+                bBorderRadius: .50,
+                bBorderWeight: .10,
+                bXPadding:     .30,
+                bYPadding:     .30
+            }
+        );
+
+        //Get body canvas parameters.
+        let myVar = myDTP.getBodyCanvasParams();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setDefaultBody()">Set Default Values</button>
+                    <button class="btn btn-primary m-2" onclick="setCustomBody()">Set Custom Values</button>
+                    <button class="btn btn-primary m-2" onclick="getBody()">Get Values</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp70" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Body Canvas Values</h4>
+                            <span id="body1"></span><br>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection-header" id="subsection3rr">set/getInfoTextParams</div>
+                <div class="divider-bottom"></div>
+                <p>
+                    The info text parameters are different than the other parameters.  The infotext is not part of the canvas but is composed of
+                    HTML elements.  All the info text parameters are strings used to set the CSS.<br>
+                    setInfoTextParams - Set the parameters of the info text.<br>
+                    getInfoTextParams - Get the parameters of the info text.
+                    <br><br>
+                    The following object is passed as a parameter to the setInfoTextParams function and returned from the getInfoTextParams function:
+                </p>
+                <pre>
+        {
+            infoPointerSize:  The width of the pointer that points to the hovered item,
+            infoBackColor:    The background color of the info text,
+            infoTextColor:    The text color of the info text,
+            infoPadding:      Padding around the info text,
+            infoWidth:        The total width of the info text structure,
+            infoBorderRadius: Border radius of the ingo text body.
+        }
+                </pre>
+                <p>Examples:</p>
+                <pre>
+        //Set default info text parameters.
+        myDTP.setInfoTextParams
+        (
+            {
+                infoPointerSize:  "10px",
+                infoBackColor:    "#000000a0",
+                infoTextColor:    "#ffffff",
+                infoPadding:      "2px, 5px",
+                infoWidth:        "150px",
+                infoBorderRadius: "10px"
+            }
+        );
+
+        //Set custom info text parameters.
+        myDTP.setInfoTextParams
+        (
+            {
+                infoPointerSize: "75px",
+                infoBackColor: "#c0c000",
+                infoTextColor: "#ff0000",
+                infoPadding: "2px, 5px",
+                infoWidth: "150px",
+                infoBorderRadius: "10px 10px 0px 0px"
+            }
+        );
+
+        //Get info text parameters.
+        let myVar = myDTP.getInfoTextParams();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setDefaultInfoText()">Set Default Values</button>
+                    <button class="btn btn-primary m-2" onclick="setCustomInfoText()">Set Custom Values</button>
+                    <button class="btn btn-primary m-2" onclick="getInfoText()">Get Values</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp69" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Info Text Values</h4>
+                            <span id="info-text1"></span><br>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection-header" id="subsection3ss">set/getSelectableParams</div>
+                <div class="divider-bottom"></div>
+                <p>
+                    The selectable item parameters set the style of the selectable items on hover. It is composed of two dimension parameters
+                    and two color parameters. The dimensions are a fraction based on the corresponding cointainer height.<br>
+                    setSelectableParams - Set the parameters of the selectable item.<br>
+                    getSelectableParams - Get the parameters of the selectable item.
+                    <br><br>
+                    The following object is passed as a parameter to the setSelectableParams function and returned from the getSelectableParams function:
+                </p>
+                <pre>
+        {
+            selectBorderColor: Border color,
+            selectFillColor:   Fill color,
+            selectRadius:      Border radius,
+            selectWeight:      Border thickness
+        }
+                </pre>
+                <p>Examples:</p>
+                <pre>
+        //Set default selected item parameters.
+        myDTP.setSelectableParams
+        (
+            {
+                selectBorderColor: "#202020a0",
+                selectFillColor:   "#808080a0",
+                selectRadius:      .25,
+                selectWeight:      .07
+            }
+        );
+
+        //Set custom selected item parameters.
+        myDTP.setSelectableParams
+        (
+            {
+                selectBorderColor: "#ff0000",
+                selectFillColor:   "#ff0000a0",
+                selectRadius:      .50,
+                selectWeight:      .20
+            }
+        );
+
+        //Get selected item parameters.
+        let myVar = myDTP.getSelectableParams();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setDefaultSelectable()">Set Default Values</button>
+                    <button class="btn btn-primary m-2" onclick="setCustomSelectable()">Set Custom Values</button>
+                    <button class="btn btn-primary m-2" onclick="getSelectable()">Get Values</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp68" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Selectable Item Values</h4>
+                            <span id="selectable1"></span><br>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="subsection-header" id="subsection3tt">set/getPrevNextParams</div>
                 <div class="divider-bottom"></div>
@@ -1819,7 +2150,7 @@
         );
 
         //Get previous/next values.
-        let myScales = myDTP.getPrevNextParams();
+        let myVar = myDTP.getPrevNextParams();
                 </pre>
                 <div style="text-align: center;">
                     <button class="btn btn-primary m-2" onclick="setDefaultPrevNext()">Set Default Values</button>
@@ -1840,42 +2171,237 @@
 
                 <div class="subsection-header" id="subsection3uu">set/getClockParams</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    The clock parameters set the style of the clock graphic in the date views. It is composed of two dimension parameters.
+                    The dimensions are a fraction based on the corresponding cointainer height.<br>
+                    setClockParams - Set the parameters of the clock graphic.<br>
+                    getClockParams - Get the parameters of the clock graphic.
+                    <br><br>
+                    The following object is passed as a parameter to the setClockParams function and returned from the getClockParams function:
+                </p>
+                <pre>
+        {
+            clockPad:    Padding around the clock dial,
+            clockWeight: Line thickness
+        }
+                </pre>
+                <p>Examples:</p>
+                <pre>
+        //Set default selected item parameters.
+        myDTP.setClockParams
+        (
+            {
+                clockPad:    .10,
+                clockWeight: .07
+            }
+        );
+
+        //Set custom selected item parameters.
+        myDTP.setClockParams
+        (
+            {
+                clockPad:    .01,
+                clockWeight: .01
+            }
+        );
+
+        //Get selected item parameters.
+        let myVar = myDTP.getClockParams();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setDefaultClock()">Set Default Values</button>
+                    <button class="btn btn-primary m-2" onclick="setCustomClock()">Set Custom Values</button>
+                    <button class="btn btn-primary m-2" onclick="getClock()">Get Values</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp67" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Clock Graphic Values</h4>
+                            <span id="clock1"></span><br>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection3vv">set/getCalendarParams</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    The calendar parameters set the style of the calendar graphic in the time view. It is composed of three dimension parameters.
+                    The dimensions are a fraction based on the corresponding cointainer height.<br>
+                    setCalendarParams - Set the parameters of the calendar graphic.<br>
+                    getCalendarParams - Get the parameters of the calendar graphic.
+                    <br><br>
+                    The following object is passed as a parameter to the setCalendarParams function and returned from the getCalendarParams function:
+                </p>
+                <pre>
+        {
+            calXPadding:  Left and right padding,
+            calYPadding:  Top and bottom padding,
+            calLineWidth: Line thickness
+        }
+                </pre>
+                <p>Examples:</p>
+                <pre>
+        //Set default selected item parameters.
+        myDTP.setCalendarParams
+        (
+            {
+                calXPadding:  .20,
+                calYPadding:  .10,
+                calLineWidth: .05
+            }
+        );
+
+        //Set custom selected item parameters.
+        myDTP.setCalendarParams
+        (
+            {
+                calXPadding:  .01,
+                calYPadding:  .01,
+                calLineWidth: .01
+            }
+        );
+
+        //Get selected item parameters.
+        let myVar = myDTP.getCalendarParams();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setDefaultCalendar()">Set Default Values</button>
+                    <button class="btn btn-primary m-2" onclick="setCustomCalendar()">Set Custom Values</button>
+                    <button class="btn btn-primary m-2" onclick="getCalendar()">Get Values</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp66" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Calendar Graphic Values</h4>
+                            <span id="calendar1"></span><br>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection3ww">set/getWeekHeaderParams</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    The week header parameters set the style of the days listed in the month view. It is composed of a color and a dimension for text.
+                    The dimension is a fraction based on the corresponding cointainer heights.<br>
+                    setWeekHeaderParams - Set the parameters of the week header.<br>
+                    getWeekHeaderParams - Get the parameters of the week header.
+                    <br><br>
+                    The following object is passed as a parameter to the setWeekHeaderParams function and returned from the getWeekHeaderParams function:
+                </p>
+                <pre>
+        {
+            headerColor: Text color.
+            headerScale: Text size.
+        }
+                </pre>
+                <p>Examples:</p>
+                <pre>
+        //Set default selected item parameters.
+        myDTP.setWeekHeaderParams
+        (
+            {
+                headerColor: "#0087b6",
+                headerScale: .80
+            }
+        );
 
+        //Set custom selected item parameters.
+        myDTP.setWeekHeaderParams
+        (
+            {
+                headerColor: "#ff0000",
+                headerScale: .40
+            }
+        );
 
+        //Get selected item parameters.
+        let myVar = myDTP.getWeekHeaderParams();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setDefaultWeekHeader()">Set Default Values</button>
+                    <button class="btn btn-primary m-2" onclick="setCustomWeekHeader()">Set Custom Values</button>
+                    <button class="btn btn-primary m-2" onclick="getWeekHeader()">Get Values</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp65" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Week Header Values</h4>
+                            <span id="week-header1"></span><br>
+                        </div>
+                    </div>
+                </div>
 
-
-
-
-
-
-
-
-
-
-
-
-                
                 <div class="subsection-header" id="subsection3xx">set/getSelectedParams</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    The selected item parameters set the style of the currently selected items. It is composed of two colors and two dimensions for the
+                    border and corner radius. The dimensions are a fraction based on the corresponding cointainer heights.<br>
+                    setTodaysDateParams - Set the parameters of the today's date graphics.<br>
+                    getTodaysDateParams - Get the parameters of the today's date graphics.
+                    <br><br>
+                    The following object is passed as a parameter to the setSelectedParams function and returned from the getSelectedParams function:
+                </p>
+                <pre>
+        {
+            currentBorderColor: Border color string,
+            currentFillColor:   Fill color string,
+            currentRadius:      Corner radius,
+            currentWeight:      Border Width
+        }
+                </pre>
+                <p>Examples:</p>
+                <pre>
+        //Set default selected item parameters.
+        myDTP.setSelectedParams
+        (
+            {
+                currentBorderColor: "#000000",
+                currentFillColor:   "#ffffff80",
+                currentRadius:      .25,
+                currentWeight:      .02
+            }
+        );
 
+        //Set custom selected item parameters.
+        myDTP.setSelectedParams
+        (
+            {
+                currentBorderColor: "#808080",
+                currentFillColor:   "#0000ff80",
+                currentRadius:      .50,
+                currentWeight:      .20
+            }
+        );
 
+        //Get selected item parameters.
+        let myVar = myDTP.getSelectedParams();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setDefaultSelected()">Set Default Values</button>
+                    <button class="btn btn-primary m-2" onclick="setCustomSelected()">Set Custom Values</button>
+                    <button class="btn btn-primary m-2" onclick="getSelected()">Get Values</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp64" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Selected Item Values</h4>
+                            <span id="selected1"></span><br>
+                        </div>
+                    </div>
+                </div>
 
-
-
-
-
-
-
-
-
-
-
-
-                
                 <div class="subsection-header" id="subsection3yy">set/getTodaysDateParams</div>
                 <div class="divider-bottom"></div>
                 <p>
@@ -1898,8 +2424,8 @@
         myDTP.setTodaysDateParams
         (
             {
-                nowColor  = "#000000",
-                nowWeight = .20
+                nowColor:  "#000000",
+                nowWeight: .20
             }
         );
 
@@ -1907,13 +2433,13 @@
         myDTP.setTodaysDateParams
         (
             {
-                nowColor  = "#00ffff",
-                nowWeight = .35
+                nowColor:  "#00ffff",
+                nowWeight: .35
             }
         );
 
         //Get today's date values.
-        let myScales = myDTP.getTodaysDateParams();
+        let myVar = myDTP.getTodaysDateParams();
                 </pre>
                 <div style="text-align: center;">
                     <button class="btn btn-primary m-2" onclick="setDefaultTodaysDate()">Set Default Values</button>
@@ -1972,7 +2498,7 @@
         );
 
         //Get increment/decrement values.
-        let myScales = myDTP.getIncDecParams();
+        let myVar = myDTP.getIncDecParams();
                 </pre>
                 <div style="text-align: center;">
                     <button class="btn btn-primary m-2" onclick="setDefaultIncDec()">Set Default Values</button>
@@ -2020,15 +2546,15 @@
         myDTP.setScales
         (
             {
-                bannerScale   = .80,
-                dayScale      = .60,
-                monthScale    = .60,
-                yearScale     = .60,
-                decadeScale   = .50,
-                timeScale     = .80,
-                timeAmPmScale = .60,
-                minuteScale   = .80,
-                hourScale     = .80
+                bannerScale:   .80,
+                dayScale:      .60,
+                monthScale:    .60,
+                yearScale:     .60,
+                decadeScale:   .50,
+                timeScale:     .80,
+                timeAmPmScale: .60,
+                minuteScale:   .80,
+                hourScale:     .80
             }
         );
 
@@ -2036,20 +2562,20 @@
         myDTP.setScales
         (
             {
-                bannerScale   = .50,
-                dayScale      = .30,
-                monthScale    = .30,
-                yearScale     = .30,
-                decadeScale   = .20,
-                timeScale     = .50,
-                timeAmPmScale = .30,
-                minuteScale   = .50,
-                hourScale     = .50
+                bannerScale:   .50,
+                dayScale:      .30,
+                monthScale:    .30,
+                yearScale:     .30,
+                decadeScale:   .20,
+                timeScale:     .50,
+                timeAmPmScale: .30,
+                minuteScale:   .50,
+                hourScale:     .50
             }
         );
 
         //Get scales.
-        let myScales = myDTP.getScales();
+        let myVar = myDTP.getScales();
                 </pre>
                 <div style="text-align: center;">
                     <button class="btn btn-primary m-2" onclick="setDefaultScales()">Set Default Scales</button>

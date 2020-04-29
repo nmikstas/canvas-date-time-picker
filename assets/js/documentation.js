@@ -987,4 +987,296 @@ let getTodaysDate = () =>
     document.getElementById("todays-date1").innerText = JSON.stringify(canDTP9.getTodaysDateParams(), null, 1);
 }
 
+//Get/set selected item parameters.
+let canDTP10 = new CanvDTP(document.getElementById("dtp64"), {isCollapsible: false});
+let setDefaultSelected = () =>
+{
+    canDTP10.setSelectedParams
+    (
+        {
+            currentBorderColor: "#000000",
+            currentFillColor:   "#ffffff80",
+            currentRadius:      .25,
+            currentWeight:      .02
+        }
+    );
+}
+
+let setCustomSelected = () =>
+{
+    canDTP10.setSelectedParams
+    (
+        {
+            currentBorderColor: "#808080",
+            currentFillColor:   "#0000ff80",
+            currentRadius:      .50,
+            currentWeight:      .20
+        }
+    );
+}
+
+let getSelected = () =>
+{
+    document.getElementById("selected1").innerText = JSON.stringify(canDTP10.getSelectedParams(), null, 1);
+}
+
+//Get/set week header parameters.
+let canDTP11 = new CanvDTP(document.getElementById("dtp65"), {isCollapsible: false});
+let setDefaultWeekHeader = () =>
+{
+    canDTP11.setWeekHeaderParams
+    (
+        {
+            headerColor: "#0087b6",
+            headerScale: .80
+        }
+    );
+}
+
+let setCustomWeekHeader = () =>
+{
+    canDTP11.setWeekHeaderParams
+    (
+        {
+            headerColor: "#ff0000",
+            headerScale: .40
+        }
+    );
+}
+
+let getWeekHeader = () =>
+{
+    document.getElementById("week-header1").innerText = JSON.stringify(canDTP11.getWeekHeaderParams(), null, 1);
+}
+
+//Get/set calendar parameters.
+let canDTP12 = new CanvDTP(document.getElementById("dtp66"), {isCollapsible: false});
+let setDefaultCalendar = () =>
+{
+    canDTP12.setCalendarParams
+    (
+        {
+            calXPadding:  .20,
+            calYPadding:  .10,
+            calLineWidth: .05
+        }
+    );
+}
+
+let setCustomCalendar = () =>
+{
+    canDTP12.setCalendarParams
+    (
+        {
+            calXPadding:  .01,
+            calYPadding:  .01,
+            calLineWidth: .01
+        }
+    );
+}
+
+let getCalendar = () =>
+{
+    document.getElementById("calendar1").innerText = JSON.stringify(canDTP12.getCalendarParams(), null, 1);
+}
+
+//Get/set clock parameters.
+let canDTP13 = new CanvDTP(document.getElementById("dtp67"), {isCollapsible: false});
+let setDefaultClock = () =>
+{
+    canDTP13.setClockParams
+    (
+        {
+            clockPad:    .10,
+            clockWeight: .07
+        }
+    );
+}
+
+let setCustomClock = () =>
+{
+    canDTP13.setClockParams
+    (
+        {
+            clockPad:    .01,
+            clockWeight: .01
+        }
+    );
+}
+
+let getClock = () =>
+{
+    document.getElementById("clock1").innerText = JSON.stringify(canDTP13.getClockParams(), null, 1);
+}
+
+//Get/set selectable items parameters.
+let canDTP14 = new CanvDTP(document.getElementById("dtp68"), {isCollapsible: false});
+let setDefaultSelectable = () =>
+{
+    canDTP14.setSelectableParams
+    (
+        {
+            selectBorderColor: "#202020a0",
+            selectFillColor:   "#808080a0",
+            selectRadius:      .25,
+            selectWeight:      .07
+        }
+    );
+}
+
+let setCustomSelectable = () =>
+{
+    canDTP14.setSelectableParams
+    (
+        {
+            selectBorderColor: "#ff0000",
+            selectFillColor:   "#ff0000a0",
+            selectRadius:      .50,
+            selectWeight:      .20
+        }
+    );
+}
+
+let getSelectable = () =>
+{
+    document.getElementById("selectable1").innerText = JSON.stringify(canDTP14.getSelectableParams(), null, 1);
+}
+
+//Get/set info text parameters.
+let canDTP15 = new CanvDTP(document.getElementById("dtp69"), 
+{
+    isCollapsible: false,
+    dayExcludeArray: 
+    [
+        {
+            daysOfWeek: [CanvDTP.SATURDAY, CanvDTP.SUNDAY], 
+            color: "#0000ff80",
+            info: "Weekend Days Spotlighted"
+        }
+    ]
+});
+let setDefaultInfoText = () =>
+{
+    canDTP15.setInfoTextParams
+    (
+        {
+            infoPointerSize:  "10px",
+            infoBackColor:    "#000000a0",
+            infoTextColor:    "#ffffff",
+            infoPadding:      "2px, 5px",
+            infoWidth:        "150px",
+            infoBorderRadius: "10px"
+        }
+    );
+}
+
+let setCustomInfoText = () =>
+{
+    canDTP15.setInfoTextParams
+    (
+        {
+            infoPointerSize: "75px",
+            infoBackColor: "#c0c000",
+            infoTextColor: "#ff0000",
+            infoPadding: "2px, 5px",
+            infoWidth: "150px",
+            infoBorderRadius: "10px 10px 0px 0px"
+        }
+    );
+}
+
+let getInfoText = () =>
+{
+    document.getElementById("info-text1").innerText = JSON.stringify(canDTP15.getInfoTextParams(), null, 1);
+}
+
+//Get/set body canvas parameters.
+let canDTP16 = new CanvDTP(document.getElementById("dtp70"), {isCollapsible: false});
+let setDefaultBody = () =>
+{
+    canDTP16.setBodyCanvasParams
+    (
+        {
+            bBorderColor:  "#707070",
+            bFillColor:    "#e0e0e0",
+            bBorderRadius: .05,
+            bBorderWeight: .01,
+            bXPadding:     .10,
+            bYPadding:     .10
+        }
+    );
+}
+
+let setCustomBody = () =>
+{
+    canDTP16.setBodyCanvasParams
+    (
+        {
+            bBorderColor:  "#0000ff",
+            bFillColor:    "#0000e0",
+            bBorderRadius: .50,
+            bBorderWeight: .05,
+            bXPadding:     .30,
+            bYPadding:     .30
+        }
+    );
+}
+
+let getBody = () =>
+{
+    document.getElementById("body1").innerText = JSON.stringify(canDTP16.getBodyCanvasParams(), null, 1);
+}
+
+//Get/set icon canvas parameters.
+let canDTP17 = new CanvDTP(document.getElementById("dtp71"));
+let setDefaultIcon = () =>
+{
+    canDTP17.setIconCanvasParams
+    (
+        {
+            iBorderColorn: "#a0a0a0",
+            iFillColorn:   "#d0d0d0",
+            iCalColorn:    "#000000",
+            iBorderColorh: "#202020",
+            iFillColorh:   "#808080",
+            iCalColorh:    "#ffffff",
+            iBorderRadius: .20,
+            iBorderWeight: .05,
+            iXPadding:     .20,
+            iYPadding:     .20,
+            iLineWidth:    .02
+        }
+    );
+}
+
+let setCustomIcon = () =>
+{
+    canDTP17.setIconCanvasParams
+    (
+        {
+            iBorderColorn: "#0000ff",
+            iFillColorn:   "#c000c0",
+            iCalColorn:    "#00ff00",
+            iBorderColorh: "#ff0000",
+            iFillColorh:   "#30ff30",
+            iCalColorh:    "#ff00ff",
+            iBorderRadius: .00,
+            iBorderWeight: .10,
+            iXPadding:     .10,
+            iYPadding:     .10,
+            iLineWidth:    .001
+        }
+    );
+}
+
+let getIcon = () =>
+{
+    document.getElementById("icon1").innerText = JSON.stringify(canDTP17.getIconCanvasParams(), null, 1);
+}
+
+//Get/set icon text vertical offset.
+let canDTP18 = new CanvDTP(document.getElementById("dtp72"), {isCollapsible: false});
+let setDefaultVertOffset = () => canDTP18.setDayVertOffset(.05);
+let setCustomVertOffset = () => canDTP18.setDayVertOffset(.20);
+let getVertOffset = () => document.getElementById("vert-offset1").innerText = JSON.stringify(canDTP18.getDayVertOffset(), null, 1);
 

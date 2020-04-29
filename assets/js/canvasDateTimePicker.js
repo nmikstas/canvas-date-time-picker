@@ -5672,4 +5672,37 @@ class CanvDTP
     }
 
     getBodyPosition() {return this.bodyPosition;}
+
+    setIsCollapsible(params)
+    {
+        this.isCollapsible = params;
+        
+        if(this.isCollapsible)
+        {
+            this.parentDiv.style.height = this.dtpText.offsetHeight + "px";
+            this.calendarIcon = true;
+        }
+        this.init();
+        this.textBoxDateTime();
+    }
+
+    getIsCollapsible() {return this.isCollapsible;}
+
+    setCalendarIcon(params)
+    {
+        this.calendarIcon = params;
+        this.init();
+        this.textBoxDateTime();
+    }
+
+    getCalendarIcon() {return this.calendarIcon;}
+
+    setTopView(params)
+    {
+        this.topView = params;
+        if(this.calView < this.topView) this.calView = this.topView;
+        this.bodyDraw();
+    }
+
+    getTopView() {return this.topView;}
 }

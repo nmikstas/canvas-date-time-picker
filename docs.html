@@ -164,6 +164,7 @@
                         <a href="#subsection3kk" class="subsection-link scroll-link">set/getTodaysDate</a>
                         <a href="#subsection3ll" class="subsection-link scroll-link">set/getTopView</a>
                         <a href="#subsection3mm" class="subsection-link scroll-link">set/getCalendarIcon</a>
+                        <a href="#subsection3aaa" class="subsection-link scroll-link">set/getIsCollapsible</a>
                         <a href="#subsection3nn" class="subsection-link scroll-link">set/getBodyPosition</a>
                         <a href="#subsection3oo" class="subsection-link scroll-link">set/getDayVertOffset</a>
                         <a href="#subsection3pp" class="subsection-link scroll-link">set/getIconCanvasParams</a>
@@ -265,8 +266,7 @@
                 <div class="subsection-header" id="subsection2a">Collapsibility</div>
                 <div class="divider-bottom"></div>
                 <p>
-                    The ability to collapse the body of the picker can be disabled on initialization. The collapsability cannot be changed
-                    after instantiation. The canvas is collapsible by default.
+                    The ability to collapse the body of the picker can be disabled on initialization. The canvas is collapsible by default.
                     <br><br>
                     Instantiation:
                     <pre>
@@ -1773,41 +1773,139 @@
                 <div class="subsection-header" id="subsection3kk">set/getTodaysDate</div>
                 <div class="divider-bottom"></div>
 
-                <!--
-                topView: CanvDTP.CAL_CENTURY
-                -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
                 <div class="subsection-header" id="subsection3ll">set/getTopView</div>
                 <div class="divider-bottom"></div>
-                <!--
-                calendarIcon: true
-                -->
+                <p>
+                    The top view of the date picker can be set.  By default, the century view is the highest view.
+                    Class constants can be used to set the highest view: CanvDTP.CAL_CENTURY, CanvDTP.CAL_DECADE,
+                    CanvDTP.CAL_YEAR, CanvDTP.CAL_MONTH<br>
+                    setTopView - Set the top view of the date picker.<br>
+                    getTopView - Get the top view of the date picker.
+                </p>
+                <p>Examples:</p>
+                <pre>
+        //Set the top view of the date picker.
+        myDTP.setTopView(CanvDTP.CAL_CENTURY;
+        myDTP.setTopView(CanvDTP.CAL_DECADE);
+        myDTP.setTopView(CanvDTP.CAL_YEAR);
+        myDTP.setTopView(CanvDTP.CAL_MONTH);
+        
+        //Get the top view of the date picker.
+        let myVar = myDTP.getTopView();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="defaultTopView()">Default Top View</button>
+                    <button class="btn btn-primary m-2" onclick="customTopView()">Month Top View</button>
+                    <button class="btn btn-primary m-2" onclick="getTopView()">Get Top View</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp76" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Top View Value</h4>
+                            <span id="top-view1"></span><br>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection3mm">set/getCalendarIcon</div>
                 <div class="divider-bottom"></div>
-                
+                <p>
+                    The calendar icon next to the textbox can be disabled using these functions. The calendar icon is enabled by default.<br>
+                    setCalendarIcon - Set the visibility status of the calendar icon.<br>
+                    getCalendarIcon - Get the visibility status of the calendar icon.
+                </p>
+                <p>Examples:</p>
+                <pre>
+        //Set the visibility of the calendar icon.
+        myDTP.setCalendarIcon(true);
+        myDTP.setCalendarIcon(false);
+        
+        //Get the visibility of the calendar icon.
+        let myVar = myDTP.getCalendarIcon();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="enableCalendar()">Show Calendar Icon</button>
+                    <button class="btn btn-primary m-2" onclick="disableCalendar()">Hide Calendar Icon</button>
+                    <button class="btn btn-primary m-2" onclick="getCalendarVis()">Get Calendar Icon Visibility</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp75" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Calendar Visibility</h4>
+                            <span id="cal-vis1"></span><br>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="subsection-header" id="subsection3aaa">set/getIsCollapsible</div>
+                <div class="divider-bottom"></div>
+                <p>
+                    The isCollapsible parameter determines if the user can collapse the body canvas so only the textbox is shown.<br>
+                    setIsCollapsible - Set the body isCollapsible parameter.<br>
+                    getIsCollapsible - Get the body isCollapsible parameter.
+                </p>
+                <p>Examples:</p>
+                <pre>
+        //Set isCollapsible parameter.
+        myDTP.setIsCollapsible(true);
+        myDTP.setIsCollapsible(false);
+        
+        //Get isCollapsible parameter.
+        let myVar = myDTP.getIsCollapsible();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="enableCollapse()">Enable Collapsibility</button>
+                    <button class="btn btn-primary m-2" onclick="disableCollapse()">Disable Collapsibility</button>
+                    <button class="btn btn-primary m-2" onclick="getCollapse()">Get Collapsibility</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp74" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Collapsibility</h4>
+                            <span id="collapsibility1"></span><br>
+                        </div>
+                    </div>
+                </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                
                 <div class="subsection-header" id="subsection3nn">set/getBodyPosition</div>
                 <div class="divider-bottom"></div>
                 <p>

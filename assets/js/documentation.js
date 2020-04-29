@@ -1288,3 +1288,21 @@ let setTopLeft  = () => canDTP19.setBodyPosition(CanvDTP.POS_TOPLEFT);
 let setTopRight = () => canDTP19.setBodyPosition(CanvDTP.POS_TOPRIGHT);
 let getBodyPos  = () => document.getElementById("body-pos1").innerText = canDTP19.getBodyPosition();
 
+//Get/set isCollapsible parameter.
+let canDTP20 = new CanvDTP(document.getElementById("dtp74"));
+let enableCollapse  = () => canDTP20.setIsCollapsible(true);
+let disableCollapse = () => canDTP20.setIsCollapsible(false);
+let getCollapse     = () => document.getElementById("collapsibility1").innerText = canDTP20.getIsCollapsible();
+
+//Get/set calendar icon visibility.
+let canDTP21 = new CanvDTP(document.getElementById("dtp75"));
+let enableCalendar  = () => canDTP21.setCalendarIcon(true);
+let disableCalendar = () => canDTP21.setCalendarIcon(false);
+let getCalendarVis  = () => document.getElementById("cal-vis1").innerText = canDTP21.getCalendarIcon();
+
+//Get/set date picker top view.
+let canDTP22 = new CanvDTP(document.getElementById("dtp76"), {isCollapsible: false});
+let defaultTopView  = () => canDTP22.setTopView(CanvDTP.CAL_CENTURY);
+let customTopView   = () => canDTP22.setTopView(CanvDTP.CAL_MONTH);
+let getTopView      = () => document.getElementById("top-view1").innerText = canDTP22.getTopView();
+

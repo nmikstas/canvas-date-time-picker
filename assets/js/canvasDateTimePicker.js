@@ -551,7 +551,7 @@ class CanvDTP
         ];
 
         //Only create date/time picker if the parent exists.
-        if(this.parentDiv)this.intit();
+        if(this.parentDiv)this.init();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -560,7 +560,7 @@ class CanvDTP
 
     /**************************************** Initialize *****************************************/
 
-    intit()
+    init()
     {
         //Create the components necessary for the date/time picker.
         this.paddingDiv = document.createElement("div");
@@ -5663,4 +5663,13 @@ class CanvDTP
     
     setDayVertOffset(params) {this.dayVertOffset = params;}
     getDayVertOffset() {return this.dayVertOffset;}
+
+    setBodyPosition(params)
+    {
+        this.bodyPosition = params;
+        this.init();
+        this.textBoxDateTime();
+    }
+
+    getBodyPosition() {return this.bodyPosition;}
 }

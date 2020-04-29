@@ -1674,6 +1674,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
+                
                 <div class="subsection-header" id="subsection3e">clearDayExcludeArray</div>
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection3f">pushDayExcludeArray</div>
@@ -1773,18 +1783,6 @@
                 -->
                 <div class="subsection-header" id="subsection3mm">set/getCalendarIcon</div>
                 <div class="divider-bottom"></div>
-                <!--
-                bodyPosition: CanvDTP.POS_BOTLEFT
-                -->
-                <div class="subsection-header" id="subsection3nn">set/getBodyPosition</div>
-                <div class="divider-bottom"></div>
-
-
-
-
-
-
-
                 
 
 
@@ -1795,6 +1793,59 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+                <div class="subsection-header" id="subsection3nn">set/getBodyPosition</div>
+                <div class="divider-bottom"></div>
+                <p>
+                    The body position parameter sets the position of the body canvas with respect to the textbox. Class constants are
+                    provided for choosing one of four different positions: CanvDTP.POS_BOTLEFT(default), CanvDTP.POS_BOTRIGHT,
+                    CanvDTP.POS_TOPLEFT or CanvDTP.POS_TOPRIGHT<br>
+                    setBodyPosition - Set the body position parameter.<br>
+                    getBodyPosition - Get the body position parameter.
+                </p>
+                <p>Examples:</p>
+                <pre>
+        //Set body position parameter.
+        myDTP.setBodyPosition(CanvDTP.POS_BOTLEFT);
+        myDTP.setBodyPosition(CanvDTP.POS_BOTRIGHT);
+        myDTP.setBodyPosition(CanvDTP.POS_TOPLEFT);
+        myDTP.setBodyPosition(CanvDTP.POS_TOPRIGHT);
+
+        //Get body position parameter.
+        let myVar = myDTP.getBodyPosition();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setBotLeft()">Set Bottom Left</button>
+                    <button class="btn btn-primary m-2" onclick="setBotRight()">Set Bottom Right</button>
+                    <button class="btn btn-primary m-2" onclick="setTopLeft()">Set Top Left</button>
+                    <button class="btn btn-primary m-2" onclick="setTopRight()">Get Top Right</button>
+                    <button class="btn btn-primary m-2" onclick="getBodyPos()">Get Body Position</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp73" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Body Canvas Position</h4>
+                            <span id="body-pos1"></span><br>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="subsection-header" id="subsection3oo">set/getDayVertOffset</div>
                 <div class="divider-bottom"></div>

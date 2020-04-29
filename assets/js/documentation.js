@@ -1280,3 +1280,11 @@ let setDefaultVertOffset = () => canDTP18.setDayVertOffset(.05);
 let setCustomVertOffset = () => canDTP18.setDayVertOffset(.20);
 let getVertOffset = () => document.getElementById("vert-offset1").innerText = JSON.stringify(canDTP18.getDayVertOffset(), null, 1);
 
+//Get/set body canvas position.
+let canDTP19 = new CanvDTP(document.getElementById("dtp73"));
+let setBotLeft  = () => canDTP19.setBodyPosition(CanvDTP.POS_BOTLEFT);
+let setBotRight = () => canDTP19.setBodyPosition(CanvDTP.POS_BOTRIGHT);
+let setTopLeft  = () => canDTP19.setBodyPosition(CanvDTP.POS_TOPLEFT);
+let setTopRight = () => canDTP19.setBodyPosition(CanvDTP.POS_TOPRIGHT);
+let getBodyPos  = () => document.getElementById("body-pos1").innerText = canDTP19.getBodyPosition();
+

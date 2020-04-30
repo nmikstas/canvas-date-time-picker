@@ -48,13 +48,3 @@ getMonthImageArray
 setMonthImageArray  
 getMonthImageElement  
 setMonthImageElement  
-getFontColors  
-setFontColors  
-getDateTimeFormat  
-setDateTimeFormat  
-getIsAnimated  
-setIsAnimated  
-getMaxPixelWidth  
-setMaxPixelWidth  
-getStartOfWeek  
-setStartOfWeek  

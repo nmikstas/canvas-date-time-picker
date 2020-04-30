@@ -1746,25 +1746,226 @@
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection38">set/getMonthImageElement</div>
                 <div class="divider-bottom"></div>
+
+
+
+
+
+
+
+
+
+
+
+                
+
+
+
+
                 <div class="subsection-header" id="subsection39">set/getFontColors</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Get and set the font colors in the body canvas.<br>
+                    setFontColors - Set the font colors in the body canvas.<br>
+                    getFontColors - Get the font colors in the body canvas.
+                    <br><br>
+                    The following object is passed as a parameter to the setFontColors function and returned from the getFontColors function:
+                </p>
+                <pre>
+        {
+            textMainColorn: "color string",  //The primary color for non-hovered items.
+            textMainColorh: "color string",  //The primary color for hovered items.
+            textAltColorn:  "color string",  //The alternate for non-hovered items.
+            textAltColorh:  "color string",  //The alternate for hovered items.
+            rangeBkColor:   "color string"   //Out of range date colors.
+        }
+                </pre>
+                <p>Examples:</p>
+                <pre>
+        //Set default font colors.
+        myDTP.setFontColors
+        (
+            {
+                textMainColorn: "#000000",
+                textMainColorh: "#ffffff",
+                textAltColorn:  "#888888",
+                textAltColorh:  "#ff8888",
+                rangeBkColor:   "#000000a0"
+            }
+        );
+
+        //Set custom font colors.
+        myDTP.setFontColors
+        (
+            {
+                textMainColorn: "#0000ff",
+                textMainColorh: "#ffff00",
+                textAltColorn:  "#ff0000",
+                textAltColorh:  "#ff00ff",
+                rangeBkColor:   "#808080"
+            }
+        );
+
+        //Get font colors.
+        let myVar = myDTP.setFontColors();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setDefaultColors()">Set Default Font Colors</button>
+                    <button class="btn btn-primary m-2" onclick="setCustomColors()">Set Custom Font Colors</button>
+                    <button class="btn btn-primary m-2" onclick="getColors()">Get Font Colors</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp86" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Font Colors</h4>
+                            <span id="font-colors1"></span><br>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection3aa">set/getDateTimeFormat</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Get or set the date/time format string.  See the Custom Date/Time String subsection in the parameters
+                    section for details on the string formatting.<br>
+                    setDateTimeFormat - Set date/time format string.<br>
+                    getDateTimeFormat - Get date/time format string.
+                </p>
+                <p>Examples:</p>
+                <pre>
+        //Set date/time format string.
+        myDTP.setDateTimeFormat(myString);
+        
+        //Get date/time format string.
+        let myVar = myDTP.getDateTimeFormat();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setString1()">Set Default Format String</button>
+                    <button class="btn btn-primary m-2" onclick="setString2()">Set Custom Format String</button>
+                    <button class="btn btn-primary m-2" onclick="getString()">Get Format String</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp85" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Date/Time Format String</h4>
+                            <span id="format-string1"></span><br>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection3bb">set/getIsAnimated</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Get or set whether or not the bondy canvas is animated on open or close.<br>
+                    setIsAnimated - Set animation prooperty of body canvas.<br>
+                    getIsAnimated - Get animation prooperty of body canvas.
+                </p>
+                <p>Examples:</p>
+                <pre>
+        //Set animation prooperty of body canvas.
+        myDTP.setIsAnimated(true);
+        myDTP.setIsAnimated(false);
+        
+        //Get animation prooperty of body canvas.
+        let myVar = myDTP.getIsAnimated();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="enableAnimation()">Enable Body Animation</button>
+                    <button class="btn btn-primary m-2" onclick="disableAnimation()">Disable Body Animation</button>
+                    <button class="btn btn-primary m-2" onclick="getAnimation()">Get Body Animation</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp84" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Body Canvas Animation</h4>
+                            <span id="body-anim1"></span><br>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection3cc">set/getMaxPixelWidth</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Get or set the maximum width in pixels of the body canvas.  The body canvas will nexer exceed
+                    the width of the textbox and calendar icon. Setting to null will maximize the body canvas.<br>
+                    setMaxPixelWidth - Set the maximum width in pixels of the body canvas.<br>
+                    getMaxPixelWidth - Get the maximum width in pixels of the body canvas.
+                </p>
+                <p>Examples:</p>
+                <pre>
+        //Set the maximum width in pixels of the body canvas.
+        myDTP.setStartOfWeek(null);
+        myDTP.setStartOfWeek(250);
+        
+        //Get the maximum width in pixels of the body canvas.
+        let myVar = myDTP.getStartOfWeek();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setDefaultWidth()">Set Default Width</button>
+                    <button class="btn btn-primary m-2" onclick="setCustomWidth()">Set Custom Width</button>
+                    <button class="btn btn-primary m-2" onclick="getMaxWidth()">Get Pixel Width</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp83" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Body Canvas Max Pixel Width</h4>
+                            <span id="body-width1"></span><br>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection3dd">set/getStartOfWeek</div>
                 <div class="divider-bottom"></div>
-
-
-
-
-
-
-
-
-
+                <p>
+                    Get or set the starting day of the week.  Class constants can be used: CanvDTP.SUNDAY, 
+                    CanvDTP.MONDAY, CanvDTP.TUESDAY, CanvDTP.WEDNESDAY, CanvDTP.THURSDAY, CanvDTP.FRIDAY,
+                    CanvDTP.SATURDAY. Sunday is the default<br>
+                    setStartOfWeek - Set starting day of the week.<br>
+                    getStartOfWeek - Get starting day of the week.
+                </p>
+                <p>Examples:</p>
+                <pre>
+        //Set starting day of the week.
+        myDTP.setStartOfWeek(CanvDTP.SUNDAY);
+        myDTP.setStartOfWeek(CanvDTP.MONDAY);
+        myDTP.setStartOfWeek(CanvDTP.TUESDAY);
+        myDTP.setStartOfWeek(CanvDTP.WEDNESDAY);
+        myDTP.setStartOfWeek(CanvDTP.THURSDAY);
+        myDTP.setStartOfWeek(CanvDTP.FRIDAY);
+        myDTP.setStartOfWeek(CanvDTP.SATURDAY);
+        
+        //Get starting day of the week.
+        let myVar = myDTP.getStartOfWeek();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setSunday()">Set Sunday</button>
+                    <button class="btn btn-primary m-2" onclick="setMonday()">Set Monday</button>
+                    <button class="btn btn-primary m-2" onclick="setSaturday()">Set Saturday</button>
+                    <button class="btn btn-primary m-2" onclick="getStartDay()">Get Start of Week</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp82" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Start Day of Week</h4>
+                            <span id="start-day1"></span><br>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="subsection-header" id="subsection3ee">set/getIsMilitaryTime</div>
                 <div class="divider-bottom"></div>
@@ -1793,7 +1994,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="border p-3 m-3">
-                            <h4>Time Format</h4>
+                            <h4>Is Military Time</h4>
                             <span id="is-military1"></span><br>
                         </div>
                     </div>

@@ -5814,4 +5814,52 @@ class CanvDTP
     }
 
     getIsMilitaryTime() {return this.isMilitaryTime;}
+
+    setStartOfWeek(params)
+    {
+        this.startOfWeek = params;
+        this.bodyDraw();
+    }
+
+    getStartOfWeek() {return this.startOfWeek;}
+
+    setMaxPixelWidth(params)
+    {
+        this.maxPixelWidth = params;
+        this.bodyDraw();
+    }
+
+    getMaxPixelWidth() {return this.maxPixelWidth;}
+
+    setIsAnimated(params) {this.isAnimated = params;}
+    getIsAnimated() {return this.isAnimated;}
+
+    setDateTimeFormat(params)
+    {
+        this.dateTimeFormat = params;
+        this.textBoxDateTime();
+    }
+
+    getDateTimeFormat() {return this.dateTimeFormat;}
+
+    setFontColors(params)
+    {
+        if(params.hasOwnProperty("textMainColorn")) this.textMainColorn = params.textMainColorn;
+        if(params.hasOwnProperty("textMainColorh")) this.textMainColorh = params.textMainColorh;
+        if(params.hasOwnProperty("textAltColorn")) this.textAltColorn   = params.textAltColorn;
+        if(params.hasOwnProperty("textAltColorh")) this.textAltColorh   = params.textAltColorh;
+        if(params.hasOwnProperty("rangeBkColor")) this.rangeBkColor     = params.rangeBkColor;
+        this.bodyDraw();
+    }
+    
+    getFontColors()
+    {
+        return {
+            textMainColorn: this.textMainColorn,
+            textMainColorh: this.textMainColorh,
+            textAltColorn:  this.textAltColorn,
+            textAltColorh:  this.textAltColorh,
+            rangeBkColor:   this.rangeBkColor
+        }
+    }
 }

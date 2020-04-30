@@ -1391,3 +1391,61 @@ let canDTP27 = new CanvDTP(document.getElementById("dtp81"), {isCollapsible: fal
 let setMilitary   = () => canDTP27.setIsMilitaryTime(true);
 let setStandard   = () => canDTP27.setIsMilitaryTime(false);
 let getIsMilitary = () => document.getElementById("is-military1").innerText = canDTP27.getIsMilitaryTime();
+
+//Get/set start day of week.
+let canDTP28 = new CanvDTP(document.getElementById("dtp82"), {isCollapsible: false});
+let setSunday   = () => canDTP28.setStartOfWeek(CanvDTP.SUNDAY);
+let setMonday   = () => canDTP28.setStartOfWeek(CanvDTP.MONDAY);
+let setSaturday = () => canDTP28.setStartOfWeek(CanvDTP.SATURDAY);
+let getStartDay = () => document.getElementById("start-day1").innerText = canDTP28.getStartOfWeek();
+
+//Get/set body canvas max pixel width.
+let canDTP29 = new CanvDTP(document.getElementById("dtp83"), {isCollapsible: false});
+let setDefaultWidth = () => canDTP29.setMaxPixelWidth(null);
+let setCustomWidth  = () => canDTP29.setMaxPixelWidth(250);
+let getMaxWidth     = () => document.getElementById("body-width1").innerText = canDTP29.getMaxPixelWidth();
+
+//Get/set body canvas open/close animation.
+let canDTP30 = new CanvDTP(document.getElementById("dtp84"));
+let enableAnimation  = () => canDTP30.setIsAnimated(true);
+let disableAnimation = () => canDTP30.setIsAnimated(false);
+let getAnimation     = () => document.getElementById("body-anim1").innerText = canDTP30.getIsAnimated();
+
+//Get/set date/time format string.
+let canDTP31 = new CanvDTP(document.getElementById("dtp85"), {isCollapsible: false});
+let setString1 = () => canDTP31.setDateTimeFormat("M/D/YYYY h:mm a");
+let setString2 = () => canDTP31.setDateTimeFormat("dddd, MMMM Do YYYY h:mm a. DDDo [Day of the Year], Wo [Week of the Year]");
+let getString  = () => document.getElementById("format-string1").innerText = canDTP31.getDateTimeFormat();
+
+//Get/set font colors.
+let canDTP32 = new CanvDTP(document.getElementById("dtp86"), {isCollapsible: false});
+let setDefaultColors = () =>
+{
+    canDTP32.setFontColors
+    (
+        {
+            textMainColorn: "#000000",
+            textMainColorh: "#ffffff",
+            textAltColorn:  "#888888",
+            textAltColorh:  "#ff8888",
+            rangeBkColor:   "#000000a0"
+        }
+    );
+}
+
+let setCustomColors = () =>
+{
+    canDTP32.setFontColors
+    (
+        {
+            textMainColorn: "#0000ff",
+            textMainColorh: "#ffff00",
+            textAltColorn:  "#ff0000",
+            textAltColorh:  "#ff00ff",
+            rangeBkColor:   "#808080"
+        }
+    );
+} 
+
+let getColors = () => document.getElementById("font-colors1").innerText = JSON.stringify(canDTP32.getFontColors(), null, 1);
+

@@ -584,7 +584,7 @@
                 day:   number(1-31),
                 year:  number
             },
-            lasttDate:
+            lastDate:
             {
                 month: number(1-12),
                 day:   number(1-31),
@@ -1758,30 +1758,120 @@
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection3ee">set/getIsMilitaryTime</div>
                 <div class="divider-bottom"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
                 <div class="subsection-header" id="subsection3ff">set/getFontStyle</div>
                 <div class="divider-bottom"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <div class="subsection-header" id="subsection3gg">set/getDateRanges</div>
                 <div class="divider-bottom"></div>
-                
-                
+                <p>
+                    The setDateRanges function sets the first and last dates. each date is an object that must contain a day, month and year.
+                    If an invalid day, month or year is passed in firstDate or lastDate, that date will be unbounded. If only one end needs
+                    to be bounded, only a firstDate or lastDate can be passed.
+                    setDateRanges - Set first and last date.
+                    getDateRanges - Get first and last date.
+                <br><br>
+                    The following object is passed as a parameter to the setDateRanges function and returned from the getDateRanges function:
+                </p>
+                <pre>
+        {
+            firstDate:
+            {
+                month: number(1-12),
+                day:   number(1-31),
+                year:  number
+            },
+            lastDate:
+            {
+                month: number(1-12),
+                day:   number(1-31),
+                year:  number
+            }
+        }
+                </pre>
+                <p>Examples:</p>
+                <pre>
+        //Set date range from 1/1/2000 to 12/1/2029.
+        myDTP.setDateRanges
+        (
+            {
+                firstDate:
+                {
+                    day:   1,
+                    month: 2,
+                    year:  2000
+                },
+                lastDate:
+                {
+                    day:   11,
+                    month: 30,
+                    year:  2029
+                }
+            }
+        );
 
+        //Clear date ranges.
+        myDTP.setDateRanges
+        (
+            {
+                firstDate: {},
+                lastDate:  {}
+            }
+        );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        //Get today's date.
+        let myVar = myDTP.getDateRanges();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setDateRanges()">Range 2/1/2000 to 11/30/2029</button>
+                    <button class="btn btn-primary m-2" onclick="clearDateRanges()">Clear Date Ranges</button>
+                    <button class="btn btn-primary m-2" onclick="getDateRanges()">Get Date Ranges</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp79" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Date Ranges</h4>
+                            <span id="date-range1"></span><br>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="subsection-header" id="subsection3jj">set/getTodayIndicator</div>
                 <div class="divider-bottom"></div>

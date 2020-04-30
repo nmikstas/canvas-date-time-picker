@@ -1111,6 +1111,7 @@ class CanvDTP
     //Determines if a date object is valid. date object has keys day, month and year.
     checkValidDate(date)
     {
+        if(!date) return false;
         if(!date.hasOwnProperty("day")   || typeof date.day !== "number")   return false;
         if(!date.hasOwnProperty("month") || typeof date.month !== "number") return false;
         if(!date.hasOwnProperty("year")  || typeof date.year !== "number")  return false;
@@ -5733,4 +5734,68 @@ class CanvDTP
         this.bodyDraw();
     }
     getTodayIndicator() {return this.todaysDate;}
+
+    setDateRanges(params)
+    {
+        let first = {...params.firstDate};
+        let last  = {...params.lastDate};
+
+        this.checkValidDate(first) ? this.checkBefore = true : this.checkBefore = false;
+        this.checkValidDate(last)  ? this.checkAfter  = true : this.checkAfter  = false;
+
+        this.firstDate = {...params.firstDate};
+        this.lastDate  = {...params.lastDate};
+
+        //Make sure the view stays within a valid range.
+    
+        //If the initial pick date is before first date, set it to first date. 
+        if(this.checkBefore && this.compareDates({month: this.tempMonth, day: 1, year: this.tempYear}, this.firstDate) === CanvDTP.DATE_LESS)
+        {
+            this.tempMonth = this.firstDate.month;
+            this.tempYear  = this.firstDate.year;
+        }
+
+        //If the initial pick date is before first date, set it to last date. 
+        if(this.checkAfter && this.compareDates({month: this.tempMonth, day: 1, year: this.tempYear}, this.lastDate) === CanvDTP.DATE_GREATER)
+        {
+            this.tempMonth = this.lastDate.month;
+            this.tempYear  = this.lastDate.year;
+        }
+
+        //If the initial pick date is before first date, set it to first date. 
+        if(this.checkBefore && this.compareDates({month: this.month, day: this.day, year: this.year}, this.firstDate) === CanvDTP.DATE_LESS)
+        {
+            this.month = this.firstDate.month;
+            this.day   = this.firstDate.day;
+            this.year  = this.firstDate.year;
+        }
+
+        //If the initial pick date is before first date, set it to last date. 
+        if(this.checkAfter && this.compareDates({month: this.month, day: this.day, year: this.year}, this.lastDate) === CanvDTP.DATE_GREATER)
+        {
+            this.month = this.lastDate.month;
+            this.day   = this.lastDate.day;
+            this.year  = this.lastDate.year;
+        }
+        
+        this.updateDecade = true;
+        this.updateYear   = true;
+        this.updateMonth  = true;
+
+        this.decadeSpotlight();
+        this.yearSpotlight();
+        this.monthExclude();
+        this.textBoxDateTime();
+        this.bodyDraw();
+    }
+
+    getDateRanges()
+    {
+        let first = this.checkValidDate(this.firstDate) ? this.firstDate : null;
+        let last  = this.checkValidDate(this.lastDate)  ? this.lastDate  : null;
+        return {
+            firstDate: {...first},
+            lastDate:  {...last}
+        };
+    }
 }

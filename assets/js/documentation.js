@@ -1342,6 +1342,40 @@ let enableTodayDate   = () => canDTP24.setTodayIndicator(true);
 let disableTodayDate  = () => canDTP24.setTodayIndicator(false);
 let getTodayIndicator = () => document.getElementById("today1").innerText = canDTP24.getTodayIndicator();
 
+//Get/set first and last dates.
+let canDTP25 = new CanvDTP(document.getElementById("dtp79"), {isCollapsible: false});
+let setDateRanges = () => 
+{
+    canDTP25.setDateRanges
+    (
+        {
+            firstDate:
+            {
+                day:   1,
+                month: 2,
+                year:  2000
+            },
+            lastDate:
+            {
+                day:   30,
+                month: 11,
+                year:  2029
+            }
+        }
+    );
+}
 
+let clearDateRanges  = () =>
+{
+    canDTP25.setDateRanges
+    (
+        {
+            firstDate: {},
+            lastDate:  {}
+        }
+    );
+}
+
+let getDateRanges = () => document.getElementById("date-range1").innerText = JSON.stringify(canDTP25.getDateRanges(), null, 1);
 
 

@@ -62,5 +62,3 @@ getIsMilitaryTime
 setIsMilitaryTime  
 getFontStyle  
 setFontStyle  
-getDateRanges  
-setDateRanges  

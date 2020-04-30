@@ -5862,4 +5862,57 @@ class CanvDTP
             rangeBkColor:   this.rangeBkColor
         }
     }
+
+    clearDayExcludeArray()
+    {
+        this.dayExcludeArray = [];
+        this.bodyDraw();
+        this.autoPick = false;
+    }
+
+    pushDayExcludeArray(params)
+    {
+        this.dayExcludeArray.push({...params});
+        this.monthExclude();
+
+        let todaysIndex = -1;
+        let todayExcluded = false;
+        
+        //Try to find the currently selected date in the current month being displayed.
+        for(let i = 0; i < this.dayArray.length; i++)
+        {
+            if
+            (
+                this.year  === this.dayArray[i].year &&
+                this.month === this.dayArray[i].month &&
+                this.day   === this.dayArray[i].day
+            )
+            {
+                todaysIndex = i;
+            }
+        }
+
+        //Check if current date is blocked.
+        if(todaysIndex >= 0 && this.monthSpecial[todaysIndex].excluded) todayExcluded = true;
+
+        //Delete the current date if no auto pick or date is blocked.
+        if(todayExcluded)
+        {
+            this.month         = undefined;
+            this.day           = undefined;
+            this.year          = undefined;
+            this.dayOfWeek     = undefined;
+            this.dayOfYear     = undefined;
+            this.isLeapYear    = undefined;
+            this.isFirstPicked = false;
+            this.autoPick      = false;
+            this.dtpText.value = "";
+        }
+        else
+        {
+            this.isFirstPicked = true;
+        }
+
+        this.bodyDraw();
+    }
 }

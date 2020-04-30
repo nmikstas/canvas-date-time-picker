@@ -1378,4 +1378,16 @@ let clearDateRanges  = () =>
 
 let getDateRanges = () => document.getElementById("date-range1").innerText = JSON.stringify(canDTP25.getDateRanges(), null, 1);
 
+//Get/set font style.
+let canDTP26 = new CanvDTP(document.getElementById("dtp80"), {isCollapsible: false});
+let fontArial      = () => canDTP26.setFontStyle("Arial");
+let fontArialBlack = () => canDTP26.setFontStyle("Arial Black");
+let fontComic      = () => canDTP26.setFontStyle("Comic Sans MS");
+let fontLucinda    = () => canDTP26.setFontStyle("Lucida Console");
+let getFont        = () => document.getElementById("font1").innerText = canDTP26.getFontStyle();
 
+//Get/set military time.
+let canDTP27 = new CanvDTP(document.getElementById("dtp81"), {isCollapsible: false});
+let setMilitary   = () => canDTP27.setIsMilitaryTime(true);
+let setStandard   = () => canDTP27.setIsMilitaryTime(false);
+let getIsMilitary = () => document.getElementById("is-military1").innerText = canDTP27.getIsMilitaryTime();

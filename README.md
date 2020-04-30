@@ -58,7 +58,3 @@ getMaxPixelWidth
 setMaxPixelWidth  
 getStartOfWeek  
 setStartOfWeek  
-getIsMilitaryTime  
-setIsMilitaryTime  
-getFontStyle  
-setFontStyle  

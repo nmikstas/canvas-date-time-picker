@@ -1756,45 +1756,85 @@
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection3dd">set/getStartOfWeek</div>
                 <div class="divider-bottom"></div>
+
+
+
+
+
+
+
+
+
+
                 <div class="subsection-header" id="subsection3ee">set/getIsMilitaryTime</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    Get or set the military time or standard time<br>
+                    setIsMilitaryTime - Set military or standard time.<br>
+                    getIsMilitaryTime - Get military or standard time.
+                </p>
+                <p>Examples:</p>
+                <pre>
+        //Set military or standard time.
+        myDTP.setIsMilitaryTime(true);
+        myDTP.setIsMilitaryTime(false);
+        
+        //Get military or standard time.
+        let myVar = myDTP.getIsMilitaryTime();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="setMilitary()">Set Military Time</button>
+                    <button class="btn btn-primary m-2" onclick="setStandard()">Set Standard Time</button>
+                    <button class="btn btn-primary m-2" onclick="getIsMilitary()">Get Is Military Time</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp81" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Time Format</h4>
+                            <span id="is-military1"></span><br>
+                        </div>
+                    </div>
+                </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                
                 <div class="subsection-header" id="subsection3ff">set/getFontStyle</div>
                 <div class="divider-bottom"></div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                <p>
+                    Get or set the font style of calendar text. Arial is the default font<br>
+                    setFontStyle - Set the font style of calendar text.<br>
+                    getFontStyle - Get the font style of calendar text.
+                </p>
+                <p>Examples:</p>
+                <pre>
+        //Set the font style of calendar text.
+        myDTP.setFontStyle("Arial");
+        myDTP.setFontStyle("Arial Black");
+        myDTP.setFontStyle("Comic Sans MS");
+        myDTP.setFontStyle("Lucida Console");
+        
+        //Get the visibility of the today's date indicator.
+        let myVar = myDTP.getFontStyle();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="fontArial()">Set Default Font Arial</button>
+                    <button class="btn btn-primary m-2" onclick="fontArialBlack()">Set Font Arial Black</button>
+                    <button class="btn btn-primary m-2" onclick="fontComic()">Set Font Comic Sans</button>
+                    <button class="btn btn-primary m-2" onclick="fontLucinda()">Set Font Lucinda</button>
+                    <button class="btn btn-primary m-2" onclick="getFont()">Get Font Style</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp80" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Font Style</h4>
+                            <span id="font1"></span><br>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="subsection-header" id="subsection3gg">set/getDateRanges</div>
                 <div class="divider-bottom"></div>

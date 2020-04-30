@@ -5798,4 +5798,20 @@ class CanvDTP
             lastDate:  {...last}
         };
     }
+
+    setFontStyle(params)
+    {
+        this.fontStyle = params;
+        this.bodyDraw();
+    }
+
+    getFontStyle() {return this.fontStyle;}
+
+    setIsMilitaryTime(params)
+    {
+        this.isMilitaryTime = params;
+        this.bodyDraw();
+    }
+
+    getIsMilitaryTime() {return this.isMilitaryTime;}
 }

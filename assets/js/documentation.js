@@ -1654,4 +1654,52 @@ let setWhitelistLast5 = () =>
 
 let getWhitelistYears = () => document.getElementById("whitelist3").innerText = JSON.stringify(canDTP37.getYearWhiteArray(), null, 1);
 
+//Set/get month images array.
+let canDTP38 = new CanvDTP(document.getElementById("dtp92"), {isCollapsible: false});
+
+let clearImgArray = () => canDTP38.setMonthImageArray([]);
+let setImgFirst3 = () =>
+{
+    canDTP38.setMonthImageArray
+    (
+        [
+            {image: document.getElementById("january"), opacity: 0.4},
+            {image: document.getElementById("february"), opacity: 0.4},
+            {image: document.getElementById("march"), opacity: 0.4},
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ]
+    );
+}
+
+let setImgLast3 = () =>
+{
+    canDTP38.setMonthImageArray
+    (
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            {image: document.getElementById("october"), opacity: 0.4},
+            {image: document.getElementById("november"), opacity: 0.4},
+            {image: document.getElementById("december"), opacity: 0.4},
+        ]
+    );
+}
+
+let getImgArray = () => document.getElementById("img-array1").innerText = JSON.stringify(canDTP38.getMonthImageArray(), null, 1);
+
 

@@ -5963,4 +5963,15 @@ class CanvDTP
     {
         return [...this.yearWhiteArray];
     }
+
+    setMonthImageArray(arrData)
+    {
+        this.monthImages = [...arrData];
+        this.bodyDraw();
+    }
+
+    getMonthImageArray()
+    {
+        return [...this.monthImages];
+    }
 }

@@ -1903,44 +1903,73 @@
                     </div>
                 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 <div class="subsection-header" id="subsection37">set/getMonthImageArray</div>
                 <div class="divider-bottom"></div>
-               
+                <p>
+                    setMonthImageArray - Sets the contents of the month image array. Replaces any existing data.
+                    getMonthImageArray - Returns a copy of the entire contents of the month image array.
+                    <br><br>
+                    Examples:
+                </p>
+                <pre>
+        //Add images to Jan, Feb and March.
+        myDTP.setMonthImageArray
+        (  
+            [
+                {image: document.getElementById("january"), opacity: 0.4},
+                {image: document.getElementById("february"), opacity: 0.4},
+                {image: document.getElementById("march"), opacity: 0.4},
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            ]
+        );
 
+        //Add images to Oct, Nov and Dec.
+        myDTP.setMonthImageArray
+        (
+            [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                {image: document.getElementById("october"), opacity: 0.4},
+                {image: document.getElementById("november"), opacity: 0.4},
+                {image: document.getElementById("december"), opacity: 0.4},
+            ]
+        );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        //Get month images array.
+        let data = myDTP.getMonthImageArray();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="clearImgArray()">Clear Month Image Array</button>
+                    <button class="btn btn-primary m-2" onclick="setImgFirst3()">Set Jan, Feb, March Images</button>
+                    <button class="btn btn-primary m-2" onclick="setImgLast3()">Set Oct, Nov, Dec Images</button>
+                    <button class="btn btn-primary m-2" onclick="getImgArray()">Get Month Image Array</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp92" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Month Image Array</h4>
+                            <span id="img-array1"></span><br>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="subsection-header" id="subsection39">set/getFontColors</div>
                 <div class="divider-bottom"></div>

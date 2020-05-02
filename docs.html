@@ -1643,30 +1643,196 @@
                     </div>
                 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-               
                 <div class="subsection-header" id="subsection3i">set/getDayWhiteArray</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    setDayWhiteArray - Sets the contents of the day whitelist array. Replaces any existing data.
+                    getDayWhiteArray - Returns a copy of the entire contents of the day whitelist array.
+                    <br><br>
+                    Examples:
+                </p>
+                <pre>
+        //Whitelist all weekdays.
+        myDTP.setDayWhiteArray
+        (
+            [
+                {   
+                    daysOfWeek: [CanvDTP.MONDAY, CanvDTP.TUESDAY, CanvDTP.WEDNESDAY, CanvDTP.THURSDAY, CanvDTP.FRIDAY], 
+                    type: CanvDTP.WHITE_BLOCK
+                }
+            ]
+        );
+
+        //Whitelist all weekends.
+        myDTP.setDayWhiteArray
+        (
+            [
+                {   
+                    daysOfWeek: [CanvDTP.SATURDAY, CanvDTP.SUNDAY], 
+                    type: CanvDTP.WHITE_BLOCK
+                }
+            ]
+        );
+
+        //Get day whitelist array.
+        let data = myDTP.getDayWhiteArray();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="clearWhitelistDays()">Clear Whitelist Array</button>
+                    <button class="btn btn-primary m-2" onclick="setWhitelisteWeekdays()">Set Weekdays Whitelisted</button>
+                    <button class="btn btn-primary m-2" onclick="setWhitelistWeekends()">Set Weekends Whitelisted</button>
+                    <button class="btn btn-primary m-2" onclick="getWhitelistDays()">Get Day Whitelist</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp87" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Day Whitelist Array</h4>
+                            <span id="whitelist1"></span><br>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection3n">set/getMonthSpotlightArray</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    setMonthSpotlightArray - Sets the contents of the month spotlight array. Replaces any existing data.
+                    getMonthSpotlightArray - Returns a copy of the entire contents of the month spotlight array.
+                    <br><br>
+                    Examples:
+                </p>
+                <pre>
+        //Spotlight January, Febuary, March.
+        myDTP.setMonthSpotlightArray
+        (
+            [
+                {   
+                    months: [CanvDTP.JANUARY, CanvDTP.FEBRUARY, CanvDTP.MARCH], 
+                    color: "#0000ff",
+                    info: "Spotlighted Month"
+                }
+            ]
+        );
+
+        //Spotlight October, November, December.
+        myDTP.setMonthSpotlightArray
+        (
+            [
+                {   
+                    months: [CanvDTP.OCTOBER, CanvDTP.NOVEMBER, CanvDTP.DECEMBER], 
+                    color: "#0000ff",
+                    info: "Another Spotlighted Month"
+                }
+            ]
+        );
+
+        //Get month spotlight array.
+        let data = myDTP.getMonthSpotlightArray();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="clearMonthSpotlight()">Clear Month Spotlight Array</button>
+                    <button class="btn btn-primary m-2" onclick="setFirst3Months()">Set Jan, Feb, March Spotlight</button>
+                    <button class="btn btn-primary m-2" onclick="setLast3Months()">Set Oct, Nov, Dec Spotlight</button>
+                    <button class="btn btn-primary m-2" onclick="getMonthSpotlight()">Get Month Spotlight</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp88" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Month Spotlight Array</h4>
+                            <span id="spotlight2"></span><br>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="subsection-header" id="subsection3s">set/getMonthWhiteArray</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    setMonthWhiteArray - Sets the contents of the month whitelist array. Replaces any existing data.
+                    getMonthWhiteArray - Returns a copy of the entire contents of the month whitelist array.
+                    <br><br>
+                    Examples:
+                </p>
+                <pre>
+        //Whitelist January, Febuary, March.
+        myDTP.setDayWhiteArray
+        (
+            [
+                {   
+                    months: [CanvDTP.JANUARY, CanvDTP.FEBRUARY, CanvDTP.MARCH]
+                }
+            ]
+        );
+
+        //Whitelist October, November, December.
+        myDTP.setDayWhiteArray
+        (
+            [
+                {   
+                    months: [CanvDTP.OCTOBER, CanvDTP.NOVEMBER, CanvDTP.DECEMBER]
+                }
+            ]
+        );
+
+        //Get month whitelist array.
+        let data = myDTP.getDayWhiteArray();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="clearWhitelistMonth()">Clear Whitelist Array</button>
+                    <button class="btn btn-primary m-2" onclick="setWhitelistFirst3()">Set Jan, Feb, March Whitelisted</button>
+                    <button class="btn btn-primary m-2" onclick="setWhitelistLast3()">Set Oct, Nov, Dec Whitelisted</button>
+                    <button class="btn btn-primary m-2" onclick="getWhitelistMonths()">Get Month Whitelist</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp89" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Month Whitelist Array</h4>
+                            <span id="whitelist2"></span><br>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <div class="subsection-header" id="subsection3x">set/getYearSpotlightArray</div>
                 <div class="divider-bottom"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
                 <div class="subsection-header" id="subsection32">set/getYearWhiteArray</div>
                 <div class="divider-bottom"></div>
                 <div class="subsection-header" id="subsection37">set/getMonthImageArray</div>

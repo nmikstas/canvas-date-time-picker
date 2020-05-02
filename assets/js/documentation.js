@@ -1449,3 +1449,129 @@ let setCustomColors = () =>
 
 let getColors = () => document.getElementById("font-colors1").innerText = JSON.stringify(canDTP32.getFontColors(), null, 1);
 
+//Get/set day whitelist array.
+let canDTP33 = new CanvDTP
+(
+    document.getElementById("dtp87"),
+    {
+        isCollapsible: false,
+        dayExcludeArray:
+        [
+            {
+                excluded: true,
+                color: "#ff000080",
+                info: "Day Excluded"
+            }
+        ]
+    }
+);
+
+let clearWhitelistDays = () => canDTP33.setDayWhiteArray([]);
+
+let setWhitelisteWeekdays = () =>
+{
+    canDTP33.setDayWhiteArray
+    (
+        [
+            {   
+                daysOfWeek: [CanvDTP.MONDAY, CanvDTP.TUESDAY, CanvDTP.WEDNESDAY, CanvDTP.THURSDAY, CanvDTP.FRIDAY], 
+                type: CanvDTP.WHITE_BLOCK
+            }
+        ]
+    );
+}
+
+let setWhitelistWeekends = () =>
+{
+    canDTP33.setDayWhiteArray
+    (
+        [
+            {   
+                daysOfWeek: [CanvDTP.SATURDAY, CanvDTP.SUNDAY], 
+                type: CanvDTP.WHITE_BLOCK
+            }
+        ]
+    );
+}
+
+let getWhitelistDays = () => document.getElementById("whitelist1").innerText = JSON.stringify(canDTP33.getDayWhiteArray(), null, 1);
+
+//Get/set month spotlight array.
+let canDTP34 = new CanvDTP(document.getElementById("dtp88"), {isCollapsible: false,});
+
+let clearMonthSpotlight = () => canDTP34.setMonthSpotlightArray([]);
+
+let setFirst3Months = () =>
+{
+    canDTP34.setMonthSpotlightArray
+    (
+        [
+            {   
+                months: [CanvDTP.JANUARY, CanvDTP.FEBRUARY, CanvDTP.MARCH], 
+                color: "#0000ff",
+                info: "Spotlighted Month"
+            }
+        ]
+    );
+}
+
+let setLast3Months = () =>
+{
+    canDTP34.setMonthSpotlightArray
+    (
+        [
+            {   
+                months: [CanvDTP.OCTOBER, CanvDTP.NOVEMBER, CanvDTP.DECEMBER], 
+                color: "#0000ff",
+                info: "Another Spotlighted Month"
+            }
+        ]
+    );
+}
+
+let getMonthSpotlight = () => document.getElementById("spotlight2").innerText = JSON.stringify(canDTP34.getMonthSpotlightArray(), null, 1);
+
+//Set/get month whitelist array.
+let canDTP35 = new CanvDTP
+(
+    document.getElementById("dtp89"),
+    {
+        isCollapsible: false,
+        monthSpotlightArray:
+        [
+            {
+                color: "#0000ff",
+                info: "Month Spotlighted"
+            }
+        ]
+    }
+);
+
+let clearWhitelistMonth = () => canDTP35.setMonthWhiteArray([]);
+
+let setWhitelistFirst3 = () =>
+{
+    canDTP35.setMonthWhiteArray
+    (
+        [
+            {   
+                months: [CanvDTP.JANUARY, CanvDTP.FEBRUARY, CanvDTP.MARCH]
+            }
+        ]
+    );
+}
+
+let setWhitelistLast3 = () =>
+{
+    canDTP35.setMonthWhiteArray
+    (
+        [
+            {   
+                months: [CanvDTP.OCTOBER, CanvDTP.NOVEMBER, CanvDTP.DECEMBER]
+            }
+        ]
+    );
+}
+
+let getWhitelistMonths = () => document.getElementById("whitelist2").innerText = JSON.stringify(canDTP35.getMonthWhiteArray(), null, 1);
+

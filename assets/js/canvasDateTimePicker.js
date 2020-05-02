@@ -5862,4 +5862,79 @@ class CanvDTP
             rangeBkColor:   this.rangeBkColor
         }
     }
+
+    setDayWhiteArray(arrData)
+    {
+        let todaysIndex = -1;
+        let todayExcluded = false;
+
+        this.dayWhiteArray = [...arrData];
+        this.monthExclude();
+        
+        //Try to find the currently selected date in the current month being displayed.
+        for(let i = 0; i < this.dayArray.length; i++)
+        {
+            if
+            (
+                this.year  === this.dayArray[i].year &&
+                this.month === this.dayArray[i].month &&
+                this.day   === this.dayArray[i].day
+            )
+            {
+                todaysIndex = i;
+            }
+        }
+
+        //Check if current date is blocked.
+        if(todaysIndex >= 0 && this.monthSpecial[todaysIndex].excluded) todayExcluded = true;
+
+        //Delete the current date if no auto pick or date is blocked.
+        if(todayExcluded)
+        {
+            this.month         = undefined;
+            this.day           = undefined;
+            this.year          = undefined;
+            this.dayOfWeek     = undefined;
+            this.dayOfYear     = undefined;
+            this.isLeapYear    = undefined;
+            this.isFirstPicked = false;
+            this.autoPick      = false;
+            this.dtpText.value = "";
+        }
+        else
+        {
+            this.isFirstPicked = true;
+        }
+
+        this.bodyDraw();
+    }
+
+    getDayWhiteArray()
+    {
+        return [...this.dayWhiteArray];
+    }
+
+    setMonthSpotlightArray(arrData)
+    {
+        this.monthSpotlightArray = [...arrData];
+        this.yearSpotlight();
+        this.bodyDraw();
+    }
+
+    getMonthSpotlightArray()
+    {
+        return [...this.monthSpotlightArray];
+    }
+
+    setMonthWhiteArray(arrData)
+    {
+        this.monthWhiteArray = [...arrData];
+        this.yearSpotlight();
+        this.bodyDraw();
+    }
+
+    getMonthWhiteArray()
+    {
+        return [...this.monthWhiteArray];
+    }
 }

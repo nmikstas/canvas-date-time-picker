@@ -5937,4 +5937,30 @@ class CanvDTP
     {
         return [...this.monthWhiteArray];
     }
+
+    setYearSpotlightArray(arrData)
+    {
+        let yearBase  = parseInt(this.tempYear / 10) * 10 - 1;
+        this.yearSpotlightArray = [...arrData];
+        this.decadeSpotlight(yearBase);
+        this.bodyDraw();
+    }
+
+    getYearSpotlightArray()
+    {
+        return [...this.yearSpotlightArray];
+    }
+
+    setYearWhiteArray(arrData)
+    {
+        let yearBase  = parseInt(this.tempYear / 10) * 10 - 1;
+        this.yearWhiteArray = [...arrData];
+        this.decadeSpotlight(yearBase);
+        this.bodyDraw();
+    }
+
+    getYearWhiteArray()
+    {
+        return [...this.yearWhiteArray];
+    }
 }

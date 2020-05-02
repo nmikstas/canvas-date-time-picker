@@ -1575,3 +1575,83 @@ let setWhitelistLast3 = () =>
 
 let getWhitelistMonths = () => document.getElementById("whitelist2").innerText = JSON.stringify(canDTP35.getMonthWhiteArray(), null, 1);
 
+//Get/set year spotlight array.
+let canDTP36 = new CanvDTP(document.getElementById("dtp90"), {isCollapsible: false,});
+
+let clearYearSpotlight = () => canDTP36.setYearSpotlightArray([]);
+
+let setFirst5Years = () =>
+{
+    canDTP36.setYearSpotlightArray
+    (
+        [
+            {
+                years: [2020, 2021, 2022, 2023, 2024], 
+                color: "#0000ff",
+                info: "Spotlighted Year"
+            }
+        ]
+    );
+}
+
+let setLast5Years = () =>
+{
+    canDTP36.setYearSpotlightArray
+    (
+        [
+            {   
+                years: [2025, 2026, 2027, 2028, 2029], 
+                color: "#0000ff",
+                info: "Another Spotlighted Year"
+            }
+        ]
+    );
+}
+
+let getYearSpotlight = () => document.getElementById("spotlight3").innerText = JSON.stringify(canDTP36.getYearSpotlightArray(), null, 1);
+
+//Set/get year whitelist array.
+let canDTP37 = new CanvDTP
+(
+    document.getElementById("dtp91"),
+    {
+        isCollapsible: false,
+        yearSpotlightArray:
+        [
+            {
+                color: "#0000ff",
+                info: "Year Spotlighted"
+            }
+        ]
+    }
+);
+
+let clearWhitelistYear = () => canDTP37.setYearWhiteArray([]);
+
+let setWhitelistFirst5 = () =>
+{
+    canDTP37.setYearWhiteArray
+    (
+        [
+            {
+                years: [2020, 2021, 2022, 2023, 2024]
+            }
+        ]
+    );
+}
+
+let setWhitelistLast5 = () =>
+{
+    canDTP37.setYearWhiteArray
+    (
+        [
+            {   
+                years: [2025, 2026, 2027, 2028, 2029]
+            }
+        ]
+    );
+}
+
+let getWhitelistYears = () => document.getElementById("whitelist3").innerText = JSON.stringify(canDTP37.getYearWhiteArray(), null, 1);
+
+

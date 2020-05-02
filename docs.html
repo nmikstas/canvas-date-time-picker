@@ -1799,42 +1799,129 @@
                     </div>
                 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 <div class="subsection-header" id="subsection3x">set/getYearSpotlightArray</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    setYearSpotlightArray - Sets the contents of the year spotlight array. Replaces any existing data.
+                    getYearSpotlightArray - Returns a copy of the entire contents of the year spotlight array.
+                    <br><br>
+                    Examples:
+                </p>
+                <pre>
+        //Spotlight 2020-2024.
+        myDTP.setYearSpotlightArray
+        (
+            [
+                {   
+                    years: [2020, 2021, 2022, 2023, 2024], 
+                    color: "#0000ff",
+                    info: "Spotlighted Year"
+                }
+            ]
+        );
 
+        //Spotlight 2025-2029.
+        myDTP.setYearSpotlightArray
+        (
+            [
+                {   
+                    months: [2025, 2026, 2027, 2028, 2029], 
+                    color: "#0000ff",
+                    info: "Another Spotlighted Year"
+                }
+            ]
+        );
 
+        //Get month spotlight array.
+        let data = myDTP.getYearSpotlightArray();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="clearYearSpotlight()">Clear Year Spotlight Array</button>
+                    <button class="btn btn-primary m-2" onclick="setFirst5Years()">Set 2020-2024 Spotlight</button>
+                    <button class="btn btn-primary m-2" onclick="setLast5Years()">Set 2025-2029 Spotlight</button>
+                    <button class="btn btn-primary m-2" onclick="getYearSpotlight()">Get Year Spotlight</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp90" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Year Spotlight Array</h4>
+                            <span id="spotlight3"></span><br>
+                        </div>
+                    </div>
+                </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-                
                 <div class="subsection-header" id="subsection32">set/getYearWhiteArray</div>
                 <div class="divider-bottom"></div>
+                <p>
+                    setYearWhiteArray - Sets the contents of the year whitelist array. Replaces any existing data.
+                    getYearWhiteArray - Returns a copy of the entire contents of the year whitelist array.
+                    <br><br>
+                    Examples:
+                </p>
+                <pre>
+        //Whitelist 2020-2024
+        myDTP.setYearWhiteArray
+        (
+            [
+                {   
+                    years: [2020, 2021, 2022, 2023, 2024]
+                }
+            ]
+        );
+
+        //Whitelist 2025-2029
+        myDTP.setYearWhiteArray
+        (
+            [
+                {   
+                    years: [2025, 2026, 2027, 2028, 2029]
+                }
+            ]
+        );
+
+        //Get year whitelist array.
+        let data = myDTP.getYearWhiteArray();
+                </pre>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary m-2" onclick="clearWhitelistYear()">Clear Whitelist Array</button>
+                    <button class="btn btn-primary m-2" onclick="setWhitelistFirst5()">Set 2020-2024 Whitelisted</button>
+                    <button class="btn btn-primary m-2" onclick="setWhitelistLast5()">Set 2025-2029 Whitelisted</button>
+                    <button class="btn btn-primary m-2" onclick="getWhitelistYears()">Get Year Whitelist</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="dtp91" class="dtp-doc"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border p-3 m-3">
+                            <h4>Year Whitelist Array</h4>
+                            <span id="whitelist3"></span><br>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <div class="subsection-header" id="subsection37">set/getMonthImageArray</div>
                 <div class="divider-bottom"></div>
                

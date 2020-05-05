@@ -298,10 +298,11 @@ footer
 
 .dtp-doc
 {
+    font-size: 20px;
     margin-top: 8px;
     max-width: 400px;
-    padding-left: 2.0rem;
-    padding-right: 2.0rem;
+    margin-left: 2.0rem;
+    margin-right: 2.0rem;
 }
 
 .doc-pad

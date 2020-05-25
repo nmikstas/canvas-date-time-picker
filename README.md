@@ -5,4 +5,8 @@ Overview: https://nmikstas.github.io/canvas-date-time-picker/
 Documentation: https://nmikstas.github.io/canvas-date-time-picker/docs.html  
 
 Last updated: 5/1/2020.  
-This project is now complete!  
+This project is now complete!
+
+# NOTE
+This project is part of my project portfolio: https://nmikstas.github.io/portfolio/
+
